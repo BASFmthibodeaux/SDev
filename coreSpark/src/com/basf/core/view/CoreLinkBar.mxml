@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:LinkBar xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="colorearSeleccion()"
+			itemClick="changeHandler(event)"
+			>
+<!--
+	CoreLinkBar
+	Descripcion: LinkBar que colorea el LinkButton seleccionado	
+	Autor: Nicolas Enriquez
+	
+	11Oct07
+		V000 - Creacion del componente	
+ -->
+		
+	<mx:Script>
+		<![CDATA[
+
+			import mx.controls.LinkButton;
+			import mx.events.ItemClickEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.core.UIComponent;
+			import mx.collections.ArrayCollection;
+			
+			/**
+			 *	Coleccion de Number's, correspondientes a los indices
+			 * 	de los linkButton's seleccionados inicialmente
+			 */
+			public var inicialSelectedItems:ArrayCollection = new ArrayCollection();
+			
+			/**
+			 *	Color de los linkButtons no seleccionados
+			 *	@defualt '0x666666' (gris)
+			 */
+			public var unSelectedColor:String = '0x666666';
+			
+			/**
+			 *	Color del linkButton seleccionado
+			 *	@defualt '0x000000' (negro)
+			 */
+			public var selectedColor:String = '0x000000';
+			
+			
+			
+			/**
+			 *	Colorea los intems seleccionados inicialmente 
+			 */
+			private function colorearSeleccion():void{
+				
+				var i:Number;
+				var child:UIComponent
+					
+				// no hay items seleccionados iniciales
+				if (inicialSelectedItems.length == 0)
+				{ 	
+					for (i=0; i<numChildren; i++)
+						UIComponent(getChildAt(i)).setStyle('color', unSelectedColor);				
+	        
+				} 
+				 else // si los hay
+				{
+					for (i=0; i<numChildren; i++)
+						UIComponent(getChildAt(i)).setStyle('color', unSelectedColor);				
+
+					for each (var index:Number in inicialSelectedItems){
+	            		
+	            		// valido que exista el indice proveido
+	            		if (index > numChildren-1) return;
+	            		
+	            		child = UIComponent(getChildAt(index));
+	            		child.setStyle('color', selectedColor);
+	    			} 	
+	        
+				} 
+				
+			}
+			
+			/**
+			 *	Colorea el linkButton seleccionado con selectedColor
+			 *  y los no seleccionados con unSelectedColor
+			 */
+			private function changeHandler(event:ItemClickEvent):void{
+				
+				if(selectedIndex>=0 && numChildren>0){
+
+					for (var i:Number=0; i<numChildren; i++)
+						UIComponent(getChildAt(i)).setStyle('color', unSelectedColor);				
+
+		       		var child:UIComponent = UIComponent(getChildAt(selectedIndex));
+	           		child.setStyle('color', selectedColor); 
+				}
+			}
+			
+			
+		]]>
+	</mx:Script>
+
+</mx:LinkBar>

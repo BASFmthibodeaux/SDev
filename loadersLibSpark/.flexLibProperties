@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties version="1">
+  <includeClasses>
+    <classEntry path="fabulousFlex.IProgress"/>
+    <classEntry path="fabulousFlex.MaskImage"/>
+    <classEntry path="fabulousFlex.MaskMove"/>
+    <classEntry path="fabulousFlex.PreloadingImage"/>
+    <classEntry path="fabulousFlex.ProgressPreloadingWindow"/>
+    <classEntry path="fabulousFlex.SquaresPreloadingWindow"/>
+    <classEntry path="fabulousFlex.SquaresSpinnerPreloadingWindow"/>
+    <classEntry path="fabulousFlex.StartPositionMode"/>
+    <classEntry path="fabulousFlex.WheelPreloadingWindow"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

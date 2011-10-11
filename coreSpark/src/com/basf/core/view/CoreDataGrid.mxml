@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataGrid xmlns:fx="http://ns.adobe.com/mxml/2009"
+			xmlns:s="library://ns.adobe.com/flex/spark"
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			creationComplete="initControl()">
+	
+	<fx:Metadata>
+		[Event(name="dataRetrieved",type="*")]
+		[Event(name="dataError",type="*")]
+	</fx:Metadata>	
+
+	<fx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import com.basf.core.business.ComponentDAO;
+			import mx.binding.utils.BindingUtils;
+			import com.basf.core.vo.ServiceParameter;
+
+			
+			private var dao:ComponentDAO;
+			public var serviceName:String;
+			public var serviceType:String;
+			public var serviceMethod:String;
+			[Bindable]
+			public var serviceResult:*;
+			public var loadOnCreationComplete:Boolean=true;
+			public var serviceParameter:ServiceParameter;
+			public var dataProviderNode:String;
+			
+			public var clearDataProviderOnRequest:Boolean = true;
+			
+			[Bindable]
+			public var serviceRunning:Boolean = false;
+			
+ 			private var init:Boolean=false;
+ 			private var loadDataPending:Boolean = false;
+
+			private function initControl():void
+			{		
+				dao = new ComponentDAO(serviceName,serviceType,this,dataProviderNode);
+				dao.addEventListener("dataRetrieved",dataRetrieved);
+				dao.addEventListener(FaultEvent.FAULT,dataError);
+				BindingUtils.bindProperty(this,"dataProvider",dao,"dataProvider");
+				BindingUtils.bindProperty(this,"serviceResult",dao,"serviceResult");
+
+				this.init = true;
+
+				if(loadOnCreationComplete || this.loadDataPending)
+					loadData(serviceParameter);
+				
+				this.loadDataPending = false;
+			}
+			[Bindable]
+			public function get service():Object {
+				return dao.serviceStrategy.service;
+			}
+			public function set service(content:Object):void {
+				
+			}
+			
+			public function loadData(param:ServiceParameter=null):void
+			{
+				this.serviceParameter = param;
+				if (!this.init) {
+					this.loadDataPending = true;
+					this.initControl();
+				} else {
+					serviceRunning = true;
+					errorString = "";
+					dao.clearResultOnRequest = this.clearDataProviderOnRequest;
+					dao.loadData(param,serviceMethod);
+				}
+			}
+			
+			public function dataRetrieved(event:Event):void
+			{
+				errorString = "";
+//				this.serviceResult = dao.serviceResult;
+				serviceRunning = false;
+				dispatchEvent(new Event("dataRetrieved"));
+			}
+
+			public function dataError(event:FaultEvent):void
+			{
+				errorString = event.fault.message;
+				serviceRunning = false;
+				dispatchEvent(new Event("dataError"));
+			}
+			
+		]]>
+	</fx:Script>
+	
+</s:DataGrid>

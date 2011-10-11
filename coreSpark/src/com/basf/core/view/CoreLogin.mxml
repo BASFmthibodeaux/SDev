@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+	xmlns:controls="com.basf.controls.*" 
+	xmlns:view="com.basf.core.view.*" 
+	creationComplete="initControl()">
+
+	<mx:Metadata>
+		[Event(name="loginOK",type="*")]
+		[Event(name="loginError",type="*")]
+		[Event(name="userProfileLoaded",type="*")]
+		[Event(name="userProfileError",type="*")]  
+		[Event(name="usernameChange",type="*")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import com.basf.core.vo.UserProfileSAPServiceParameter2;
+			import com.basf.core.vo.UserProfileSAPServiceParameter;
+			import com.basf.core.vo.ServiceParameter;
+			import com.basf.core.business.*;
+			import mx.events.ValidationResultEvent;
+			import mx.effects.easing.*;
+
+			private var _loginServiceName:String;
+			
+
+			
+			public var activityMonitor:ActivityMonitor;
+			
+			[Bindable]
+			public var ldapServiceUsed:String;
+
+			[Bindable]
+			public var textInsertUsername:String = "Ingrese su código de usuario.";
+			[Bindable]
+			public var textInsertPassword:String ="Debe ingresar su password."; 
+			[Bindable]
+			public var textVerifyingCredentials:String = "Verificando credenciales...";
+			[Bindable]
+			public var textObtainingUserProfile:String = "Obteniendo perfil de usuario...";
+			[Bindable]
+			public var textUsername:String = "Username";
+			[Bindable]
+			public var textPassword:String = "Password"; 
+
+			public function set loginServiceName(content:String):void {
+				_loginServiceName = content;
+				daoLogin = new Dao (_loginServiceName,"http",this);
+			}
+			public function get loginServiceName():String {
+				return _loginServiceName;
+			}
+			
+			public var applicationCode:String;
+			public var userProfileServiceName:String;
+			public var userProfileServiceType:String;
+			public var userProfileWsdlOperation:String="YSA_RFC_CORE_USER_PROFILE";
+			
+			[Bindable]
+			public var daoLogin:Dao;
+			
+			[Bindable]
+			public var daoGetUserProfile:Dao;
+			
+			private function initControl():void {
+				this.currentState = "show";
+			}
+			
+			private function onClick ():void {
+	        	var result:ValidationResultEvent;
+				var validacion:Boolean = true;
+
+				result = validatorUsername.validate();
+                if (result.type==ValidationResultEvent.INVALID) {
+                    validacion = false;
+                }
+				result = validatorPassword.validate();
+                if (result.type==ValidationResultEvent.INVALID) {
+                    validacion = false;
+                }
+                				
+				if (validacion) {
+					this.errorString = "";
+					login();
+				}
+			}
+			
+			private function login():void {
+				var sp:ServiceParameter = new ServiceParameter();
+				sp.parametros.cUser=String(username.text).toUpperCase();
+				sp.parametros.cPassword=password.text;
+				daoLogin.request(sp,null,loginOK,loginError);
+				this.currentState = "logginIn";
+			}
+			
+			private function loginOK(event:*=null):void { 
+				if (daoLogin.serviceResult!=null) {
+					if (daoLogin.serviceResult.login.ldap_host!=null) {
+						this.ldapServiceUsed = daoLogin.serviceResult.login.ldap_host;
+					} 
+					if (daoLogin.serviceResult.login.response == "0") {
+						this.errorString = "";
+						sendEvent("loginOK");
+						//this.currentState = "";
+						getUserProfile();
+					} else {
+						this.errorString = daoLogin.serviceResult.login.text;
+						this.currentState = "error";
+						sendEvent("loginError");
+					}
+				}
+			}
+			
+			private function sendEvent(name:String):void {
+				this.dispatchEvent(new Event(name));
+				if (activityMonitor != null ) {
+					if (name == "loginError" || name == "userProfileError") {
+						this.activityMonitor.send(this.applicationCode,String(username.text).toUpperCase(),"CORE_LOGIN",name,null,true);
+					} else {
+						this.activityMonitor.send(this.applicationCode,String(username.text).toUpperCase(),"CORE_LOGIN",name);
+					}
+				}
+			}
+			
+			private function loginError(event:*=null):void {
+				this.currentState = "error";
+				sendEvent("loginError");
+			}
+			
+			private function getUserProfile ():void {
+				var sp:ServiceParameter = new ServiceParameter();
+				var sp2:UserProfileSAPServiceParameter = new UserProfileSAPServiceParameter();
+				var sp3:UserProfileSAPServiceParameter2 = new UserProfileSAPServiceParameter2();
+													
+				
+				if (userProfileServiceName != null) {  
+					this.currentState = "gettingUserProfile";
+					if (userProfileServiceType == null) {
+						daoGetUserProfile = new Dao (userProfileServiceName,"http",this);											
+						sp.parametros.cUser=username.text;
+						daoGetUserProfile.request(sp,null,getUserProfileOK,getUserProfileError);
+					} else {
+						daoGetUserProfile = new Dao (userProfileServiceName,userProfileServiceType,this);
+						if (userProfileWsdlOperation == "YSA_RFC_CORE_USER_PROFILE") {
+							sp2.parametros.cUser=String(username.text).toUpperCase();
+							sp2.parametros.cSistema=this.applicationCode;
+							daoGetUserProfile.request(sp2,userProfileWsdlOperation,getUserProfileOK,getUserProfileError);							
+						} else {
+							sp3.parametros.cUser=String(username.text).toUpperCase();
+							sp3.parametros.cSistema=this.applicationCode;
+							daoGetUserProfile.request(sp3,userProfileWsdlOperation,getUserProfileOK,getUserProfileError);
+							//getUserProfileOK();
+						}	
+						
+					}
+				}
+				
+			}
+			
+			private function getUserProfileOK(event:*=null):void {
+				this.currentState = "" ;
+				this.errorString ="";
+				sendEvent("userProfileLoaded");
+			}
+			private function getUserProfileError(event:*=null):void {
+				this.currentState = "error" ;
+				this.errorString = "GetUserProfile:" + event.fault;
+				sendEvent("userProfileError");
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:states>
+		<mx:State name="show">
+			<mx:SetProperty target="{formItem1}" name="alpha" value="1"/>
+			<mx:SetProperty target="{formItem2}" name="alpha" value="1"/>
+			<mx:SetProperty target="{formItem3}" name="alpha" value="1"/>
+		</mx:State>
+		<mx:State name="logginIn" basedOn="show">
+			<mx:SetProperty target="{boxPassword}" name="height" value="100%"/>
+			<mx:SetProperty target="{boxPerfil}" name="height" value="0"/>
+			<mx:SetProperty target="{loginForm}" name="enabled" value="false"/>
+		</mx:State>
+		<mx:State name="gettingUserProfile" basedOn="show">
+			<mx:SetProperty target="{boxPassword}" name="height" value="0"/>
+			<mx:SetProperty target="{boxPerfil}" name="height" value="100%"/>
+			<mx:SetProperty target="{loginForm}" name="enabled" value="false"/>
+		</mx:State>
+		<mx:State name="error" basedOn="show">
+			<mx:SetProperty target="{boxPassword}" name="height" value="0"/>
+			<mx:SetProperty target="{boxPerfil}" name="height" value="0"/>
+			<mx:SetProperty target="{loginForm}" name="enabled" value="true"/>
+			<mx:SetProperty target="{boxError}" name="height" value="100%"/>
+			<mx:SetProperty target="{boxError}" name="alpha" value="1"/>
+		</mx:State>
+	</mx:states>
+
+	<mx:transitions>
+        <mx:Transition fromState="*" toState="*">
+            <mx:Parallel targets="{[boxPassword,boxPerfil]}">
+	            <mx:Fade duration="100"/>
+	            <mx:Resize duration="100"/>
+			</mx:Parallel>
+        </mx:Transition>
+        <mx:Transition fromState="*" toState="show">
+        	<mx:Parallel>
+				<mx:Fade id="fade1" target="{formItem1}" duration="400" easingFunction="{Quintic.easeOut}"/>
+				<mx:Fade id="fade2" target="{formItem2}" duration="600" easingFunction="{Quintic.easeOut}"/>
+				<mx:Fade id="fade3" target="{formItem3}" duration="800" easingFunction="{Quintic.easeOut}"/>
+        	</mx:Parallel>
+        </mx:Transition>
+	</mx:transitions> 
+
+
+    <mx:StringValidator id="validatorUsername" source="{username}"
+    	property="text"
+        requiredFieldError="{this.textInsertUsername}"
+        minLength="1"
+        trigger="{bSubmit}" triggerEvent="click" />
+    <mx:StringValidator id="validatorPassword" source="{password}"
+    	property="text"
+        requiredFieldError="{this.textInsertPassword}"
+        minLength="1"
+        trigger="{bSubmit}" triggerEvent="click" />
+        	
+	<mx:Form id="loginForm" 
+		errorString="{this.errorString}" 
+		defaultButton="{bSubmit}" fontSize="11">
+		
+		<mx:FormItem id="formItem1" label="{this.textUsername}" required="true" alpha="0">
+			<mx:TextInput id="username" change="this.dispatchEvent(new Event('usernameChange'));"  />
+		</mx:FormItem>
+		<mx:FormItem id="formItem2" label="{this.textPassword}" required="true"  alpha="0" >
+			<mx:TextInput id="password" displayAsPassword="true" />
+		</mx:FormItem>
+		<mx:FormItem id="formItem3" alpha="0">
+			<mx:Button id="bSubmit" label="Login" click="onClick();" />
+		</mx:FormItem>
+	</mx:Form>
+	<mx:VBox verticalGap="0">
+		<mx:HBox id="boxPassword" height="0" verticalAlign="middle">
+			<view:WaitingIcon/>
+			<mx:Label text="{this.textVerifyingCredentials}"/>
+		</mx:HBox>
+		<mx:HBox id="boxPerfil" height="0"  verticalAlign="middle">
+			<view:WaitingIcon/>
+			<mx:Label text="{this.textObtainingUserProfile}"/>
+		</mx:HBox>		
+		<mx:HBox id="boxError" height="0"  verticalAlign="middle" alpha="0">
+			<mx:Label text="{this.errorString}" color="#FF3300"/>
+		</mx:HBox>		
+	</mx:VBox>
+</mx:VBox>

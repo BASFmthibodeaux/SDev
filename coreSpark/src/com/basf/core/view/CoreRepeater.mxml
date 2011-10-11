@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Repeater xmlns:mx="http://www.adobe.com/2006/mxml" 
+			 creationComplete="initControl()"
+			 >
+	
+	<mx:Metadata>
+		[Event("dataRetrieved")]
+		[Event("dataError")]
+	</mx:Metadata>	
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import com.basf.core.business.ComponentDAO;
+			import mx.binding.utils.BindingUtils;
+			import com.basf.core.vo.ServiceParameter;
+
+			
+			private var dao:ComponentDAO;
+			public var serviceName:String;
+			public var serviceType:String;
+			public var serviceMethod:String;
+			[Bindable]
+			public var serviceResult:*;
+			public var loadOnCreationComplete:Boolean=true;
+			public var serviceParameter:ServiceParameter;
+			public var dataProviderNode:String;
+			[Bindable]
+			public var serviceRunning:Boolean = false;
+			
+			private function initControl():void
+			{		
+				dao = new ComponentDAO(serviceName,serviceType,this,dataProviderNode);
+				dao.addEventListener("dataRetrieved",dataRetrieved);
+				dao.addEventListener(FaultEvent.FAULT,dataError);
+				BindingUtils.bindProperty(this,"dataProvider",dao,"dataProvider");
+
+				if(loadOnCreationComplete)
+					loadData(serviceParameter);
+				
+			}
+			
+			public function loadData(param:ServiceParameter=null):void
+			{
+				serviceRunning = true;
+				errorString = "";
+				dao.loadData(param,serviceMethod);
+			}
+			
+			public function dataRetrieved(event:Event):void
+			{
+				errorString = "";
+				this.serviceResult = dao.serviceResult;
+				serviceRunning = false;
+				dispatchEvent(new Event("dataRetrieved"));
+			}
+
+			public function dataError(event:FaultEvent):void
+			{
+				errorString = event.fault.message;
+				serviceRunning = false;
+				dispatchEvent(new Event("dataError"));
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Repeater>

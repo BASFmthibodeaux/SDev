@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+				creationPolicy="all"
+				width="100%"
+				height="100%"
+				>
+<!--
+	CustonPopUp
+	Descripcion: PopUp que muestra una 	
+	Autor: Nicolas Enriquez
+	
+	03Oct07
+		V000 - Creacion del componente
+ -->
+	
+	<mx:Metadata>
+		[Event("creationComplete")]
+		[Event("initialize")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Container;
+			import mx.managers.PopUpManager;
+			import mx.events.FlexEvent;
+			import mx.messaging.config.ServerConfig;
+			
+			
+			
+			/** 
+			 *  @private
+			 *  @default true
+			 *	Habilita o deshabilita la muestra en espera.
+			 *  Utilizar gutters y setters para modificar o ver su valor
+			 */
+			[Bindable] private var _serviceRunning:Boolean = true;
+						
+			/** 
+			 *  @public
+			 *	@default "Esperando..."
+			 *	Mensaje que se muestra cuando _serviceRunning sea true
+			 */			
+			[Bindable] public var waitMessage:String = "Buscando datos...";  
+			
+			/** 
+			 *  @public
+			 *	@default 14
+			 *	Tamaño de fuente de waithMenssage.
+			 */			
+			[Bindable] public var fotnSizeWaitMessage:Number = 14;  
+    
+			/** 
+			 *  @public
+			 *	@default "bold"
+			 */			
+			[Bindable] public var fontWeightWaitMessage:String = "bold";  
+
+			/**
+			 *	@private
+			 *	contiene el componente que el usuario crea
+			 */	
+			[Bindable] private var _innerContainer:Container;
+			
+			
+			
+			/**
+			 *	@public
+			 *	@param argumento type Container
+			 *			argumento: el componente unico que el usuario crea
+			 */	
+			public function set innerContainer(argumento:Container):void{
+				if (innerContainer == null && argumento != null)			
+					this._innerContainer = argumento;		
+				else trace("Solo debe haber un hijo agregado (contenedor)");
+			}
+
+			/**
+			 *	@public
+			 *	@return type Container - componente creado por el usuario
+			 */		
+			public function get innerContainer():Container{
+				return this._innerContainer;
+			}
+			
+			/**
+			 *	@private
+			 *	agrega el componente creado al stack interno
+			 *	notar que se lo llama luego de creado el stack 
+			 */		
+			private function addNewChilds():void{
+				vsContainner.addChild(innerContainer);
+			}
+			
+			
+			/**
+			 *	@public
+			 *	@param argumento type boolean
+			 *			true: se muestra waithMenssage
+			 *			false: se muestra el contenido del usuario 
+			 */		
+			public function set serviceRunning(argumento:Boolean):void{
+				this._serviceRunning = argumento;
+			}
+
+			/**
+			 *	@public
+			 *	@return type Boolean - estado de la property serviceRunning
+			 */				
+			[Bindable]
+			public function get serviceRunning():Boolean{
+				return this._serviceRunning;
+			}
+			
+			/**
+			 *	@public
+			 *	@return type Label - instancia del label de mensaje
+			 */							
+			public function getMessageLabel():Label{
+				return this.lbMessage;
+			}
+					
+		]]>
+	</mx:Script>
+	
+	<mx:ViewStack id="vsContainner" selectedIndex="{serviceRunning ? 0:1}" 
+				  creationComplete="addNewChilds()" creationPolicy="all" width="100%" height="100%">
+		
+		<!-- vs1 en espera -->
+		<mx:Box height="100%" width="100%" horizontalAlign="center" verticalAlign="middle">
+				<mx:Label id="lbMessage" fontSize="{fotnSizeWaitMessage}" text="{waitMessage}" 
+						  fontWeight="{fontWeightWaitMessage}"/>							
+		</mx:Box>	
+		
+		<!-- vs2 el que agrega el usuario -->
+		
+	</mx:ViewStack>	
+
+</mx:TitleWindow>

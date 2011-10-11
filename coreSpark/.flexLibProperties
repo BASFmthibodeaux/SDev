@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" useMultiPlatformConfig="false" version="1">
+  <includeClasses>
+    <classEntry path="com.basf.core.business.ActivityMonitor"/>
+    <classEntry path="com.basf.core.business.ComponentDAO"/>
+    <classEntry path="com.basf.core.business.Dao"/>
+    <classEntry path="com.basf.core.business.FactoryNode"/>
+    <classEntry path="com.basf.core.business.HTTPServiceStrategy"/>
+    <classEntry path="com.basf.core.business.RPCServiceStrategy"/>
+    <classEntry path="com.basf.core.business.ServiceStrategy"/>
+    <classEntry path="com.basf.core.business.ServiceStrategyFactory"/>
+    <classEntry path="com.basf.core.business.WSServiceStrategy"/>
+    <classEntry path="com.basf.core.view.CoreCombo"/>
+    <classEntry path="com.basf.core.view.CoreDataGrid"/>
+    <classEntry path="com.basf.core.view.CoreLinkBar"/>
+    <classEntry path="com.basf.core.view.CoreLoginSpark"/>
+    <classEntry path="com.basf.core.view.CorePopUp"/>
+    <classEntry path="com.basf.core.view.CoreRepeater"/>
+    <classEntry path="com.basf.core.view.CoreSearchAsYouType"/>
+    <classEntry path="com.basf.core.view.WaitingIcon"/>
+    <classEntry path="com.basf.core.vo.ComboVO"/>
+    <classEntry path="com.basf.core.vo.ServiceParameter"/>
+    <classEntry path="com.basf.core.vo.UserProfileSAPServiceParameter"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

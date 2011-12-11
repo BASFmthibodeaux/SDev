@@ -1,4 +1,4 @@
-	<?php
+<?php
 function connect_database ($database) {
     $link = mysql_connect("sdev.com.ar", "loucimj", "p2ssw0rd")
         or die("Could not connect");

@@ -19,15 +19,25 @@
 */
 require_once '../global/global_variables.php';
 require_once $functions_path . '/connect.php';
-	$NL = "
-";
-	$link=connect_database($main_database);
+
+	header('Content-type: text/xml');
+	header('Pragma: public');
+	header('Cache-control: private');
+	header('Expires: -1');
+
     import_request_variables("gP","rvar_");
-	header ('Content-Type: application/xml; charset=iso-8859-1');
+
+
+	$NL = chr(13);
+	$link=connect_database($main_database);
+	
 	print '<?xml version="1.0" encoding="iso-8859-1"?>'. $NL;
-	print ('<credit_cards'
-				.'>'. $NL);
+	print ('<credit_cards>'.$NL);
+	
 	if ($rvar_cHash !="") {
+		
+		//TODO: revisar HASH primero!
+		
 		$query="select * from credit_cards,banks,accounts ";
 		$where = "where bank_id = acc_bank_id and cc_acc_id = acc_id ";
 		if ($rvar_username !="") {
@@ -41,22 +51,23 @@ require_once $functions_path . '/connect.php';
 
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 			print('<credit_card>'.$NL);
-			print('<credit_card>'.$NL);
+
+			print('<holder>'.$row["cc_holder"].'</holder>'.$NL);
+			print('<cc_number>'.$row["cc_number"].'</cc_number>'.$NL);
+			print('<bank>'.$row["bank_description"].'</bank>'.$NL);
+			print('<card_type>'.$row["acc_card_type"].'</card_type>'.$NL);
+
 			print('</credit_card>'.$NL);
-	        					.' base_datos="'.$row["apl_database"].'" '
-	        					.' descripcion="'.$row["apl_descripcion"].'" '
-	        					.' id_aplicacion="'.$row["apl_id"].'" '
-	        					.' namespace="'.$row["apl_namespace"].'" '
-								."/>" .$NL);
 			$item_index ++;
 	    }
-		print('<where string="'.$where.'" />');
+		print('<where_clause>'.$where.'</where_clause>'.$NL);
    	} else {
    		$texto_error = "";
    		if ($rvar_cHash == "") {
-   			$texto_error.= " HASH invalid.";
-   		}
+   			$texto_error.= "Invalid HASH.";
+   		} 
 		print ('<error texto="'.$texto_error.'"/>'.$NL);;
 	}	
+
 	print ('</credit_cards>'. $NL);
 ?>

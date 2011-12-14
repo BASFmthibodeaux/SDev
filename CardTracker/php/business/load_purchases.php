@@ -19,6 +19,9 @@
 */
 require_once '../global/global_variables.php';
 require_once $functions_path . '/connect.php';
+require_once $functions_path . '/database_functions.php';
+
+
 
 	header('Content-type: text/xml');
 	header('Pragma: public');
@@ -63,6 +66,66 @@ require_once $functions_path . '/connect.php';
 				} else {
 					print ('<error>MySQL error: '.mysql_error().'</error>'.$NL);;
 				}	
+				//tomar el dia de cierre para ver si entra en el cierre de la compra o en el siguiente
+				
+				$dia = execute_sql ('select cc_closing_date from credit_cards where cc_id = '.$rvar_credit_card);
+				$dia_operacion = substr($rvar_date,8,2);
+				$mes_operacion = substr($rvar_date,5,2);
+				$anio_operacion = substr($rvar_date,0,4);
+
+				if ($dia_operacion > $dia) {
+					$due_date = add_month ($rvar_date);
+					$due_date = substr($due_date,0,7)."-".str_pad($dia,2,"0",STR_PAD_LEFT);
+				} else {
+					$due_date = substr($rvar_date,0,7)."-".str_pad($dia,2,"0",STR_PAD_LEFT);
+				}
+				
+				if ($rvar_payments > 1) {
+					for ($x=1;$x<=$rvar_payments;$x++) {
+
+					$query2 = "insert into future_payments ("
+								."fp_cc_id,"
+								."fp_due_date,"
+								."fp_due_period,"
+								."fp_value,"
+								."fp_created_by,"
+								."fp_pur_id"
+								.") values ("
+								." ".$rvar_credit_card 
+								.",'". $due_date. "'" 
+								.",'".substr($due_date,0,7)."'" 
+								.", ".$rvar_value/$rvar_payments 
+								.", '".$rvar_purchased_by."'" 
+								.", ".$rvar_nId
+								.")";
+
+//					print ($query2);
+					mysql_query ($query2) or die("EXECUTE_SQL:Query failed '".$query2."'" . "<br>" .mysql_error());;								
+
+					$due_date = add_month ($due_date);
+					$due_date = substr($due_date,0,7)."-".str_pad($dia,2,"0",STR_PAD_LEFT);
+
+					}
+				} else {
+					$query2 = "insert into future_payments ("
+								."fp_cc_id,"
+								."fp_due_date,"
+								."fp_due_period,"
+								."fp_value,"
+								."fp_created_by,"
+								."fp_pur_id"
+								.") values ("
+								." ".$rvar_credit_card 
+								.",'". $due_date. "'" 
+								.",'".substr($due_date,0,7)."'" 
+								.", ".$rvar_value 
+								.", '".$rvar_purchased_by."'" 
+								.", ".$rvar_nId
+								.")";
+
+//					print ($query2);
+					mysql_query ($query2) or die("EXECUTE_SQL:Query failed '".$query2."'" . "<br>" .mysql_error());;								
+				}
 				
 				break;
 			case "EDIT":

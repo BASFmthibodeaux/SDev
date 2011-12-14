@@ -52,6 +52,7 @@ require_once $functions_path . '/connect.php';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 			print('<credit_card>'.$NL);
 
+			print('<cc_id>'.$row["cc_id"].'</cc_id>'.$NL);
 			print('<holder>'.$row["cc_holder"].'</holder>'.$NL);
 			print('<cc_number>'.$row["cc_number"].'</cc_number>'.$NL);
 			print('<bank>'.$row["bank_description"].'</bank>'.$NL);
@@ -66,7 +67,7 @@ require_once $functions_path . '/connect.php';
    		if ($rvar_cHash == "") {
    			$texto_error.= "Invalid HASH.";
    		} 
-		print ('<error texto="'.$texto_error.'"/>'.$NL);;
+		print ('<error>'.$texto_error.'</error>'.$NL);;
 	}	
 
 	print ('</credit_cards>'. $NL);

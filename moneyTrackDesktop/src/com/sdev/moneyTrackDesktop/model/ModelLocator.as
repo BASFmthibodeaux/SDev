@@ -13,7 +13,7 @@ package com.sdev.moneyTrackDesktop.model {
 		
 		private static var modelLocatorInstance:com.sdev.moneyTrackDesktop.model.ModelLocator;
 		
-		public var accesoBaseDatos:String = "http://sourceserver.basf-arg.com.ar/source_informatica/pls/db";
+		public var accesoBaseDatos:String = "http://localhost";
 		//  public var accesoBaseDatos:String = "sampledata";
 		public var accesoBaseDatos2:String = "sampledata";
 		public var videoService:String;
@@ -59,7 +59,6 @@ package com.sdev.moneyTrackDesktop.model {
 		
 		public var amURL:String;
 		
-		public var createRequestReport:CreateRequest;
 		
 		public var isAdmin:Boolean = false;
 		
@@ -82,8 +81,6 @@ package com.sdev.moneyTrackDesktop.model {
 		}
 		
 		public function getConfiguration():void {
-			var event:GetConfigEvent = new GetConfigEvent();
-			CairngormEventDispatcher.getInstance().dispatchEvent(event);
 			
 		}
 		public function configurationLoaded():void {

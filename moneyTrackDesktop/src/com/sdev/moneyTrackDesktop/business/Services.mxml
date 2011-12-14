@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cairngorm:ServiceLocator xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:cairngorm="com.adobe.cairngorm.business.*"
+						  >
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import com.sdev.moneyTrackDesktop.model.ModelLocator;
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+		]]>
+	</mx:Script>
+	
+	<mx:HTTPService id="configSrv" 
+					url="configuracion.xml" showBusyCursor="true"
+					result="event.token.resultHandler(event);"
+					fault="event.token.faultHandler (event);"/>
+	
+	<mx:HTTPService id="cardsListSrv" 
+					url="http://localhost/php/view/list_cards.php" showBusyCursor="true"
+					result="event.token.resultHandler(event);"
+					fault="event.token.faultHandler (event);"/>
+
+	<mx:HTTPService id="addPurchaseSrv" 
+					url="http://localhost/php/business/load_purchases.php" showBusyCursor="true"
+					result="event.token.resultHandler(event);"
+					fault="event.token.faultHandler (event);"/>
+
+	<mx:HTTPService id="activityMonitorSrv" 
+					showBusyCursor="false"
+					method="POST"
+					url="{model.accesoBaseDatos2}/am.get_activity_log"
+					result="event.token.resultHandler(event);"
+					fault="event.token.faultHandler (event);"/>
+
+	
+</cairngorm:ServiceLocator>

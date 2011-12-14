@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.basf.core.business.Dao;
+			
+			var dao:Dao= new Dao("addPurchaseSrv","http",this);
+			
+			private function save():void {
+				
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Form name="Nueva Compra">
+		<s:FormItem label="Fecha">
+			<mx:DateField id="date" formatString="DD/MM/YY"/>
+		</s:FormItem>
+				
+		<s:FormItem label="Descripcion">
+			<s:TextInput id="text" maxChars="140" width="100%"/>
+		</s:FormItem>
+		<s:FormItem label="Pagos">
+			<s:NumericStepper value="1" minimum="1"/>
+		</s:FormItem>
+		<s:FormItem>
+			<s:Button label="Guardar" click="save();"/>
+		</s:FormItem>
+	</s:Form>
+</s:Group>

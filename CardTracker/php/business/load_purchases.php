@@ -62,7 +62,7 @@ require_once $functions_path . '/database_functions.php';
 								.")";
 				if (mysql_query ($query)) {
 					$rvar_nId=mysql_insert_id($link);
-					print('<response codigo="1">Se cargo el Evento con el id '.$rvar_nId.' id='.$rvar_nId.'</response>'. $NL);
+					print('<response code="1">Se cargo la compra con el id '.$rvar_nId.'</response>'. $NL);
 				} else {
 					print ('<error>MySQL error: '.mysql_error().'</error>'.$NL);;
 				}	
@@ -128,48 +128,8 @@ require_once $functions_path . '/database_functions.php';
 				}
 				
 				break;
-			case "EDIT":
-				$query="update eventos set "
-								."  event_id = ".$rvar_nId.""
-								." , event_flex_name = '".$rvar_cFlexName."'"
-								." , event_ent_id = '".$rvar_nIdEntidad."'"
-								." , event_php_name = '".$rvar_cPHPName."'"
-								." , event_apl_id = ".$rvar_nIdAplicacion.""
-								." , event_ent_schema = '".$rvar_cSchema."'"
-								." where "
-								."  event_id = ".$rvar_nId.""
-								."  and  event_ent_id = '".$rvar_nIdEntidad."'"
-								."  and  event_apl_id = ".$rvar_nIdAplicacion.""
-								."  and  event_ent_schema = '".$rvar_cSchema."'"
-				;
-				$result_update= mysql_query ($query);
-				$affected_rows = mysql_affected_rows();
-			    mysql_free_result($result_update);
-				if (!$result_update || $rvar_nId=="" || $affected_rows < 1) {
-					print ('<respuesta><error texto="Hubo un problema al actualizar LA ENTIDAD ('.$rvar_nId.') '.mysql_error().'" '.
-									' affected_rows="'.$affected_rows.'" '.
-									'/></respuesta>'.$NL);
-					print ('<query>'.$query.'</query>'.$NL);
-				} else {
-					print('<respuesta codigo="1" mensaje="Se actualizaron los datos de LA ENTIDAD '.$rvar_nIdCampo.'"/>'. $NL);
-				}					
-				break;
-			case "DELETE":
-				$query="delete from eventos  " 
-								." where "
-								."  event_id = ".$rvar_nId.""
-								."  and  event_ent_id = '".$rvar_nIdEntidad."'"
-								."  and  event_apl_id = ".$rvar_nIdAplicacion.""
-								."  and  event_ent_schema = '".$rvar_cSchema."'"
-				;
-				if (!mysql_query ($query) || $rvar_nId="" || mysql_affected_rows() < 1) {
-					print ('<respuesta><error texto="Hubo un problema al borrar. '.mysql_error().'"/></respuesta>'.$NL);;
-				} else {
-					print('<respuesta codigo="1" mensaje="Se borraron los datos '.$rvar_nId.'"/>'. $NL);
-				}	
-				break;
 			default:
-				print('<respuesta><error texto="La acción '.$rvar_cAction.' no es reconocida"/></respuesta>'. $NL);
+				print('<response code="0">La acción '.$rvar_cAction.' no es reconocida</response>'. $NL);
 				break;
 		} 
 	} else {

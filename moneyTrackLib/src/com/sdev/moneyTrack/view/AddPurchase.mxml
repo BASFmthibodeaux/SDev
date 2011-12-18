@@ -5,8 +5,12 @@
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
+	<fx:Metadata>
+		[Event(name="dataLoaded", type="*")]
+	</fx:Metadata>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	
 	</fx:Declarations>
 	
 	<fx:Script>
@@ -18,6 +22,24 @@
 			public var purchasedBy:String;
 			
 			private var dao:Dao= new Dao("addPurchaseSrv","http",this);
+			
+			private function validate():void {
+				
+				if (date.text==null || date.text == "") {
+					date.setFocus();
+					return;
+				}
+				if (text.text==null || text.text == "") {
+					text.setFocus();
+					return;
+				}
+				if (value.text==null || value.text == "") {
+					value.setFocus();
+					return;
+				}
+				
+				save();
+			}
 			
 			private function save():void {
 				var sp:ServiceParameter = new ServiceParameter();
@@ -41,6 +63,8 @@
 				this.payments.value = 1;
 				date.text="";
 				this.currentState="default";
+				this.errorString="";
+				this.dispatchEvent(new Event("dataLoaded"));
 			}
 			private function dataError(event:*=null):void {
 				this.currentState="default";
@@ -54,25 +78,25 @@
 		<s:State name="running"/>
 	</s:states>
 	
-	<s:Form name="Nueva Compra">
+	<s:Form name="Nueva Compra" defaultButton="{saveButton}">
 		<s:alpha.running>0.5</s:alpha.running>
 		<s:enabled.running>false</s:enabled.running>
 		
-		<s:FormItem label="Fecha">
-			<mx:DateField id="date" formatString="DD/MM/YY"/>
+		<s:FormItem label="Fecha" required="true">
+			<mx:DateField id="date" formatString="YYYY-MM-DD" width="100"/>
 		</s:FormItem>
 				
-		<s:FormItem label="Descripcion">
+		<s:FormItem label="Descripcion" required="true">
 			<s:TextInput id="text" maxChars="140" width="100%"/>
 		</s:FormItem>
-		<s:FormItem label="Valor">
+		<s:FormItem label="Valor" required="true">
 			<s:TextInput id="value" restrict="0-9." width="100%"/>
 		</s:FormItem>
 		<s:FormItem label="Pagos">
-			<s:NumericStepper id="payments" value="1" minimum="1"/>
+			<s:NumericStepper id="payments" value="1" minimum="1" maximum="60"/>
 		</s:FormItem>
 		<s:FormItem>
-			<s:Button label="Guardar" click="save();"/>
+			<s:Button id="saveButton" label="Guardar" click="validate();"/>
 		</s:FormItem>
 	</s:Form>
 </s:Group>

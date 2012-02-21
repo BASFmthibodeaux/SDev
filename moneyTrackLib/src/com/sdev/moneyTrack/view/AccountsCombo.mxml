@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view:CoreDropDownList xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="com.basf.core.view.*" serviceName="accountsListSrv" serviceType="http" 
+				creationComplete="initControl();"
+				loadOnCreationComplete="false"
+				labelFunction="comboBox_labelFunc"
+				dataProviderNode="accounts.account" 
+				dataRetrieved="onDataRetrieved()">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.basf.core.vo.ServiceParameter;
+			
+			import mx.utils.StringUtil;
+			
+			private function initControl():void {
+				this.load();
+			}
+			
+			private function load():void {
+				var sp:ServiceParameter = new ServiceParameter();
+				sp.parametros.cHash="NONE";
+				this.loadData(sp);
+				this.currentState="running";
+			}
+			
+			private function onDataRetrieved(event:*=null):void{
+				this.errorString="";
+				if (this.serviceResult.accounts!=null) {
+					if (this.serviceResult.accounts.error!=null) {
+						this.errorString = this.serviceResult.accounts.error;
+					}
+				}
+				this.currentState="default";
+			}
+			private function comboBox_labelFunc(item:Object):String {
+				return StringUtil.substitute("{0} {1}", item.bank, item.card_type);
+			}
+		]]>
+	</fx:Script>
+	<view:states>
+		<s:State name="default"/>
+		<s:State name="running"/>
+	</view:states>
+	
+	<view:alpha.running>0.5</view:alpha.running>
+	<view:enabled.running>false</view:enabled.running>
+
+</view:CoreDropDownList>

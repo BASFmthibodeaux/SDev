@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="true" version="3">
+  <includeClasses>
+    <classEntry path="MobileExamples"/>
+    <classEntry path="spark.components.FocusFormItemRenderer"/>
+    <classEntry path="spark.components.ListForm"/>
+    <classEntry path="spark.components.ListFormItemRenderer"/>
+    <classEntry path="spark.components.ToggleButtonFormItemRenderer"/>
+    <classEntry path="spark.layouts.MultiDPIHorizontalLayout"/>
+    <classEntry path="spark.layouts.MultiDPIVerticalLayout"/>
+    <classEntry path="spark.skins.mobile.ListFormSkin"/>
+    <classEntry path="spark.skins.mobile.PanelSkin"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests>
+    <namespaceManifestEntry manifest="../manifest.xml" namespace="library://ns.adobe.com/flex/spark"/>
+  </namespaceManifests>
+</flexLibProperties>

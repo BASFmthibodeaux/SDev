@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cairngorm:ServiceLocator xmlns:fx="http://ns.adobe.com/mxml/2009"  xmlns="*" 
+						  xmlns:cairngorm="com.adobe.cairngorm.business.*" xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.sdev.moneyTrackMobile.model.ModelLocator;
+			[Bindable]
+			private var model:ModelLocator = ModelLocator.getInstance();
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		
+		<mx:HTTPService id="configSrv" 
+						url="configuracion.xml" showBusyCursor="true"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+		
+		<mx:HTTPService id="cardsListSrv" 
+						url="http://localhost/php/view/list_cards.php" showBusyCursor="false"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+	
+		<mx:HTTPService id="accountsListSrv" 
+						url="http://localhost/php/view/list_accounts.php" showBusyCursor="false"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+	
+		<mx:HTTPService id="addPurchaseSrv" 
+						url="http://localhost/php/business/load_purchases.php" showBusyCursor="false"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+		
+		<mx:HTTPService id="purchasesListSrv" 
+						url="http://localhost/php/view/list_purchases.php" showBusyCursor="false"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+		
+		<mx:HTTPService id="graphSrv" 
+						url="http://localhost/php/view/graph.php" showBusyCursor="false"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+	
+		<mx:HTTPService id="activityMonitorSrv" 
+						showBusyCursor="false"
+						method="POST"
+						url="{model.accesoBaseDatos2}/am.get_activity_log"
+						result="event.token.resultHandler(event);"
+						fault="event.token.faultHandler (event);"/>
+
+	</fx:Declarations>
+
+</cairngorm:ServiceLocator>

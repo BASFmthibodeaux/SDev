@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Overview" xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				vsMain.selectedIndex=1;
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Metadata>
+		[Event(name="creditCardSelected", type="*")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="inDetail"/>
+	</s:states>
+	
+	<s:transitions>
+		<s:Transition fromState="*" toState="*">
+			<s:Fade duration="300" targets="{[generalButton]}"/>
+		</s:Transition>
+	</s:transitions>
+	<s:Group  width="100%" height="100%" xmlns:view="com.sdev.moneyTrack.view.*" creationComplete="showGeneral()">
+		<s:layout>
+			<s:VerticalLayout paddingLeft="20" paddingTop="30" paddingRight="20" paddingBottom="20"/>
+		</s:layout>
+		
+		<fx:Script>
+			<![CDATA[
+				private function loadPurchases():void {
+					if (cards.selectedItem!=null) {
+						this.selectedItem = cards.selectedItem;
+						this.dispatchEvent(new Event("creditCardSelected"));
+						
+					}
+				}
+				[Bindable]
+				public var selectedItem:Object;
+				
+				private function showChart():void {
+					if (cards.selectedItem != null) {
+						
+						if (graph!=null) {
+							graph.creditCard = cards.selectedItem.acc_id;
+							graph.title = cards.selectedItem.bank + " - "+cards.selectedItem.card_type;
+							graph.load();
+							this.currentState = "inDetail";
+							vsMain.selectedIndex=0;	
+						}
+					}
+				}
+				private function showGeneral():void {
+					graph.accountId = -1;
+					graph.title = "General";
+					graph.creditCard = -1;
+					graph.load();
+					this.currentState='default';
+				}
+			]]>
+		</fx:Script>
+		
+		<s:Label text="MoneyTrack" fontSize="24" fontWeight="bold" color="#2998FF"/>
+		<s:Spacer height="20"/>
+		<s:Group width="100%">
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:Label text="Pagos a realizar" fontSize="16" fontWeight="bold"/>
+			<mx:ViewStack id="vsMain" width="100%" height="100%">
+				<s:NavigatorContent width="100%" height="100%">
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+					<view:Graph id="graph" width="100%" height="100%"/>
+					<s:Spacer height="20"/>
+					<mx:LinkButton id="generalButton" label="ver grafico de situacion general" includeIn="inDetail" click="showGeneral()"/>
+					<mx:LinkButton label="seleccionar tarjeta" click="button1_clickHandler(event)" />
+				</s:NavigatorContent>
+				<s:NavigatorContent width="100%" height="100%">
+					<view:Accounts id="cards" width="100%" click="showChart();"/>
+				</s:NavigatorContent>
+			</mx:ViewStack>
+		</s:Group>
+	</s:Group>
+</s:View>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" title="Agregar compras">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			private function initControl():void {
+			}
+			
+			protected function cards_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if (cards.selectedItem!=null) {
+					this.currentState="cardSelected";
+					purchases.creditCard=cards.selectedItem.cc_id;
+					purchases.limit = 10;
+					purchases.load();
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="cardSelected"/>
+	</s:states>
+	
+	<s:Group  width="100%" height="100%" xmlns:view="com.sdev.moneyTrack.view.*" creationComplete="initControl();">
+		<s:layout>
+			<s:VerticalLayout paddingLeft="20" paddingTop="30" paddingRight="20" paddingBottom="20"/>
+		</s:layout>
+			
+		<s:Label text="MoneyTrack - Agregar datos" fontSize="24" fontWeight="bold"/>
+		<view:Cards id="cards" width="100%" click="cards_clickHandler(event)"/>
+		<view:AddPurchase creditCardID="{cards.selectedItem.cc_id}" purchasedBy="{cards.selectedItem.holder}" dataLoaded="cards_clickHandler(null)" enabled="false" enabled.cardSelected="true"/>
+		<mx:Label text="Ultimas 10 compras"/>
+		<view:Purchases id="purchases" width="100%" height="100%"/>
+		
+	</s:Group>
+</s:View>

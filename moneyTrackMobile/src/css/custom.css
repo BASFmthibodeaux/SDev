@@ -1,0 +1,50 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+
+@font-face { 
+	src: url("HelveticaNeueLTStd-Md.ttf"); 
+	fontFamily: Helvetica; 
+	embedAsCFF:true ; 
+	advancedAntiAliasing: true; 
+}
+
+@font-face { 
+	src: url("HelveticaNeueLTStd-Md.ttf"); 
+	fontFamily: Helvetica2; 
+	embedAsCFF:false ; 
+}
+
+
+.Title {
+	fontFamily: Helvetica;
+}
+s|Label {
+	fontFamily: Helvetica;
+}
+s|DataGrid {
+	fontFamily: Helvetica;
+	fontSize:12;
+}
+
+s|Button {
+	fontFamily: Helvetica;
+	fontSize:12;
+}
+
+s|DropDownList {
+	fontFamily: Helvetica;
+	fontSize:12;
+}
+
+s|TextInput {
+	fontFamily: Helvetica;
+	fontSize:12;
+}
+
+mx|LinkButton {
+	fontFamily: Helvetica2;
+	fontSize:12;
+}

@@ -15,7 +15,7 @@
 
 	<fx:Script>
 		<![CDATA[
-			private function loadPurchases():void {
+			private function loadPurchases():void { 
 				if (cards.selectedItem!=null) {
 					this.selectedItem = cards.selectedItem;
 					this.dispatchEvent(new Event("creditCardSelected"));
@@ -57,6 +57,7 @@
 	</s:transitions>
 	
 	<s:Label text="MoneyTrack" fontSize="24" fontWeight="bold"/>
+
 	<view:Accounts id="cards" width="100%" height="100%" click="showChart();"/>
 	<s:Spacer height="20"/>
 	<s:Label text="Pagos a realizar" fontSize="16" fontWeight="bold"/>

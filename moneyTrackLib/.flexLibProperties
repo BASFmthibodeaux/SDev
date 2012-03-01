@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+<flexLibProperties includeAllClasses="false" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-    <classEntry path="com.sdev.moneyTrack.view.Cards"/>
+    <classEntry path="com.sdev.moneyTrack.view.Accounts"/>
     <classEntry path="com.sdev.moneyTrack.view.AddPurchase"/>
+    <classEntry path="com.sdev.moneyTrack.view.Cards"/>
+    <classEntry path="com.sdev.moneyTrack.view.Graph"/>
+    <classEntry path="com.sdev.moneyTrack.view.Purchases"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

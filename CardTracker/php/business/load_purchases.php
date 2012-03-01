@@ -45,6 +45,11 @@ require_once $functions_path . '/database_functions.php';
 
 		switch ($rvar_cAction) {
 			case "ADD":
+
+				if ($rvar_value_type == "MONTHLY_PAYMENT") {
+					$rvar_value = $rvar_value * $rvar_payments;
+				}
+
 				$query="insert into purchases (" 
 								." pur_date "
 								.", pur_purchased_by "

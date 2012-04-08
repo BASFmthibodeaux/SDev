@@ -22,6 +22,21 @@ require_once $functions_path . '/connect.php';
 require_once $functions_path . '/database_functions.php';
 
 
+/* PARAMETROS
+
+	cHash			hash de seguridad
+	cAction			accion a realizar (ADD)
+	value_type		tipo de valor que esta recibiendo (valor cuota o valor total)
+	
+	-- campos:
+	date
+	purchased_by	
+	credit_card
+	description
+	value
+	payments
+	
+*/
 
 	header('Content-type: text/xml');
 	header('Pragma: public');

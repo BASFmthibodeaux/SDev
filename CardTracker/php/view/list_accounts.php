@@ -27,6 +27,11 @@ require_once $functions_path . '/connect.php';
 
     import_request_variables("gP","rvar_");
 
+/* PARAMETROS
+
+	cHash			hash de seguridad
+	
+*/
 
 	$NL = chr(13);
 	$link=connect_database($main_database);

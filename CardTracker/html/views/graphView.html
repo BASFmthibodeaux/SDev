@@ -20,7 +20,10 @@
         <script src="../../js/kendo.combobox.js"></script>
         <script src="../../js/kendo.popup.js"></script>
         <script src="../../js/kendo.chart.js"></script>
-        
+
+		<script type="text/javascript" src="http://use.typekit.com/pht2fqi.js"></script>
+		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>        
+
     </head>
 	<body>
 
@@ -29,7 +32,7 @@
 		    	var ds = new kendo.data.DataSource({ 
 		    			transport: {
 		    				read: {
-		    					url:"http://10.248.20.59:8080/php/view/graph.php",
+		    					url:"http://localhost:8080/php/view/graph.php",
 		    					data: {
 		    						cHash: "nada1"
 		    					}
@@ -97,7 +100,7 @@
 		    	var ds = new kendo.data.DataSource({ 
 		    			transport: {
 		    				read: {
-		    					url:"http://10.248.20.59:8080/php/view/list_accounts.php",
+		    					url:"http://localhost:8080/php/view/list_accounts.php",
 		    					data: {
 		    						cHash: "nada1"
 		    					}
@@ -132,7 +135,7 @@
 
 
 
-
+		<h1>MoneyTrack</h1>
 		<input id="comboBox" style="width:300px"/> 
 		<div id="graphDiv">
 			<div id="graph"/>

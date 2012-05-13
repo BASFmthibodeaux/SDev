@@ -17,6 +17,20 @@
  * -----------------------------------------------------
  *  
 */
+
+
+/* PARAMETROS
+
+	cHash			hash de seguridad
+	type			PAYMENTS or blank / 
+	credit_card		
+	account
+	period_from
+	
+*/
+
+
+
 require_once '../global/global_variables.php';
 require_once $functions_path . '/connect.php';
 

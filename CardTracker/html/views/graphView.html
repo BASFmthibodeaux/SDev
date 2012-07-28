@@ -22,8 +22,9 @@
         <script src="../../js/kendo.chart.js"></script>
 
 		<script src="../../js/model/GlobalVariables.js"></script>
-		<script src="../../js/views/graph.js"></script>
-
+		<script src="../../js/views/graphAccountEvolution.js"></script>
+		<script src="../../js/views/comboAccounts.js"></script>
+		
 		<script type="text/javascript" src="http://use.typekit.com/pht2fqi.js"></script>
 		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>        
 
@@ -32,10 +33,11 @@
 
 	    <script>
 
-    		var chart = new cardChart();
-
-
-			function changeValue(event) {
+    		var chart = new graphAccountEvolution();
+    		var combo = new comboAccounts();
+			
+			
+			function onComboAccountsChangeValue(event) {
 				
 				var dropdownlist = $("#comboBox").data("kendoDropDownList");
 
@@ -51,49 +53,23 @@
 	    		
 	    		
 	    		chart.connectionString = ConnectionString;
+	    		chart.destinationDiv = "#graph";
 	    		
+	    		combo.connectionString = ConnectionString;
+	    		combo.destinationDiv = "#comboBox"
+	    			    		
                 setTimeout(function() {
                     // Initialize the chart with a delay to make sure
                     // the initial animation is visible
                     chart.createChart();
-
+                    combo.createCombo();
+					
                     $(document).bind("kendo:skinChange", function(e) {
                         chart.createChart();
+                        combo.createCombo();
                     });
                 }, 400);
                     		    	
-		    	var ds = new kendo.data.DataSource({ 
-		    			transport: {
-		    				read: {
-		    					url:"http://localhost:8080/php/view/list_accounts.php",
-		    					data: {
-		    						cHash: "nada1"
-		    					}
-		    				},
-		    			},
-	    				schema: {
-	    					type: "xml",
-	    					data: "/accounts/account",
-	    					model: {
-	    						fields: {
-	    							acc_id: "acc_id/text()",
-	    							bank: "bank/text()",
-	    							card_type: "card_type/text()"
-	    						}
-	    					}
-	    				}
-		    		}
-		    	);
-
-	            
-	            $("#comboBox").kendoDropDownList({
-	            	dataSource: ds,
-			        dataTextField: "bank",
-        			dataValueField: "acc_id",
-        			suggest: true,
-        			template: '<div width="300">${ data.bank } / <b>${ data.card_type }</b></div>' ,
-        			change: changeValue
-	            });
 	    	});
 	    	
 	   

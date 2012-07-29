@@ -42,13 +42,24 @@ function comboAccounts() {
 		    		}
 		    	);
 
+		    	if (this.destinationDiv == "" || this.destinationDiv == undefined) {
+		    		alert ("WARNING: comboAccounts.js - destinationDiv is not defined.");
+		    	}
 				
+		    	if ($(this.destinationDiv) == undefined) {
+		    		alert ("WARNING: comboAccounts.js -can't find "+this.destinationDiv+" div tag in HTML file.");
+		    	}
+		    	
+		    	if (onComboAccountsChangeValue == undefined) {
+		    		alert ("WARNING: comboAccounts.js -onComboAccountsChangeValue function in HTML file is missing.");
+		    	}
+		    	
                 $(this.destinationDiv).kendoDropDownList({
 	            	dataSource: ds,
 			        dataTextField: "bank",
         			dataValueField: "acc_id",
         			suggest: true,
-        			template: '<div width="300">${ data.bank } / <b>${ data.card_type }</b></div>' ,
+        			template: '<div width="300">${ data.bank } / <b>${ data.card_type }</b></div>', 
         			change: onComboAccountsChangeValue
 	            });
             };

@@ -85,57 +85,22 @@
    <script>
 
 //    		var chart = new graphAccountEvolution();
-    		var combo = new comboAccounts();
+	    	var combo = new comboAccounts();
     		var comboPagos = new comboPagos();
-			
-			
-			function onComboAccountsChangeValue(event) {
-				
-				var dropdownlist = $("#comboBox").data("kendoDropDownList");
-				var dataItem = dropdownlist.dataItem();
 
-				dropdownlist.text(dataItem.data.card_type);
-				//alert(dropdownlist.value() );
-				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
-				
-//				chart.account = dropdownlist.value();
-//				chart.account = event.item.value;
-//				chart.createChart();
-				
-			}
-
-			function onComboPagosChange(event) {
-				
-				var numericTextBox = $("#comboPagos").data("kendoNumericTextBox");
-
-				if (numericTextBox.value() > 1 && $("#valor").val() > 0 ) {
-		
-					$("#resultadoCuotas").html ("<p>" + numericTextBox.value()+ " pagos de $"+(Math.round($("#valor").val() / numericTextBox.value())) + "</p>" ); 
-					
-				}
-			}
-
-
-	    	//Cuando la pagina se haya creado
+    		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
-	    		
-	    		
 
-				//chart.connectionString = ConnectionString;
-	    		//chart.destinationDiv = "#graph";
-				
 	    		//ConnectionString esta definido en GlobalVariables.js
 	    		combo.connectionString = ConnectionString;
 	    		combo.destinationDiv = "#comboBox"
 	    		comboPagos.destinationDiv = "#comboPagos";
-    			$("#datepicker").kendoDatePicker();
+    			$("#datepicker").kendoDatePicker({
+    				format: "dd/MM/yyyy"
+    			});
 
 	    			    		
                 setTimeout(function() {
-                    // Initialize the chart with a delay to make sure
-                    // the initial animation is visible
-  //                  chart.createChart();
-
                     //* inicializar combo de cuentas *//
                     combo.createCombo();
     				var dropdownlist = $("#comboBox").data("kendoDropDownList");
@@ -151,8 +116,31 @@
                 }, 400);
                     		    	
 	    	});
-	    	
-	   
+
+    		
+    		
+    		/** FUNCIONES ---------------------------------------------   **/
+
+			
+			function onComboAccountsChangeValue(event) {
+				
+				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
+
+				dropdownlist.text(dataItem.data.card_type);
+				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
+				
+			}
+
+			function onComboPagosChange(event) {
+				
+				var numericTextBox = $("#comboPagos").data("kendoNumericTextBox");
+
+				if (numericTextBox.value() > 1 && $("#valor").val() > 0 ) {
+					$("#resultadoCuotas").html ("<p>" + numericTextBox.value()+ " pagos de $"+(Math.round($("#valor").val() / numericTextBox.value())) + "</p>" ); 
+				}
+			}
+
 	    </script>
 
 
@@ -160,13 +148,20 @@
 
     <div class="container">
 
-      <!-- Main hero unit for a primary marketing message or call to action -->
+      <!-- Main hero unit for a primary marketing message or call to action
       <div class="hero-unit">
         <h1>Agrega esos tickets!</h1>
         <p>Solamente hay que mepezar uno a la vez, hasta que se termine, es la parte más molesta, pero saber qué es lo que estás gastando implica este paso! Ánimo!</p>
         <p><a class="btn btn-primary btn-large">Dame fuerzas</a></p>
       </div>
-
+		 -->
+		 
+	  <div class="row">
+	  	<div class="span4">
+	  		<h6>Agregar tickets</h6>
+	  		<p>Segui estos simples pasos y vas a sacarte de encima la parte más fea del trabajo rápidamente!</p>
+	  	</div>
+	  </div>
       <!-- Example row of columns -->
       <div class="row">
         <div class="span4">
@@ -184,7 +179,7 @@
         <div class="span4">
           <h2>Cuánto?</h2>
           <p>Ouch.</p>
-          <p><input id="valor" placeholder="valor"  style="width:100px"/> en <input id="comboPagos" style="width:70px"/>     pagos.</p>
+          <p><input id="valor" placeholder="valor"  style="width:100px" onchange="onComboPagosChange();"/> en <input id="comboPagos" style="width:70px"/>     pagos.</p>
 		  <div id="resultadoCuotas" style="color:#999999"></div>
           <p><a class="btn btn-large" onclick="">Cargar</a></p>
         </div>
@@ -192,7 +187,7 @@
 	<br><br>
 	 <div class="row">
 	 	<div class="span4">
-	 		<h3>Últimos movimientos</h3>
+	 		<h6>Últimos movimientos</h6>
 	 		<p>grilla</p>
 	 	</div> 
 	 </div>

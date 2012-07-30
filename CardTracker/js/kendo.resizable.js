@@ -1,13 +1,12 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -28,11 +27,9 @@
             Widget.fn.init.call(that, element, options);
 
             that.orientation = that.options.orientation.toLowerCase() != VERTICAL ? HORIZONTAL : VERTICAL;
-            that._positionMouse = that.orientation == HORIZONTAL ? "pageX" : "pageY";
+            that._positionMouse = that.orientation == HORIZONTAL ? "x" : "y";
             that._position = that.orientation == HORIZONTAL ? "left" : "top";
             that._sizingDom = that.orientation == HORIZONTAL ? "outerWidth" : "outerHeight";
-
-            that.bind([RESIZE,RESIZEEND,START], that.options);
 
             new ui.Draggable(element, {
                 distance: 0,
@@ -42,6 +39,12 @@
                 dragend: proxy(that._stop, that)
             });
         },
+
+        events: [
+            RESIZE,
+            RESIZEEND,
+            START
+        ],
 
         options: {
             name: "Resizable",
@@ -65,7 +68,7 @@
                 hint = that.options.hint,
                 el = $(e.currentTarget);
 
-            that._initialMousePosition = e[that._positionMouse];
+            that._initialMousePosition = e[that._positionMouse].location;
             that._initialElementPosition = el.position()[that._position];
 
             if (hint) {
@@ -90,7 +93,7 @@
                 handle = $(e.currentTarget),
                 maxPosition = that._maxPosition,
                 minPosition = that._minPosition,
-                currentPosition = that._initialElementPosition + (e[that._positionMouse] - that._initialMousePosition),
+                currentPosition = that._initialElementPosition + (e[that._positionMouse].location - that._initialMousePosition),
                 position;
 
             position = minPosition !== undefined ? Math.max(minPosition, currentPosition) : currentPosition;
@@ -118,3 +121,4 @@
     kendo.ui.plugin(Resizable);
 
 })(jQuery);
+;

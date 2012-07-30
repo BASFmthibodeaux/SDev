@@ -1,140 +1,189 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
+/**
+ * @fileOverview Provides a TabStrip implementation which can be used to display a collection of tabs with associated
+ * content
+ */
 
 (function ($, undefined) {
     /**
+     *
      * @name kendo.ui.TabStrip.Description
      *
      * @section
-     *  <p>
-     *      The TabStrip widget displays a collection of tabs with associated tab content.
-     *      TabStrips are composed of an HTML unordered list of items, which represent the tabs,
-     *      and a collection of HTML divs, which define the tab content.
-     *  </p>
-     *  <h3>Getting Started</h3>
+     * <p>
+     *  A <strong>TabStrip</strong> displays a collection of tabs with associated content. It is composed of an
+     *  unordered list of items - representing tabs - and a collection of div elements, which contain the content for
+     *  each tab.
+     * </p>
+     * <h3>Getting Started</h3>
      *
-     * @exampleTitle In a HTML div, create an HTML unordered list for tabs, HTML divs for content
+     * @exampleTitle Create an unordered list for tabs with associated div elements for content
      * @example
-     *  <div id="tabstrip">
-     *      <ul>
-     *          <li>First Tab</li>
-     *          <li>Second Tab</li>
-     *      </ul>
-     *      <div>First Tab Content</div>
-     *      <div>Second Tab Content</div>
-     *  </div>
+     * <div id="tabStrip">
+     *     <ul>
+     *         <li>First tab</li>
+     *         <li>Second tab</li>
+     *     </ul>
+     *     <div>First tab content</div>
+     *     <div>Second tab content</div>
+     * </div>
      *
-     * @exampleTitle Initialize the TabStrip using a jQuery selector to target the outer div
-     * @example
-     * var tabStrip = $("#tabstrip").kendoTabStrip();
      * @section
-     *  <p>
-     *      Tabs do not have to have content. If a tab should have no content, it is safe to omit the HTML div.
-     *  </p>
-     *  <h3>Loading TabStrip content with Ajax</h3>
-     *  <p>
-     *      While any valid technique for loading Ajax content can be used, TabStrip provides
-     *      built-in support for asynchronously loading content from URLs. These URLs should
-     *      return HTML fragments that can be loaded in a TabStrip content area.
-     *  </p>
+     * <p>
+     *  Initialization of a <strong>TabStrip</strong> should occur after the DOM is fully loaded. It is recommended
+     *  that initialization the <strong>TabStrip</strong> occur within a handler is provided to $(document).ready().
+     * </p>
+     *
+     * @exampleTitle Initialize a TabStrip using a selector within $(document).ready()
+     * @example
+     * $(document).ready(function() {
+     *     $("#tabStrip").kendoTabStrip();
+     * });
+     *
+     * @exampleTitle Initialize the TabStrip using JSON data object
+     * @example
+     * $(document).ready(function() {
+     *     $("#tabstrip").kendoTabStrip({
+     *         dataTextField: "text",
+     *         dataContentField: "content",
+     *         dataUrlField: "url",
+     *         dataImageUrlField: "imageUrl",
+     *         dataSpriteCssClass: "spriteCssClass",
+     *         dataContentUrlField: "contentUrl",
+     *         dataSource:
+     *         [{
+     *             text: "Item 1",
+     *             url: "http://www.kendoui.com"               // Link URL if navigation is needed, optional.
+     *         },
+     *         {
+     *             text: "Item 2",
+     *             content: "text"                             // Content for the content element
+     *         },
+     *         {
+     *             text: "Item 3",
+     *             contentUrl: "partialContent.html"           // From where to load the item content
+     *         },
+     *         {
+     *             text: "Item 4",
+     *             imageUrl: "http://www.kendoui.com/test.jpg" // Item image URL, optional.
+     *         },
+     *         {
+     *             text: "Item 5",
+     *             spriteCssClass: "imageClass3"               // Item image sprite CSS class, optional.
+     *         }]
+     *     });
+     * });
+     *
+     * @section
+     * <p>
+     *  The tabs of a <strong>TabStrip</strong> are not required to have content. Should a tab have no content, it is
+     *  safe to omit its associated div.
+     * </p>
+     * <h3>Loading TabStrip content with AJAX</h3>
+     * <p>
+     *  While any valid technique for loading AJAX content can be used, a <strong>TabStrip</strong> supports loading
+     *  content from URLs in an asynchronous manner. These URLs should return HTML fragments that can be loaded in a
+     *  TabStrip content area. Content DIVs are not required and if present should be completely empty for AJAX loading
+     *  to work.
+     * </p>
+     *
      * @exampleTitle Loading Tab content asynchronously
      * @example
-     *  <!-- Define the TabStrip HTML -->
-     *  <div id="tabstrip">
-     *      <ul>
-     *          <li>First Tab</li>
-     *          <li>Second Tab</li>
-     *      </ul>
-     *      <div> </div>
-     *      <div> </div>
+     * <div id="tabstrip">
+     *     <ul>
+     *         <li>First Tab</li>
+     *         <li>Second Tab</li>
+     *     </ul>
+     *     <div></div>
+     *     <div></div>
      *  </div>
-     * @exampleTitle
+     *
+     * @exampleTitle Initialize TabStrip and configure one tab with async content loading
      * @example
-     *  //Initialize TabStrip and configure one tab with async content loading
-     *  $(document).ready(function(){
-     *      $("#tabstrip").kendoTabStrip({
-     *        contentUrls: [null, "html-content-snippet.html"]
-     *      });
+     * $(document).ready(function(){
+     *     $("#tabstrip").kendoTabStrip({
+     *         contentUrls: [null, "html-content-snippet.html"]
+     *     });
      *  });
      *
      * @section
-     *  <h3>Dynamically configure TabStrip tabs</h3>
-     *  <p>
-     *      The TabStrip API provides several methods for dynamically adding or removing Tabs. To add tabs,
-     *      provide the new item as a JSON object along with a reference item that will be used to determine
-     *      the placement in the TabStrip.
-     *  <p>
-     *  <br/>
-     *  <p>
-     *      A reference item is simply a target Tab HTML element that already exists in the TabStrip. Any valid
-     *      jQuery selector can be used to obtain a reference to the target item. For examples, see the <a href="../tabstrip/api.html" title="TabStrip  API demos">TabStrip  API demos</a>.
-     *  </p>
-     *  <br/>
-     *  <p>
-     *      Removing an item only requires a reference to the target element that should be removed.
-     *  </p>
-     * @exampleTitle Dynamically add a new Tab
-     * @example
-     *  var tabstrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+     * <h3>Dynamically Configure TabStrip Tabs</h3>
+     * <p>
+     *  The <strong>TabStrip</strong> API provides several methods for dynamically adding or removing tabs. To add
+     *  tabs, provide the new item as a JSON object along with a reference item that will be used to determine the
+     *  placement in the <strong>TabStrip</strong>. Note: append() does not require a reference item.
+     * <p>
+     * <p>
+     *  A reference item is simply a target DOM element of a tab that already exists in the TabStrip. Any valid
+     *  selector may be used to obtain a reference to the target item.
+     * </p>
+     * <p>Removing an item requires a reference to the target element.</p>
      *
-     *  tabstrip.insertAfter(
-     *      { text: "New Tab" },
-     *      tabstrip.tabGroup.children("li:last")
-     *  );
+     * @exampleTitle Dynamically add a new tab
+     * @example
+     * var tabStrip = $("#tabStrip").data("kendoTabStrip");
+     * tabStrip.insertAfter(
+     *     { text: "New Tab" },
+     *     tabstrip.tabGroup.children("li:last")
+     * );
+     *
      * @section
-     *  <h3>Selecting a Tab on Initial Load</h3>
-     *  <p>
-     *      A common desire with TabStrips is to select a tab and display its associated content on initial load. There are two ways to accomplish this with TabStrip:
-     *  </p>
-     *  <ol>
-     *      <li>Manually add the "k-state-active" class to the Tab that should be selected</li>
-     *      <li>Use the TabStrip API to target and select a Tab</li>
-     *  </ol>
-     *  <p>
-     *      Both approaches produce the same end result. The first approach requires no additional JavaScript, but does require a small amount of HTML configuration.
-     *  </p>
+     * <h3>Selecting a Tab on Initial Load</h3>
+     * <p>
+     *  It is possible to select a tab and display its associated content upon its initial load. There are two (2) ways
+     *  to accomplish this task:
+     * </p>
+     * <ol>
+     *  <li>Add a "k-state-active" class to the DOM element of the tab</li>
+     *  <li>Use select() to target and select a tab either by selector or index</li>
+     * </ol>
+     * <p>Both approaches produce the same result.</p>
      *
      * @exampleTitle Selecting a default tab manually using HTML
      * @example
-     *  <div id="tabstrip">
-     *      <ul>
-     *          <li class="k-state-active">First Tab</li>
-     *          <li>Second Tab</li>
-     *      </ul>
-     *      <div> </div>
-     *      <div> </div>
-     *  </div>
-     * @exampleTitle
-     * @example
-     *  //Initialize the TabStrip
-     *  $(document).ready(function(){
-     *      $("#tabstrip").kendoTabStrip();
-     *  });
-     * @exampleTitle Selecting a default tab using the TabStrip API
-     * @example
-     *  <div id="tabstrip">
-     *      <ul>
-     *          <li>First Tab</li>
-     *          <li>Second Tab</li>
-     *      </ul>
-     *      <div> </div>
-     *      <div> </div>
-     *  </div>
+     * <div id="tabstrip">
+     *     <ul>
+     *         <li class="k-state-active">First Tab</li>
+     *         <li>Second Tab</li>
+     *     </ul>
+     *     <div></div>
+     *     <div></div>
+     * </div>
      *
-     * @exampleTitle
+     * @exampleTitle Initialize a TabStrip and select first tab via select(element)
      * @example
-     *  //Initialize the TabStrip and select first tab
-     *  $(document).ready(function(){
-     *      var tabstrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
-     *      tabstrip.select(tabstrip.tabGroup.children("li:first"));
-     *  });
+     * $(document).ready(function(){
+     *     var tabstrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+     *     tabstrip.select(tabstrip.tabGroup.children("li:first"));
+     * });
+     *
+     * @exampleTitle Initialize a TabStrip and select first tab via select(index)
+     * @example
+     * $(document).ready(function(){
+     *     var tabstrip = $("#tabstrip").kendoTabStrip().data("kendoTabStrip");
+     *     tabstrip.select(1);
+     * });
+     *
+     * @section
+     * <h3>Accessing an Existing TabStrip</h3>
+     * <p>
+     *  You can reference an existing <b>TabStrip</b> instance via
+     *  <a href="http://api.jquery.com/jQuery.data/">jQuery.data()</a>. Once a reference has been established, you can
+     *  use the API to control its behavior.
+     * </p>
+     *
+     * @exampleTitle Accessing an existing TabStrip instance
+     * @example
+     * var tabStrip = $("#tabStrip").data("kendoTabStrip");
+     *
      */
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -155,6 +204,7 @@
         IMAGE = "k-image",
         FIRST = "k-first",
         SELECT = "select",
+        ACTIVATE = "activate",
         CONTENT = "k-content",
         CONTENTURL = "contentUrl",
         MOUSEENTER = "mouseenter",
@@ -199,8 +249,8 @@
                     result += " k-state-default";
                 }
 
-                if (index == 0) {
-                    result += " k-first"
+                if (index === 0) {
+                    result += " k-first";
                 }
 
                 if (index == group.length-1) {
@@ -246,7 +296,8 @@
             .removeAttr("disabled");
 
         tabs.filter(":not([class*=k-state])")
-            .children("a:focus")
+            .children("a")
+            .filter(":focus")
             .parent()
             .addClass(ACTIVESTATE + " " + TABONTOP);
 
@@ -274,152 +325,594 @@
 
     var TabStrip = Widget.extend({/** @lends kendo.ui.TabStrip.prototype */
         /**
+         *
          * Creates a TabStrip instance.
+         *
          * @constructs
          * @extends kendo.ui.Widget
          * @class TabStrip UI widget
+         *
          * @param {Selector} element DOM element
          * @param {Object} options Configuration options.
-         * @option {Object} [animation] A collection of <b>Animation</b> objects, used to change default animations. A value of false will disable all animations in the widget.
-         * @option {Animation} [animation.open] The animation that will be used when opening content.
-         * @option {Animation} [animation.close] The animation that will be used when closing content.
+         *
+         * @option {Object} [animation]
+         * A collection of visual animations used when <strong>TabStrip</strong> tab are selected through
+         * user interactions. Setting this option to <strong>false</strong> will disable all animations.
+         *
+         * _exampleTitle Defining custom animations when selecting tabs
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     animation: {
+         *         // fade-out current tab over 1000 milliseconds
+         *         close: {
+         *             duration: 1000,
+         *             effects: "fadeOut"
+         *         },
+         *        // fade-in new tab over 500 milliseconds
+         *        open: {
+         *            duration: 500,
+         *            effects: "fadeIn"
+         *        }
+         *    }
+         * });
+         *
+         * @option {Object} [animation.open]
+         * The visual animation(s) that will be used when the new tab is shown.
+         *
+         * _exampleTitle Defining a custom animation when new tab is shown that executes over 200 milliseconds
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     animation: {
+         *         open: {
+         *             duration: 200,
+         *             effects: "expand:vertical"
+         *         }
+         *     }
+         * });
+         *
+         * @option {Number} [animation.open.duration] <200>
+         * The number of milliseconds used for the visual animation when a new tab is shown.
+         *
+         * _exampleTitle Defining animation when a new tab is shown that executes over 1000 milliseconds
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *  animation: {
+         *       open: {
+         *           duration: 1000
+         *       }
+         *    }
+         * });
+         *
+         * @option {String} [animation.open.effects] <"expand:vertical fadeIn">
+         * A whitespace-separated string of animation effects that are used when a new tab is shown. Options include
+         * <strong>"expand:vertical"</strong> and <strong>"fadeIn"</strong>.
+         *
+         * @option {Boolean} [animation.open.show] <true>
+         *
+         * @option {Object} [animation.close]
+         * The visual animation(s) that will be used when the current tab is closed.
+         *
+         * _exampleTitle Defining a custom animation for the current tab that
+         * executes over 200 milliseconds
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     animation: {
+         *         close: {
+         *             duration: 200,
+         *             effects: "fadeOut"
+         *         }
+         *     }
+         * });
+         *
+         * @option {Number} [animation.close.duration] <200>
+         * The number of milliseconds used for the visual animation when the current tab is closed.
+         *
+         * _exampleTitle Animating the current tab for 1000 milliseconds
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     animation: {
+         *         close: {
+                       duration: 1000
+                   }
+         *   }
+         * });
+         *
+         * @option {String} [animation.close.effects]
+         * A whitespace-delimited string of animation effects that are utilized when the current tab
+         * is closed. By default not specified - uses the opening animation with reverse.
+         *
+         * _exampleTitle Fading-out the current tab for 1000 milliseconds
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     animation: {
+         *         close: {
+         *             duration: 1000,
+         *             effects: "fadeOut"
+         *         }
+         *     }
+         * });
+         *
+         * @option {String} [dataTextField] <""> Sets the field of the data item that provides the text name of the tab.
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     dataTextField: "Name",
+         *     dataSource: data
+         * });
+         *
+         * @option {String} [dataContentField] <""> Sets the field of the data item that provides the text content of
+         * the tab content element.
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     dataTextField: "Name",
+         *     dataContentField: "Content",
+         *     dataSource: data
+         * });
+         *
+         * @option {String} [dataImageUrlField] <""> Sets the field of the data item that provides the image URL of
+         * the tab.
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     dataTextField: "Name",
+         *     dataImageUrlField: "ImageUrl",
+         *     dataSource: data
+         * });
+         *
+         * @option {String} [dataUrlField] <""> Sets the field of the data item that provides the link URL for the
+         * tab.
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     dataTextField: "Name",
+         *     dataUrlField: "Url",
+         *     dataSource: data
+         * });
+         *
+         * @option {String} [dataSpriteCssClass] <""> Sets the field of the data item that provides the CSS class of
+         * the tab.
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     dataTextField: "Name",
+         *     dataSpriteCssClass: "CssClass",
+         *     dataSource: data
+         * });
+         *
+         * @option {String} [dataContentUrlField] <""> Sets the field of the data item that provides the URL for
+         * the ajax loaded tab content.
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     dataTextField: "Name",
+         *     dataContentUrlField: "ContentUrl",
+         *     dataSource: data
+         * });
+         *
+         * @option {Boolean} [collapsible] <false>
+         * Specifies whether the TabStrip should be able to collapse completely when clicking an expanded tab.
+         *
+         * _exampleTitle Turning on tab collapsing
+         * _example
+         * $("#tabstrip").kendoTabStrip({
+         *     collapsible: true
+         * });
+         *
          */
-
         init: function(element, options) {
-            element = $(element);
-
-            if (element.is("ul")) {
-                element = element.wrapAll("<div />").parent();
-            }
-
             var that = this;
 
-            if (options && ("animation" in options) && !options.animation) {
-                options.animation = { open: { effects: {} }, close: { effects: {} } }; // No animation
-            }
+            that._animations(options);
 
             Widget.fn.init.call(that, element, options);
 
+            if (that.element.is("ul")) {
+                that.wrapper = that.element.wrapAll("<div />").parent();
+            } else {
+                that.wrapper = that.element;
+            }
+
             options = that.options;
 
-            element
+            that.wrapper
                 .delegate(CLICKABLEITEMS, CLICK, $.proxy(that._click, that))
                 .delegate(HOVERABLEITEMS, MOUSEENTER + " " + MOUSELEAVE, that._toggleHover)
                 .delegate(DISABLEDLINKS, CLICK, false);
 
-            that.bind([
-                /**
-                 * Fires before a tab is selected.
-                 * @name kendo.ui.TabStrip#select
-                 * @event
-                 * @param {Event} e
-                 * @param {Element} e.item The selected item
-                 */
-                SELECT,
-                /**
-                 * Fires when ajax request results in an error.
-                 * @name kendo.ui.TabStrip#error
-                 * @event
-                 * @param {Event} e
-                 * @param {jqXHR} e.xhr The jqXHR object used to load the content
-                 * @param {String} e.status The returned status.
-                 */
-                ERROR,
-                /**
-                 * Fires when content is fetched from an ajax request.
-                 * @name kendo.ui.TabStrip#contentLoad
-                 * @event
-                 * @param {Event} e
-                 * @param {Element} e.item The selected item
-                 * @param {Element} e.item The loaded content element
-                 */
-                CONTENTLOAD
-            ], that.options);
-
             that._updateClasses();
 
-            if (that.tabGroup.is(EMPTY)) {
-                options.dataSource && that.append(options.dataSource);
+            that._dataSource();
+
+            if (options.dataSource) {
+                that.dataSource.fetch();
             }
 
             if (that.options.contentUrls) {
-                element.find(".k-tabstrip-items > .k-item")
+                that.wrapper.find(".k-tabstrip-items > .k-item")
                     .each(function(index, item) {
                         $(item).find(">." + LINK).data(CONTENTURL, that.options.contentUrls[index]);
                     });
             }
 
-            var selectedItems = element.find("li." + ACTIVESTATE),
+            var selectedItems = that.wrapper.find("li." + ACTIVESTATE),
                 content = $(that.contentElement(selectedItems.parent().children().index(selectedItems)));
 
-            if (content.length > 0 && content[0].childNodes.length == 0) {
+            if (content.length > 0 && content[0].childNodes.length === 0) {
                 that.activateTab(selectedItems.eq(0));
             }
+
+            kendo.notify(that);
         },
+
+        _dataSource: function() {
+            var that = this;
+
+            if (that.dataSource && that._refreshHandler) {
+                that.dataSource.unbind("change", that._refreshHandler);
+            } else {
+                that._refreshHandler = $.proxy(that.refresh, that);
+            }
+
+            that.dataSource = kendo.data.DataSource.create(that.options.dataSource)
+                                .bind("change", that._refreshHandler);
+        },
+
+        setDataSource: function(dataSource) {
+            this.options.dataSource = dataSource;
+            this._dataSource();
+            dataSource.fetch();
+        },
+
+        _animations: function(options) {
+            if (options && ("animation" in options) && !options.animation) {
+                options.animation = { open: { effects: {}, show: true }, close: { effects: {} } }; // No animation
+            }
+        },
+
+        refresh: function(e) {
+            var that = this,
+                options = that.options,
+                text = kendo.getter(options.dataTextField),
+                content = kendo.getter(options.dataContentField),
+                contentUrl = kendo.getter(options.dataContentUrlField),
+                image = kendo.getter(options.dataImageUrlField),
+                url = kendo.getter(options.dataUrlField),
+                sprite = kendo.getter(options.dataSpriteCssClass),
+                idx,
+                tabs = [],
+                tab,
+                action,
+                view = that.dataSource.view(),
+                length;
+
+
+            e = e || {};
+            action = e.action;
+
+            if (action) {
+               view = e.items;
+            }
+
+            for (idx = 0, length = view.length; idx < length; idx ++) {
+                tab = {
+                    text: text(view[idx])
+                };
+
+                if (options.dataContentField) {
+                    tab.content = content(view[idx]);
+                }
+
+                if (options.dataContentUrlField) {
+                    tab.contentUrl = contentUrl(view[idx]);
+                }
+
+                if (options.dataUrlField) {
+                    tab.url = url(view[idx]);
+                }
+
+                if (options.dataImageUrlField) {
+                    tab.imageUrl = image(view[idx]);
+                }
+
+                if (options.dataSpriteCssClass) {
+                    tab.spriteCssClass = sprite(view[idx]);
+                }
+
+                tabs[idx] = tab;
+            }
+
+            if (e.action == "add") {
+                if (e.index < that.tabGroup.children().length) {
+                    that.insertBefore(tabs, that.tabGroup.children().eq(e.index));
+                } else {
+                    that.append(tabs);
+                }
+            } else if (e.action == "remove") {
+                for (idx = 0; idx < view.length; idx++) {
+                   that.remove(e.index);
+                }
+            } else if (e.action == "itemchange") {
+                idx = that.dataSource.view().indexOf(view[0]);
+                if (e.field === options.dataTextField) {
+                    that.tabGroup.children().eq(idx).find(".k-link").text(view[0].get(e.field));
+                }
+            } else {
+                that.trigger("dataBinding");
+                that.append(tabs);
+                that.trigger("dataBound");
+            }
+        },
+
+        value: function(value) {
+            var that = this;
+
+            if (value !== undefined) {
+                if (value != that.value()) {
+                   that.tabGroup.children().each(function() {
+                        if ($.trim($(this).text()) == value) {
+                            that.select(this);
+                        }
+                   });
+                }
+            } else {
+                return that.select().text();
+            }
+        },
+
+        items: function() {
+            return this.tabGroup[0].children;
+        },
+
+        setOptions: function(options) {
+            var animation = this.options.animation;
+
+            this._animations(options);
+
+            options.animation = extend(true, animation, options.animation);
+
+            Widget.fn.setOptions.call(this, options);
+        },
+
+        events: [
+            /**
+             *
+             * Triggered before a tab is selected.
+             *
+             * @name kendo.ui.TabStrip#select
+             * @event
+             *
+             * @param {Event} e
+             *
+             * @param {HTMLElement} e.item
+             * The selected item chosen by a user.
+             *
+             * @param {Element} e.contentElement
+             * The content element of the tab going to be selected.
+             *
+             * @exampleTitle Attach select event handler during initialization; detach via unbind()
+             * @example
+             * // event handler for select
+             * var onSelect = function(e) {
+             *     // access the selected item via e.item (HTMLElement)
+             * };
+             *
+             * // attach select event handler during initialization
+             * var tabStrip = $("#tabStrip").kendoTabStrip({
+             *     select: onSelect
+             * });
+             *
+             * // detach select event handler via unbind()
+             * tabStrip.data("kendoTabStrip").unbind("select", onSelect);
+             *
+             * @exampleTitle Attach select event handler via bind(); detach via unbind()
+             * @example
+             * // event handler for select
+             * var onSelect = function(e) {
+             *     // access the selected item via e.item (HTMLElement)
+             * };
+             *
+             * // attach select event handler via bind()
+             * $("#tabStrip").data("kendoTabStrip").bind("select", onSelect);
+             *
+             * // detach select event handler via unbind()
+             * $("#tabStrip").data("kendoTabStrip").unbind("select", onSelect);
+             *
+             */
+            SELECT,
+            /**
+             * Triggered just after a tab is being made visible, but before the end of the animation
+             *
+             * @name kendo.ui.TabStrip#activate
+             * @event
+             *
+             * @param {Event} e
+             *
+             * @param {HTMLElement} e.item
+             * The activated tab.
+             *
+             * @param {Element} e.contentElement
+             * The content element of the activated tab.
+             *
+             * @exampleTitle Attach activate event handler during initialization; detach via unbind()
+             * @example
+             * // event handler for activate
+             * var onActivate = function(e) {
+             *     // access the activated item via e.item (HTMLElement)
+             * };
+             *
+             * // attach activate event handler during initialization
+             * var tabStrip = $("#tabStrip").kendoTabStrip({
+             *     activate: onActivate
+             * });
+             *
+             * // detach activate event handler via unbind()
+             * tabStrip.data("kendoTabStrip").unbind("activate", onActivate);
+             *
+             * @exampleTitle Attach activate event handler via bind(); detach via unbind()
+             * @example
+             * // event handler for activate
+             * var onActivate = function(e) {
+             *     // access the activated item via e.item (HTMLElement)
+             * };
+             *
+             * // attach activate event handler via bind()
+             * $("#tabStrip").data("kendoTabStrip").bind("activate", onActivate);
+             *
+             * // detach activate event handler via unbind()
+             * $("#tabStrip").data("kendoTabStrip").unbind("activate", onActivate);
+             *
+             */
+            ACTIVATE,
+            /**
+             *
+             * Triggered when an AJAX request results in an error.
+             *
+             * @name kendo.ui.TabStrip#error
+             * @event
+             *
+             * @param {Event} e
+             *
+             * @param {jqXHR} e.xhr
+             * The jqXHR object used to load the content
+             *
+             * @param {String} e.status
+             * The returned status.
+             *
+             */
+            ERROR,
+            /**
+             *
+             * Triggered when content is fetched from an AJAX request.
+             *
+             * @name kendo.ui.TabStrip#contentLoad
+             * @event
+             *
+             * @param {Event} e
+             *
+             * @param {Element} e.item
+             * The selected item
+             *
+             * @param {Element} e.contentElement
+             * The loaded content element that is retrieved via AJAX.
+             *
+             */
+            CONTENTLOAD,
+            "change",
+            "dataBinding",
+            "dataBound"
+        ],
+
         options: {
             name: "TabStrip",
+            dataTextField: "",
+            dataContentField: "",
+            dataImageUrlField: "",
+            dataUrlField: "",
+            dataSpriteCssClass: "",
+            dataContentUrlField: "",
             animation: {
                 open: {
-                    effects: "expandVertical fadeIn",
+                    effects: "expand:vertical fadeIn",
                     duration: 200,
                     show: true
                 },
                 close: { // if close animation effects are defined, they will be used instead of open.reverse
-                    duration: 200,
-                    show: false,
-                    hide: true
+                    duration: 200
                 }
             },
             collapsible: false
         },
 
         /**
-         * Selects the specified TabStrip tab/s. If called without arguments - returns the selected tab.
-         * @param {Selector} element Target item selector.
+         *
+         * Selects the specified tab(s) within a <strong>TabStrip</strong>. If called without arguments, it returns the
+         * currently selected tab.
+         *
+         * @param {Selector/Index} element or index
+         * The target tab(s), specified as a selector or index in the tab group.
+         *
          * @example
-         * tabStrip.select("#Item1");
+         * tabStrip.select("#tab1");
+         *
+         * @example
+         * tabStrip.select(1);
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          */
         select: function (element) {
             var that = this;
 
-            if (arguments.length == 0) {
-                return that.element.find("li." + ACTIVESTATE);
+            if (arguments.length === 0) {
+                return that.wrapper.find("li." + ACTIVESTATE);
             }
 
+            if (!isNaN(element)) {
+                element = that.tabGroup.children().get(element);
+            }
+
+            element = that.element.find(element);
             $(element).each(function (index, item) {
                 item = $(item);
-                if (!item.hasClass(ACTIVESTATE)) {
+                if (!item.hasClass(ACTIVESTATE) && !that.trigger(SELECT, { item: item[0], contentElement: that.contentElement(item.index()) })) {
                     that.activateTab(item);
                 }
             });
+
+            return that;
         },
 
         /**
-         * Enables/disables a TabStrip tab
-         * @param {Selector} element Target element
-         * @param {Boolean} enable Desired state
+         *
+         * Disables (<strong>false</strong>) or enables (<strong>true</strong>) a tab(s) of a <strong>TabStrip</strong>.
+         *
+         * @param {Selector} element
+         * The target tab(s), specified as a selector, to be enabled (<strong>true</strong>) or disabled
+         * (<strong>false</strong>).
+         *
+         * @param {Boolean} enable
+         * Desired state of the tab(s) specified by the selector; enabled (<strong>true</strong>) or disabled
+         * (<strong>false</strong>).
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          */
         enable: function (element, state) {
             this._toggleDisabled(element, state !== false);
+
+            return this;
         },
 
         /**
-         * Disables a TabStrip tab
-         * @param {Selector} element Target element
+         *
+         * Disables a tab(s) of a <strong>TabStrip</strong>.
+         *
+         * @param {Selector} element
+         * The target tab(s), specified as a selector, to be disabled.
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          */
         disable: function (element) {
             this._toggleDisabled(element, false);
+
+            return this;
         },
 
-
         /**
-         * Reloads a TabStrip tab from ajax request
-         * @param {Selector} element Target element
+         *
+         * Reloads TabStrip tab(s) via AJAX.
+         *
+         * @param {Selector} element
+         * The target tab(s), specified as a selector, to be reloaded via AJAX.
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          */
         reload: function (element) {
+            element = this.tabGroup.find(element);
             var that = this;
 
-            $(element).each(function () {
+            element.each(function () {
                 var item = $(this),
                     contentUrl = item.find("." + LINK).data(CONTENTURL);
 
@@ -427,22 +920,46 @@
                     that.ajaxRequest(item, $(that.contentElement(item.index())), null, contentUrl);
                 }
             });
+
+            return that;
         },
 
         /**
-         * Appends a TabStrip item to the end of the tab list.
-         * @param {Selector} tab Target tab, specified as a JSON object. You can pass tab text, content or contentUrl here. Can handle an HTML string or array of such strings or JSON.
+         *
+         * Appends a tab to the collection of tabs in a <strong>TabStrip</strong>.
+         *
+         * @param {Selector} tab
+         * Target tab, specified as a JSON object. You can pass tab text, content or contentUrl here. Can handle an
+         * HTML string or array of such strings or JSON.
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          * @example
          * tabStrip.append(
          *     [{
          *         text: "Item 1",
-         *         content: "text"
+         *         url: "http://www.kendoui.com"               // Link URL if navigation is needed, optional.
          *     },
          *     {
-         *         text: "Item 2",
-         *         contentUrl: "partialContent.html"
+         *         text: "<b>Item 2</b>",
+         *         encoded: false,                             // Allows use of HTML for item text
+         *         content: "text"                             // Content for the content element
+         *     },
+         *     {
+         *         text: "Item 3",
+         *         contentUrl: "partialContent.html"           // From where to load the item content
+         *     },
+         *     {
+         *         text: "Item 4",
+         *         imageUrl: "http://www.kendoui.com/test.jpg" // Item image URL, optional.
+         *     },
+         *     {
+         *         text: "Item 5",
+         *         spriteCssClass: "imageClass3"               // Item image sprite CSS class, optional.
          *     }]
          * );
+         *
          */
         append: function (tab) {
             var that = this,
@@ -450,33 +967,58 @@
 
             each(inserted.tabs, function (idx) {
                 that.tabGroup.append(this);
-                that.element.append(inserted.contents[idx]);
+                that.wrapper.append(inserted.contents[idx]);
             });
 
             updateFirstLast(that.tabGroup);
             that._updateContentElements();
+
+            return that;
         },
 
         /**
-         * Inserts a TabStrip item before the specified referenceItem
-         * @param {Selector} item Target tab, specified as a JSON object. You can pass tab text, content or contentUrl here. Can handle an HTML string or array of such strings or JSON.
-         * @param {Item} referenceTab A reference tab to insert the new item before
+         *
+         * Inserts a newly-created tab before a specified tab.
+         *
+         * @param {Selector} item
+         * Target tab, specified as a JSON object. You can pass tab text, content or contentUrl here. Can handle an
+         * HTML string or array of such strings or JSON.
+         *
+         * @param {Item} referenceTab
+         * A reference tab to insert the new item before
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          * @example
          * tabStrip.insertBefore(
          *     [{
          *         text: "Item 1",
-         *         content: "text"
+         *         url: "http://www.kendoui.com"               // Link URL if navigation is needed, optional.
          *     },
          *     {
-         *         text: "Item 2",
-         *         contentUrl: "partialContent.html"
+         *         text: "<b>Item 2</b>",
+         *         encoded: false,                             // Allows use of HTML for item text
+         *         content: "text"                             // Content for the content element
+         *     },
+         *     {
+         *         text: "Item 3",
+         *         contentUrl: "partialContent.html"           // From where to load the item content
+         *     },
+         *     {
+         *         text: "Item 4",
+         *         imageUrl: "http://www.kendoui.com/test.jpg" // Item image URL, optional.
+         *     },
+         *     {
+         *         text: "Item 5",
+         *         spriteCssClass: "imageClass3"               // Item image sprite CSS class, optional.
          *     }],
          *     referenceItem
          * );
          */
         insertBefore: function (tab, referenceTab) {
             var that = this,
-                inserted = this._create(tab),
+                inserted = that._create(tab),
                 referenceContent = $(that.contentElement(referenceTab.index()));
 
             each(inserted.tabs, function (idx) {
@@ -486,28 +1028,54 @@
 
             updateFirstLast(that.tabGroup);
             that._updateContentElements();
+
+            return that;
         },
 
         /**
-         * Inserts a TabStrip tab after the specified referenceTab
-         * @param {Selector} item Target tab, specified as a JSON object. You can pass tab text, content or contentUrl here. Can handle an HTML string or array of such strings or JSON.
-         * @param {Item} referenceTab A reference tab to insert the new item after
+         *
+         * Inserts a newly-created tab after a specified tab.
+         *
+         * @param {Selector} item
+         * Target tab, specified as a JSON object. You can pass tab text, content or contentUrl here. Can handle an
+         * HTML string or array of such strings or JSON.
+         *
+         * @param {Item} referenceTab
+         * A reference tab to insert the new item after.
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
          * @example
          * tabStrip.insertAfter(
          *     [{
          *         text: "Item 1",
-         *         content: "text"
+         *         url: "http://www.kendoui.com"               // Link URL if navigation is needed, optional.
          *     },
          *     {
-         *         text: "Item 2",
-         *         contentUrl: "partialContent.html"
+         *         text: "<b>Item 2</b>",
+         *         encoded: false,                             // Allows use of HTML for item text
+         *         content: "text"                             // Content for the content element
+         *     },
+         *     {
+         *         text: "Item 3",
+         *         contentUrl: "partialContent.html"           // From where to load the item content
+         *     },
+         *     {
+         *         text: "Item 4",
+         *         imageUrl: "http://www.kendoui.com/test.jpg" // Item image URL, optional.
+         *     },
+         *     {
+         *         text: "Item 5",
+         *         spriteCssClass: "imageClass3"               // Item image sprite CSS class, optional.
          *     }],
          *     referenceItem
          * );
+         *
          */
         insertAfter: function (tab, referenceTab) {
             var that = this,
-                inserted = this._create(tab),
+                inserted = that._create(tab),
                 referenceContent = $(that.contentElement(referenceTab.index()));
 
             each(inserted.tabs, function (idx) {
@@ -517,41 +1085,66 @@
 
             updateFirstLast(that.tabGroup);
             that._updateContentElements();
+
+            return that;
         },
 
         /**
-         * Removes the specified TabStrip item/s
-         * @param {Selector} element Target item selector.
+         *
+         * Removes a specified tab from a TabStrip.
+         *
+         * @param {Selector} element
+         * The target tab(s), specified as a selector, to be removed.
+         *
+         * @returns {TabStrip}
+         * Returns the TabStrip object to support chaining.
+         *
+         * @exampleTitle Remove a tab with ID, tab1 from a TabStrip
          * @example
-         * tabStrip.remove("#Item1");
+         * tabStrip.remove("#tab1");
+         *
          */
         remove: function (element) {
-            element = $(element);
-
             var that = this,
-                content = $(that.contentElement(element.index()));
+                type = typeof element,
+                content;
+
+            if (type === "string") {
+                element = that.tabGroup.find(element);
+            } else if (type === "number") {
+                element = that.tabGroup.children().eq(element);
+            }
+
+            content = $(that.contentElement(element.index()));
 
             content.remove();
             element.remove();
 
             that._updateContentElements();
+
+            return that;
         },
 
         _create: function (tab) {
             var plain = $.isPlainObject(tab),
                 that = this, tabs, contents;
 
-            if (plain || $.isArray(tab)) { // is JSON
-                tabs = map(plain ? [ tab ] : tab, function (value, idx) {
+            if (plain || $.isArray(tab)) {
+                tab = $.isArray(tab) ? tab : [tab];
+
+                tabs = map(tab, function (value, idx) {
                             return $(TabStrip.renderItem({
                                 group: that.tabGroup,
                                 item: extend(value, { index: idx })
                             }));
                         });
-                contents = map(plain ? [ tab ] : tab, function (value, idx) {
-                            return $(TabStrip.renderContent({
-                                item: extend(value, { index: idx })
-                            }));
+
+                contents = map( tab, function (value, idx) {
+                            if (value.content || value.contentUrl) {
+                                return $(TabStrip.renderContent({
+                                    item: extend(value, { index: idx })
+                                }));
+                            }
                         });
             } else {
                 tabs = $(tab);
@@ -564,7 +1157,8 @@
         },
 
         _toggleDisabled: function(element, enable) {
-            $(element).each(function () {
+            element = this.tabGroup.find(element);
+            element.each(function () {
                 $(this)
                     .toggleClass(DEFAULTSTATE, enable)
                     .toggleClass(DISABLEDSTATE, !enable);
@@ -575,12 +1169,13 @@
             var that = this,
                 tabs, activeItem, activeTab;
 
-            that.element.addClass("k-widget k-header k-tabstrip");
+            that.wrapper.addClass("k-widget k-header k-tabstrip");
 
-            that.tabGroup = that.element.children("ul").addClass("k-tabstrip-items k-reset");
+            that.tabGroup = that.wrapper.children("ul").addClass("k-tabstrip-items k-reset");
 
-            if (!that.tabGroup.length)
-                that.tabGroup = $("<ul class='k-tabstrip-items k-reset'/>").appendTo(that.element);
+            if (!that.tabGroup[0]) {
+                that.tabGroup = $("<ul class='k-tabstrip-items k-reset'/>").appendTo(that.wrapper);
+            }
 
             tabs = that.tabGroup.find("li").addClass("k-item");
 
@@ -596,7 +1191,7 @@
 
             tabs.eq(activeItem).addClass(TABONTOP);
 
-            that.contentElements = that.element.children("div");
+            that.contentElements = that.wrapper.children("div");
 
             that.contentElements
                 .addClass(CONTENT)
@@ -614,23 +1209,27 @@
 
         _updateContentElements: function() {
             var that = this,
-                tabStripID = that.element.attr("id");
-
-            that.contentElements = that.element.children("div");
+                contentUrls = that.options.contentUrls || [],
+                tabStripID = that.element.attr("id"),
+                contentElements = that.wrapper.children("div");
 
             that.tabGroup.find(".k-item").each(function(idx) {
-                var currentContent = that.contentElements.eq(idx),
-                    id = tabStripID + "-" + (idx+1),
-                    href = $(this).children("." + LINK).attr(HREF);
+                var currentContent = contentElements.eq(idx),
+                    id = tabStripID + "-" + (idx+1);
 
-                if (!currentContent.length) {
-                    $("<div id='"+ id +"' class='" + CONTENT + "'/>").appendTo(that.element);
+                if (!currentContent.length && contentUrls[idx]) {
+                    $("<div id='"+ id +"' class='" + CONTENT + "'/>").appendTo(that.wrapper);
                 } else {
                     currentContent.attr("id", id);
                 }
             });
 
-            that.contentElements = that.element.children("div"); // refresh the contents
+            that.contentElements = that.contentAnimators = that.wrapper.children("div"); // refresh the contents
+
+            if (kendo.support.touch && kendo.mobile.ui.Scroller) {
+                kendo.touchScroller(that.contentElements);
+                that.contentElements = that.contentElements.children(".km-scroll-container");
+            }
         },
 
         _toggleHover: function(e) {
@@ -645,12 +1244,16 @@
                 collapse = that.options.collapsible,
                 content = $(that.contentElement(item.index()));
 
+            if (item.closest(".k-widget")[0] != that.wrapper[0]) {
+                return;
+            }
+
             if (item.is("." + DISABLEDSTATE + (!collapse ? ",." + ACTIVESTATE : ""))) {
                 e.preventDefault();
                 return;
             }
 
-            if ($("." + CONTENT, this.element).filter(function() { return $(this).data("animating"); }).length) {
+            if (that.tabGroup.children("[data-animating], [data-in-request]").length) {
                 return;
             }
 
@@ -675,71 +1278,113 @@
                 if (that.activateTab(item)) {
                     e.preventDefault();
                 }
-
             }
         },
 
+        /**
+         *
+         * Deactivates a tab specified as a selector. Note: Invoking this method will not trigger any events.
+         *
+         * @param {Selector} item
+         * The target tab, specified as a selector, to be deactivated.
+         *
+         * @example
+         * var tabToDeactivate = $("#tab1");
+         * $("#tabStrip").data("kendoTabStrip").deactivateTab(tabToActivate);
+         *
+         */
         deactivateTab: function (item) {
             var that = this,
-                closeAnimation = that.options.animation.close,
-                openAnimation = that.options.animation.open;
+                animationSettings = that.options.animation,
+                animation = animationSettings.open,
+                close = extend({}, animationSettings.close),
+                hasCloseAnimation = close && "effects" in close;
+            item = that.tabGroup.find(item);
 
-            closeAnimation = closeAnimation && "effects" in closeAnimation ? closeAnimation :
-                                   extend( extend({ reverse: true }, openAnimation), { show: false, hide: true });
+            close = extend( hasCloseAnimation ? close : extend({ reverse: true }, animation), { show: false, hide: true });
 
-            if (kendo.size(openAnimation.effects)) {
-                item.kendoAddClass(DEFAULTSTATE, { duration: openAnimation.duration });
-                item.kendoRemoveClass(ACTIVESTATE, { duration: openAnimation.duration });
+            if (kendo.size(animation.effects)) {
+                item.kendoAddClass(DEFAULTSTATE, { duration: animation.duration });
+                item.kendoRemoveClass(ACTIVESTATE, { duration: animation.duration });
             } else {
                 item.addClass(DEFAULTSTATE);
                 item.removeClass(ACTIVESTATE);
             }
 
-            that.contentElements
+            that.contentAnimators
                     .filter("." + ACTIVESTATE)
                     .kendoStop(true, true)
-                    .kendoAnimate( closeAnimation )
+                    .kendoAnimate( close )
                     .removeClass(ACTIVESTATE);
         },
 
+        /**
+         *
+         * Activates a tab specified as a selector. Note: Invoking this method will not trigger any events.
+         *
+         * @param {Selector} item
+         * The target tab, specified as a selector, to be activated.
+         *
+         * @returns {Boolean}
+         * Returns <strong>true</strong> if successful; otherwise, <strong>false</strong>.
+         *
+         * @exampleTitle Activate a tab with ID, tab1 in a TabStrip
+         * @example
+         * var tabToActivate = $("#tab1");
+         * $("#tabStrip").data("kendoTabStrip").activateTab(tabToActivate);
+         *
+         */
         activateTab: function (item) {
+            item = this.tabGroup.find(item);
+
             var that = this,
-                openAnimation = that.options.animation.open,
-                closeAnimation = that.options.animation.close,
+                animationSettings = that.options.animation,
+                animation = animationSettings.open,
+                close = extend({}, animationSettings.close),
+                hasCloseAnimation = close && "effects" in close,
                 neighbours = item.parent().children(),
                 oldTab = neighbours.filter("." + ACTIVESTATE),
                 itemIndex = neighbours.index(item);
 
-            closeAnimation = closeAnimation && "effects" in closeAnimation ? closeAnimation : extend( extend({ reverse: true }, openAnimation), { show: false, hide: true });
-
+            close = extend( hasCloseAnimation ? close : extend({ reverse: true }, animation), { show: false, hide: true });
             // deactivate previously active tab
-            if (kendo.size(openAnimation.effects)) {
-                oldTab.kendoRemoveClass(ACTIVESTATE, { duration: closeAnimation.duration });
-                item.kendoRemoveClass(HOVERSTATE, { duration: closeAnimation.duration });
+            if (kendo.size(animation.effects)) {
+                oldTab.kendoRemoveClass(ACTIVESTATE, { duration: close.duration });
+                item.kendoRemoveClass(HOVERSTATE, { duration: close.duration });
             } else {
                 oldTab.removeClass(ACTIVESTATE);
                 item.removeClass(HOVERSTATE);
             }
 
             // handle content elements
-            var contentElements = that.contentElements;
+            var contentAnimators = that.contentAnimators;
 
-            if (contentElements.length == 0) {
+            if (contentAnimators.length === 0) {
+                oldTab.removeClass(TABONTOP);
+                item.addClass(TABONTOP) // change these directly to bring the tab on top.
+                    .css("z-index");
+
+                item.addClass(ACTIVESTATE);
+
+                that.trigger("change");
+
                 return false;
             }
 
-            var visibleContentElements = contentElements.filter("." + ACTIVESTATE);
+            var visibleContents = contentAnimators.filter("." + ACTIVESTATE);
 
             // find associated content element
             var content = $(that.contentElement(itemIndex));
 
-            if (content.length == 0) {
-                visibleContentElements
+            if (content.length === 0) {
+                visibleContents
                     .removeClass( ACTIVESTATE )
                     .kendoStop(true, true)
-                    .kendoAnimate( closeAnimation );
+                    .kendoAnimate( close );
                 return false;
             }
+
+            item.attr("data-animating", true);
 
             var isAjaxContent = (item.children("." + LINK).data(CONTENTURL) || false) && content.is(EMPTY),
                 showContentElement = function () {
@@ -747,37 +1392,45 @@
                     item.addClass(TABONTOP) // change these directly to bring the tab on top.
                         .css("z-index");
 
-                    if (kendo.size(openAnimation.effects)) {
-                        oldTab.kendoAddClass(DEFAULTSTATE, { duration: openAnimation.duration });
-                        item.kendoAddClass(ACTIVESTATE, { duration: openAnimation.duration });
+                    if (kendo.size(animation.effects)) {
+                        oldTab.kendoAddClass(DEFAULTSTATE, { duration: animation.duration });
+                        item.kendoAddClass(ACTIVESTATE, { duration: animation.duration });
                     } else {
                         oldTab.addClass(DEFAULTSTATE);
                         item.addClass(ACTIVESTATE);
                     }
 
                     content
+                        .closest(".k-content")
                         .addClass(ACTIVESTATE)
                         .kendoStop(true, true)
-                        .kendoAnimate( openAnimation );
+                        .kendoAnimate( extend({ init: function () {
+                            that.trigger(ACTIVATE, { item: item[0], contentElement: content[0] });
+                        } }, animation, { complete: function () {
+                                                        item.removeAttr("data-animating");
+                                                    } } ) );
                 },
                 showContent = function() {
                     if (!isAjaxContent) {
                         showContentElement();
-                    } else
+                        that.trigger("change");
+                    } else {
                         that.ajaxRequest(item, content, function () {
                             showContentElement();
+                            that.trigger("change");
                         });
+                    }
                 };
 
-            visibleContentElements
+            visibleContents
                     .removeClass(ACTIVESTATE);
 
-            if (visibleContentElements.length) {
-                visibleContentElements
+            if (visibleContents.length) {
+                visibleContents
                     .kendoStop(true, true)
                     .kendoAnimate(extend( {
                         complete: showContent
-                   }, closeAnimation ));
+                   }, close ));
             } else {
                 showContent();
             }
@@ -785,30 +1438,51 @@
             return true;
         },
 
+        /**
+         *
+         * Obtains the DOM element representing a tab by its index in the <strong>TabStrip</strong>.
+         *
+         * @param {int} itemIndex
+         * The index of the tab in the TabStrip.
+         *
+         * @returns {HTMLElement}
+         * The DOM element representing a tab by its index in the <strong>TabStrip</strong>.
+         *
+         * @exampleTitle Obtain the DOM element representing the first tab in a TabStrip
+         * @example
+         * var tabContent = $("#tabStrip").data("kendoTabStrip").contentElement(0);
+         *
+         */
         contentElement: function (itemIndex) {
-            if (isNaN(itemIndex - 0)) return;
+            if (isNaN(itemIndex - 0)) {
+                return;
+            }
 
             var contentElements = this.contentElements,
                 idTest = new RegExp("-" + (itemIndex + 1) + "$");
 
             for (var i = 0, len = contentElements.length; i < len; i++) {
-                if (idTest.test(contentElements[i].id)) {
+                if (idTest.test(contentElements.closest(".k-content")[i].id)) {
                     return contentElements[i];
                 }
             }
         },
 
         ajaxRequest: function (element, content, complete, url) {
-            if (element.find(".k-loading").length)
+            element = this.tabGroup.find(element);
+            if (element.find(".k-loading").length) {
                 return;
+            }
 
             var that = this,
                 link = element.find("." + LINK),
                 data = {},
                 statusIcon = null,
                 loadingIconTimeout = setTimeout(function () {
-                    statusIcon = $("<span class='k-icon k-loading'/>").prependTo(link)
+                    statusIcon = $("<span class='k-icon k-loading'/>").prependTo(link);
                 }, 100);
+
+            element.attr("data-in-request", true);
 
             $.ajax({
                 type: "GET",
@@ -818,12 +1492,15 @@
                 data: data,
 
                 error: function (xhr, status) {
+                    element.removeAttr("data-animating");
                     if (that.trigger("error", { xhr: xhr, status: status })) {
                         this.complete();
                     }
                 },
 
                 complete: function () {
+                    element.removeAttr("data-in-request");
+
                     clearTimeout(loadingIconTimeout);
                     if (statusIcon !== null) {
                         statusIcon.remove();
@@ -849,8 +1526,7 @@
             options = extend({ tabStrip: {}, group: {} }, options);
 
             var empty = templates.empty,
-                item = options.item,
-                tabStrip = options.tabStrip;
+                item = options.item;
 
             return templates.item(extend(options, {
                 image: item.imageUrl ? templates.image : empty,
@@ -867,3 +1543,4 @@
     kendo.ui.plugin(TabStrip);
 
 })(jQuery);
+;

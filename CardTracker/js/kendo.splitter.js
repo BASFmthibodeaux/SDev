@@ -1,129 +1,145 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
+/**
+ * @fileOverview Provides a Splitter implementation which can be used to display a dynamic layout of resizable and
+ * collapsible panes.
+ */
 
-(function($, undefined) {
+(function ($, undefined) {
     /**
-    * @name kendo.ui.Splitter.Description
-    *
-    * @section
-    *   <p>
-    *       The Splitter widget provides an easy way to create a dynamic layout of resizable and
-    *       collapsible panes. The widget converts the children of an HTML element in to the interactive
-    *       layout, adding resize and collapse handles based on configuration. Splitters can be mixed
-    *       in both vertical and horizontal orientations to build complex layouts.
-    *   </p>
-    *   <h3>Getting Started</h3>
-    *
-    * @exampleTitle Create a root HTML div element with children that will become panes
-    * @example
-    * <div id="splitter">
-    *    <div>
-    *        Area 1
-    *    </div>
-    *    <div>
-    *        Area 2
-    *    </div>
-    * </div>
-    *
-    * @exampleTitle Initialize the Splitter using a jQuery selector
-    * @example
-    *   $("#splitter").kendoSplitter();
-    * @section
-    *   <p>
-    *       When the Splitter is initialized, a vertical split bar will be placed between the two
-    *       HTML divs. This bar can be moved by a user left and right to adjust the size on the panes.
-    *   </p>
-    *   <h3>Configuring Splitter Behavior</h3>
-    *   <p>
-    *       Splitter provides many configuration options that can be easily set during initialization.
-    *       Among the properties that can be controlled:
-    *   </p>
-    *   <ul>
-    *       <li>Min/Max pane size</li>
-    *       <li>Resizable and Collapsible pane behaviors</li>
-    *       <li>Orientation of the splitter</li>
-    *   </ul>
-    *   <p>
-    *       Pane properties are set for each individual pane in a Splitter,
-    *       whereas Splitter properties apply to the entire widget.
-    *   </p>
-    * @exampleTitle Setting Splitter and Pane properties
-    * @example
-    *   $("#splitter").kendoSplitter({
-    *       panes: [{
-    *           min: "100px",
-    *           max: "300px",
-    *           collapsible: true
-    *       },
-    *       {
-    *           collapsible: true
-    *       }],
-    *       orientation: "vertical"
-    *   });
-    * @section
-    *   <h3>Nested Splitter Layouts</h3>
-    *   <p>
-    *       To achieve complex layouts, it may be necessary to nest Splitters in different orientations.
-    *       Splitter fully supports nested configurations. All that is required is proper HTML
-    *       configuration and multiple Kendo Splitter initializations.
-    *   </p>
-    * @exampleTitle Creating nested Splitter layout
-    * @example
-    *   <!-- Define nested HTML layout with divs -->
-    *   <div id="horizontalSplitter">
-    *       <div><p>Left Side Pane Content</p></div>
-    *       <div>
-    *           <div id="verticalSplitter">
-    *               <div><p>Right Side, Top Pane Content</p></div>
-    *               <div><p>Right Side, Bottom Pane Content</p></div>
-    *           </div>
-    *       </div>
-    *   </div>
-    * @exampleTitle
-    * @example
-    *   // Initialize both Splitters with the proper orientation
-    *   $(document).ready(function() {
-    *       $("horizontalSplitter").kendoSplitter();
-    *       $("verticalSplitter").kendoSplitter({ orientation: "vertical" });
-    *   });
-    *
-    * @section
-    *   <h3>Loading Content with Ajax</h3>
-    *   <p>
-    *       While any valid technique for loading Ajax content can be used, Splitter provides built-in
-    *       support for asynchronously loading content from URLs. These URLs should return HTML fragments
-    *       that can be loaded in a Splitter pane. If you want to load a whole page in an IFRAME,
-    *       you can do so by specifying the complete URL (e.g. http://kendoui.com/)
-    *       Ajax content loading must be configured for each Pane that should use it.
-    *   </p>
-    * @exampleTitle Loading Splitter content asynchronously
-    * @example
-    *   <!-- Define the Splitter HTML -->
-    *   <div id="splitter">
-    *       <div>Area 1 with Static Content</div>
-    *       <div></div>
-    *       <div></div>
-    *   </div>
-    * @exampleTitle
-    * @example
-    *   // Initialize the Splitter and configure async loading for one pane, and an iframe for a thrid pane
-    *   $(document).ready(function() {
-    *       $("#splitter").kendoSplitter({
-    *           panes: [
-    *               {},
-    *               { contentUrl: "html-content-snippet.html" },
-    *               { contentUrl: "http://kendoui.com" }
-    *           ]
-    *       });
-    *   });
-    */
+     * @name kendo.ui.Splitter.Description
+     *
+     * @section
+     * <p>
+     *  The <strong>Splitter</strong> provides a dynamic layout of resizable and collapsible panes. It converts the
+     *  children of an HTML element in to the interactive layout, adding resize and collapse handles based on
+     *  configuration. A <strong>Splitter</strong> can be mixed in a vertical or horizontal orientation to build
+     *  complex layouts.
+     * </p>
+     * <h3>Getting Started</h3>
+     * <p>
+     *  The layout and structure of a <strong>Splitter</strong> is defined within the DOM as a div with child elements.
+     * </p>
+     *
+     * @exampleTitle Create a div with children that will become panes
+     * @example
+     * <div id="splitter">
+     *     <div>Area 1</div>
+     *     <div>Area 2</div>
+     * </div>
+     *
+     * @section
+     * <p>
+     *  Initialization of a <strong>Splitter</strong> should occur after the DOM is fully loaded. It is recommended
+     *  that initialization the <strong>Splitter</strong> occur within a handler is provided to $(document).ready().
+     * </p>
+     *
+     * @exampleTitle Initialize the Splitter using a selector within $(document).ready()
+     * @example
+     * $(document).ready(function() {
+     *     $("#splitter").kendoSplitter();
+     * });
+     *
+     * @section
+     * <p>
+     *  When the <strong>Splitter</strong> is initialized, a vertical split bar will be placed between the two div
+     *  elements. This bar can be moved by a user left and right to adjust the size on the panes.
+     * </p>
+     * <h3>Configuring Splitter Behaviors</h3>
+     * <p>
+     *  The <strong>Splitter</strong> has a default configuration specified during initialization. However, these
+     *  options may be overriden to control the following properties:
+     * </p>
+     * <ul>
+     *  <li>Maximum and/or minimum pane sizes</li>
+     *  <li>Resizable and collapsible/expandable pane behaviors</li>
+     *  <li>Orientation (horizontal or vertical)</li>
+     * </ul>
+     * <p>
+     *  The properties of a pane must be set during initialization and set for each individual pane in a
+     *  <strong>Splitter</strong>.
+     * </p>
+     *
+     * @exampleTitle Initialize a Splitter and the properties of its panes
+     * @example
+     * $("#splitter").kendoSplitter({
+     *     panes: [
+     *         { collapsible: true, min: "100px", max: "300px" },
+     *         { collapsible: true }
+     *     ],
+     *     orientation: "vertical"
+     * });
+     *
+     * @section
+     * <h3>Nested Splitter Layouts</h3>
+     * <p>To achieve complex layouts, the <strong>Splitter</strong> supports nested layouts.</p>
+     *
+     * @exampleTitle Creating nested Splitter layout
+     * @example
+     * <div id="horizontalSplitter">
+     *     <div><p>Left Side Pane Content</p></div>
+     *     <div>
+     *         <div id="verticalSplitter">
+     *             <div><p>Right Side, Top Pane Content</p></div>
+     *             <div><p>Right Side, Bottom Pane Content</p></div>
+     *         </div>
+     *     </div>
+     * </div>
+     *
+     * @exampleTitle Initialize two Splitters with differing orientations
+     * @example
+     * $("horizontalSplitter").kendoSplitter();
+     * $("verticalSplitter").kendoSplitter({ orientation: "vertical" });
+     *
+     * @section
+     * <h3>Loading Content with AJAX</h3>
+     * <p>
+     *  While any valid technique for loading content via AJAX may be used, <strong>Splitter</strong> provides built-in
+     *  support for asynchronously loading content from URLs. These URLs should return HTML fragments that can be
+     *  loaded in the pane of a <strong>Splitter</strong>. If you want to load a whole page in an IFRAME, you may do so
+     *  by specifying the complete URL (i.e. http://kendoui.com/).
+     * </p>
+     *
+     * @exampleTitle Loading Splitter content asynchronously
+     * @example
+     * <div id="splitter">
+     *     <div>Area 1 with Static Content</div>
+     *     <div></div>
+     *     <div></div>
+     * </div>
+     *
+     * @exampleTitle Initialize Splitter; configure async loading for one pane; and an iframe for a third pane
+     * @example
+     * $(document).ready(function() {
+     *     $("#splitter").kendoSplitter({
+     *         panes: [
+     *             {},
+     *             { contentUrl: "html-content-snippet.html" },
+     *             { contentUrl: "http://kendoui.com/" }
+     *         ]
+     *     });
+     * });
+     *
+     * @section
+     * <h3>Accessing an Existing Splitter</h3>
+     * <p>
+     *  You can reference an existing <strong>Splitter</strong> instance via
+     *  <a href="http://api.jquery.com/jQuery.data/">jQuery.data()</a>. Once a reference has been established, you can
+     *  use the API to control its behavior.
+     * </p>
+     *
+     * @exampleTitle Accessing an existing Splitter instance
+     * @example
+     * var splitter = $("#splitter").data("kendoSplitter");
+     *
+     */
     var kendo = window.kendo,
         ui = kendo.ui,
         extend = $.extend,
@@ -141,7 +157,9 @@
         MOUSEENTER = "mouseenter",
         CLICK = "click",
         PANE = "pane",
-        MOUSELEAVE = "mouseleave";
+        MOUSELEAVE = "mouseleave",
+        KPANE = "k-" + PANE,
+        PANECLASS = "." + KPANE;
 
     function isPercentageSize(size) {
         return percentageUnitsRegex.test(size);
@@ -175,141 +193,318 @@
     var Splitter = Widget.extend(/** @lends kendo.ui.Splitter.prototype */ {
         /**
          * Creates a Splitter instance.
+         *
          * @constructs
          * @extends kendo.ui.Widget
-         * @param {DomElement} element DOM element
+         *
+         * @param {Element} element DOM element
          * @param {Object} options Configuration options.
-         * @option {String} [orientation] <horizontal> Specifies the orientation of the splitter.
-         *    <dl>
-         *         <dt>
-         *              "horizontal"
-         *         </dt>
-         *         <dd>
-         *              Define horizontal orientation of the splitter.
-         *         </dd>
-         *         <dt>
-         *              "vertical"
-         *         </dt>
-         *         <dd>
-         *              Define vertical orientation of the splitter.
-         *         </dd>
-         *    </dl>
-         * @option {Array} [panes] Array of pane definitions.
+         *
+         * @option {String} [orientation] <horizontal>
+         * Specifies the orientation of the <strong>Splitter</strong>.
+         * <div class="details-list">
+         *  <dl>
+         *   <dt>"horizontal"</dt>
+         *   <dd>Define horizontal orientation of the splitter.</dd>
+         *   <dt>"vertical"</dt>
+         *   <dd>Define vertical orientation of the splitter.</dd>
+         *  </dl>
+         * </div>
+         *
+         * @option {Array} [panes]
+         * An array of pane definitions.
+         *
          * _example
-         *  $("#splitter").kendoSplitter({
-         *      // definitions for the first three panes
-         *      panes: [
-         *          {
-         *              size: "200px",
-         *              min: "100px",
-         *              max: "300px"
-         *          },
-         *          {
-         *              size: "20%",
-         *              resizable: false
-         *         },
-         *         {
-         *              collapsed: true,
-         *              collapsible: true
-         *         }
-         *      ]
-         *   });
-         * @option {String} [panes.size] Specifies the size of the pane.
-         * <p>
-         * The size can be defined in pixes or in percents.
-         * </p>
-         * <p>
-         * The size cannot be more than panes.max and less then panes.min.
-         * </p>
-         * @option {String} [panes.min] Specifies the minimum size of the pane.
-         * <p>
-         * Resized pane cannot be smaller then the defined minimum size.
-         * </p>
-         * @option {String} [panes.max] Specifies the maximum size of the pane.
-         * <p>
-         * Resized pane cannot be bigger then the defined maximum size.
-         * </p>
-         * @option {Boolean} [panes.collapsed] <false> Specifies whether the pane is initially collapsed.
-         * @option {Boolean} [panes.collapsible] <false> Specifies whether the pane can be collapsed by the user.
-         * @option {Boolean} [panes.scrollable] <true> Specifies whether the pane shows a scrollbar when its content overflows.
-         * @option {Boolean} [panes.resizable] <true> Specifies whether the pane can be resized by the user.
-         * @option {Boolean} [panes.contentUrl] <true> Specifies URL from which to load the pane content.
+         * $("#splitter").kendoSplitter({
+         *     panes: [
+         *         { size: "200px", min: "100px", max: "300px" },
+         *         { size: "20%", resizable: false },
+         *         { collapsed: true, collapsible: true }
+         *     ]
+         * });
+         *
+         * @option {String} [panes.size]
+         * Specifies the size of a pane defined as pixels (i.e. "200px") or as a percentage (i.e. "50%"). Note: This
+         * value must not exceed <strong>panes.max</strong> or be less then <strong>panes.min</strong>.
+         *
+         * @option {String} [panes.min]
+         * Specifies the minimum size of a pane defined as pixels (i.e. "200px") or as a percentage (i.e. "50%"). The
+         * size of a resized pane cannot be less than the defined minimum size.
+         *
+         * @option {String} [panes.max]
+         * Specifies the maximum size of a pane defined as pixels (i.e. "200px") or as a percentage (i.e. "50%"). The
+         * size of a resized pane cannot exceed the defined maximum size.
+         *
+         * @option {Boolean} [panes.collapsed] <false>
+         * Specifies whether a pane is initially collapsed (<strong>true</strong>) or expanded (<strong>true</strong>).
+         *
+         * @option {Boolean} [panes.collapsible] <false>
+         * Specifies whether a pane is collapsible (<strong>true</strong>) or not collapsible (<strong>false</strong>).
+         *
+         * @option {Boolean} [panes.scrollable] <true>
+         * Specifies whether a pane is scrollable (<strong>true</strong>) or not scrollable (<strong>false</strong>).
+         *
+         * @option {Boolean} [panes.resizable] <true>
+         * Specifies whether a pane is resizable (<strong>true</strong>) or not resizable (<strong>false</strong>).
+         *
+         * @option {Boolean} [panes.contentUrl] <true>
+         * Specifies the URL from which to load the content of a pane.
+         *
          */
         init: function(element, options) {
             var that = this,
-                panesConfig,
-                splitbarSelector,
-                expandCollapseSelector = ".k-splitbar .k-icon:not(.k-resize-handle)",
                 triggerResize = function() {
                     that.trigger(RESIZE);
                 };
 
             Widget.fn.init.call(that, element, options);
 
-            that.orientation = that.options.orientation.toLowerCase() != VERTICAL ? HORIZONTAL : VERTICAL;
-            splitbarSelector = ".k-splitbar-draggable-" + that.orientation;
+            that.wrapper = that.element;
 
-            that.bind([
-                /**
-                 * Fires before a pane is expanded.
-                 * @name kendo.ui.Splitter#expand
-                 * @event
-                 * @param {Event} e
-                 * @param {Element} e.pane The expanding pane
-                 */
-                EXPAND,
-                /**
-                 * Fires before a pane is collapsed.
-                 * @name kendo.ui.Splitter#collapse
-                 * @event
-                 * @param {Event} e
-                 * @param {Element} e.pane The collapsing pane
-                 */
-                COLLAPSE,
-                /**
-                 * Fires when a request for the pane contents has finished
-                 * @name kendo.ui.Splitter#contentLoad
-                 * @event
-                 * @param {Event} e
-                 * @param {Element} e.pane The pane whose content has been loaded.
-                 */
-                CONTENTLOAD,
-                /**
-                 * Fires when a pane is resized
-                 * @name kendo.ui.Splitter#resize
-                 * @event
-                 * @param {Event} e
-                 * @param {Element} e.pane The pane which is resized
-                 */
-                RESIZE,
-                /**
-                 * Fires when the splitter layout has changed
-                 * @name kendo.ui.Splitter#layoutChange
-                 * @event
-                 */
-                LAYOUTCHANGE
-            ], that.options);
+            that.orientation = that.options.orientation.toLowerCase() != VERTICAL ? HORIZONTAL : VERTICAL;
 
             that.bind(RESIZE, proxy(that._resize, that));
 
             that._initPanes();
 
-            that.element
-                .delegate(splitbarSelector, MOUSEENTER, function() { $(this).addClass("k-splitbar-" + that.orientation + "-hover"); })
-                .delegate(splitbarSelector, MOUSELEAVE, function() { $(this).removeClass("k-splitbar-" + that.orientation + "-hover"); })
-                .delegate(splitbarSelector, "mousedown", function() { that.element.find("> .k-pane > .k-content-frame").after("<div class='k-overlay' />"); })
-                .delegate(expandCollapseSelector, MOUSEENTER, function() { $(this).addClass("k-state-hover")})
-                .delegate(expandCollapseSelector, MOUSELEAVE, function() { $(this).removeClass('k-state-hover')})
-                .delegate(".k-splitbar .k-collapse-next, .k-splitbar .k-collapse-prev", CLICK, that._arrowClick(COLLAPSE))
-                .delegate(".k-splitbar .k-expand-next, .k-splitbar .k-expand-prev", CLICK, that._arrowClick(EXPAND))
-                .delegate(".k-splitbar", "dblclick", proxy(that._dbclick, that))
-                .parent().closest(".k-splitter").each(function() {
-                    $(this).data("kendoSplitter").bind(RESIZE, triggerResize);
-                });
+            that._attachEvents();
 
             $(window).resize(triggerResize);
 
             that.resizing = new PaneResizing(that);
+
+            that.element.triggerHandler("init.kendoSplitter");
+        },
+        events: [
+            /**
+            * Triggered when a pane of a Splitter is expanded.
+            *
+            * @name kendo.ui.Splitter#expand
+            * @event
+            *
+            * @param {Event} e
+            *
+            * @param {Element} e.pane
+            * The expanding pane of the Splitter.
+            *
+            * @exampleTitle Attach expand event handler during initialization; detach via unbind()
+            * @example
+            * // event handler for expand
+            * var onExpand = function(e) {
+            *     // access the expanded item via e.pane (HTMLElement)
+            * };
+            *
+            * // attach expand event handler during initialization
+            * var splitter = $("#splitter").kendoSplitter({
+            *     expand: onExpand
+            * });
+            *
+            * // detach expand event handler via unbind()
+            * splitter.data("kendoSplitter").unbind("expand", onExpand);
+            *
+            * @exampleTitle Attach expand event handler via bind(); detach via unbind()
+            * @example
+            * // event handler for expand
+            * var onExpand = function(e) {
+            *     // access the expanded item via e.pane (HTMLElement)
+            * };
+            *
+            * // attach expand event handler via bind()
+            * $("#splitter").data("kendoSplitter").bind("expand", onExpand);
+            *
+            * // detach expand event handler via unbind()
+            * $("#splitter").data("kendoSplitter").unbind("expand", onExpand);
+            *
+            */
+            EXPAND,
+
+            /**
+            * Triggered when a pane of a Splitter is collapsed.
+            *
+            * @name kendo.ui.Splitter#collapse
+            * @event
+            *
+            * @param {Event} e
+            * @param {Element} e.pane
+            * The collapsing pane of the Splitter.
+            *
+            * @exampleTitle Attach expand event handler during initialization; detach via unbind()
+            * @example
+            * // event handler for expand
+            * var onCollapse = function(e) {
+            *     // access the collapsed item via e.pane (HTMLElement)
+            * };
+            *
+            * // attach collapse event handler during initialization
+            * var splitter = $("#splitter").kendoSplitter({
+            *     collapse: onCollapse
+            * });
+            *
+            * // detach collapse event handler via unbind()
+            * splitter.data("kendoSplitter").unbind("collapse", onCollapse);
+            *
+            * @exampleTitle Attach collapse event handler via bind(); detach via unbind()
+            * @example
+            * // event handler for collapse
+            * var onExpand = function(e) {
+            *     // access the collapsed item via e.pane (HTMLElement)
+            * };
+            *
+            * // attach collapse event handler via bind()
+            * $("#splitter").data("kendoSplitter").bind("collapse", onCollapse);
+            *
+            * // detach collapse event handler via unbind()
+            * $("#splitter").data("kendoSplitter").unbind("collapse", onCollapse);
+            *
+            */
+            COLLAPSE,
+
+            /**
+            * Triggered when the content for a pane has finished loading.
+            *
+            * @name kendo.ui.Splitter#contentLoad
+            * @event
+            *
+            * @param {Event} e
+            *
+            * @param {HTMLElement} e.pane
+            * The pane whose content has been loaded.
+            *
+            * @exampleTitle Attach contentLoad event handler during initialization; detach via unbind()
+            * @example
+            * // event handler for contentLoad
+            * var onContentLoad = function(e) {
+            *     // access the loaded pane via e.pane (HTMLElement)
+            * };
+            *
+            * // attach contentLoad event handler during initialization
+            * var splitter = $("#splitter").kendoSplitter({
+            *     contentLoad: onContentLoad
+            * });
+            *
+            * // detach contentLoad event handler via unbind()
+            * splitter.data("kendoSplitter").unbind("contentLoad", onContentLoad);
+            *
+            * @exampleTitle Attach contentLoad event handler via bind(); detach via unbind()
+            * @example
+            * // event handler for contentLoad
+            * var onContentLoad = function(e) {
+            *     // access the loaded pane via e.pane (HTMLElement)
+            * };
+            *
+            * // attach contentLoad event handler via bind()
+            * $("#splitter").data("kendoSplitter").bind("contentLoad", onContentLoad);
+            *
+            * // detach contentLoad event handler via unbind()
+            * $("#splitter").data("kendoSplitter").unbind("contentLoad", onContentLoad);
+            *
+            */
+            CONTENTLOAD,
+
+            /**
+            * Triggered when a pane is resized.
+            *
+            * @name kendo.ui.Splitter#resize
+            * @event
+            * @param {Event} e
+            *
+            * @exampleTitle Attach resize event handler during initialization; detach via unbind()
+            * @example
+            * // event handler for resize
+            * var onResize = function(e) {
+            *     // ...
+            * };
+            *
+            * // attach resize event handler during initialization
+            * var splitter = $("#splitter").kendoSplitter({
+            *     resize: onResize
+            * });
+            *
+            * // detach resize event handler via unbind()
+            * splitter.data("kendoSplitter").unbind("resize", onResize);
+
+            * @exampleTitle Attach resize event handler via bind(); detach via unbind()
+            * @example
+            * // event handler for resize
+            * var onResize = function(e) {
+            *     // ...
+            * };
+            *
+            * // attach resize event handler via bind()
+            * $("#splitter").data("kendoSplitter").bind("resize", onResize);
+            *
+            * // detach resize event handler via unbind()
+            * $("#splitter").data("kendoSplitter").unbind("resize", onResize);
+            *
+            */
+            RESIZE,
+
+            /**
+            * Fires when the splitter layout has changed
+            *
+            * @name kendo.ui.Splitter#layoutChange
+            * @event
+            *
+            * @exampleTitle Attach layoutChange event handler during initialization; detach via unbind()
+            * @example
+            * // event handler for resize
+            * var onLayoutChange = function(e) {
+            *     // ...
+            * };
+            *
+            * $("#splitter").kendoSplitter({
+            *     layoutChange: onLayoutChange
+            * });
+            *
+            * @exampleTitle Attach layoutChange event handler via bind(); detach via unbind()
+            * @example
+            * // event handler for layoutChange
+            * var onLayoutChange = function(e) {
+            *     // ...
+            * };
+            *
+            * // attach layoutChange event handler via bind()
+            * $("#splitter").bind("layoutChange", onLayoutChange);
+            *
+            * // detach layoutChange event handler via unbind()
+            * $("#splitter").unbind("layoutChange", onLayoutChange);
+            *
+            */
+            LAYOUTCHANGE
+        ],
+
+        _attachEvents: function() {
+            var that = this,
+                orientation = that.options.orientation,
+                splitbarSelector = ".k-splitbar-draggable-" + orientation,
+                expandCollapseSelector = ".k-splitbar .k-icon:not(.k-resize-handle)",
+                triggerResize = function() {
+                    that.trigger(RESIZE);
+                };
+
+            that.element
+                .delegate(splitbarSelector, MOUSEENTER, function() { $(this).addClass("k-splitbar-" + that.orientation + "-hover"); })
+                .delegate(splitbarSelector, MOUSELEAVE, function() { $(this).removeClass("k-splitbar-" + that.orientation + "-hover"); })
+                .delegate(splitbarSelector, "mousedown", function() { that._contentFrames(this).after("<div class='k-overlay' />"); })
+                .delegate(splitbarSelector, "mouseup", function() { that._contentFrames(this).next(".k-overlay").remove(); })
+                .delegate(expandCollapseSelector, MOUSEENTER, function() { $(this).addClass("k-state-hover"); })
+                .delegate(expandCollapseSelector, MOUSELEAVE, function() { $(this).removeClass('k-state-hover'); })
+                .delegate(".k-splitbar .k-collapse-next, .k-splitbar .k-collapse-prev", CLICK, that._arrowClick(COLLAPSE))
+                .delegate(".k-splitbar .k-expand-next, .k-splitbar .k-expand-prev", CLICK, that._arrowClick(EXPAND))
+                .delegate(".k-splitbar", "dblclick", proxy(that._dbclick, that))
+                .parent().closest(".k-splitter").each(function() {
+                    var parentSplitter = $(this),
+                        splitter = parentSplitter.data("kendoSplitter");
+
+                    if (splitter) {
+                        splitter.bind(RESIZE, triggerResize);
+                    } else {
+                        parentSplitter.one("init.kendoSplitter", function() {
+                            $(this).data("kendoSplitter").bind(RESIZE, triggerResize);
+                            triggerResize();
+                        });
+                    }
+                });
         },
 
         options: {
@@ -324,7 +519,7 @@
             that.element
                 .addClass("k-widget").addClass("k-splitter")
                 .children()
-                    .addClass("k-pane")
+                    .addClass(KPANE)
                     .each(function (index, pane) {
                         var config = panesConfig && panesConfig[index];
 
@@ -339,13 +534,24 @@
         },
 
         /**
-        * Loads the pane content from the specified URL.
-        * @param {Selector|DomElement|jQueryObject} pane The pane whose content should be loaded.
-        * @param {String} url The URL which returns the pane content.
-        * @param {Object|String} data Data to be sent to the server.
-        * @example
-        * splitter.ajaxRequest("#Pane1", "/customer/profile", { id: 42 });
-        */
+         * Loads the content of a pane from a local or remote URL.
+         *
+         * @param {Selector | DOM Element} pane
+         * The targetted pane whose content is to be loaded via a URL.
+         *
+         * @param {String} url
+         * A local or remote URL from which the content of the pane is to be loaded.
+         *
+         * @param {Object | String} data
+         * Any data that is necessary to be sent to the server.
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // load content into the pane with ID, pane1
+         * splitter.ajaxRequest("#pane1", "/customer/profile", { id: 42 });
+         *
+         */
         ajaxRequest: function(pane, url, data) {
             pane = $(pane);
 
@@ -373,7 +579,7 @@
                     pane.removeClass("k-scrollable")
                         .html("<iframe src='" + url + "' frameborder='0' class='k-content-frame'>" +
                                 "This page requires frames in order to show content" +
-                            + "</iframe>");
+                              "</iframe>");
                 }
             }
         },
@@ -414,8 +620,9 @@
                 var target = $(e.target),
                     pane;
 
-                if (target.closest(".k-splitter")[0] != that.element[0])
+                if (target.closest(".k-splitter")[0] != that.element[0]) {
                     return;
+                }
 
                 if (target.is(".k-" + arrowType + "-prev")) {
                     pane = target.parent().prev();
@@ -425,7 +632,7 @@
                 that._triggerAction(arrowType, pane);
             };
         },
-        _updateSplitBar: function(splitBar, previousPane, nextPane) {
+        _updateSplitBar: function(splitbar, previousPane, nextPane) {
             var catIconIf = function(iconType, condition) {
                    return condition ? "<div class='k-icon " + iconType + "' />" : "";
                 },
@@ -436,7 +643,7 @@
                 nextCollapsible = nextPane.collapsible,
                 nextCollapsed = nextPane.collapsed;
 
-            splitBar.addClass("k-splitbar k-state-default k-splitbar-" + orientation)
+            splitbar.addClass("k-splitbar k-state-default k-splitbar-" + orientation)
                 .removeClass("k-splitbar-" + orientation + "-hover")
                 .toggleClass("k-splitbar-draggable-" + orientation,
                     draggable && !prevCollapsed && !nextCollapsed)
@@ -455,8 +662,8 @@
 
             this.element.children(".k-splitbar").each(function() {
                 var splitbar = $(this),
-                    previousPane = splitbar.prev(".k-pane").data(PANE),
-                    nextPane = splitbar.next(".k-pane").data(PANE);
+                    previousPane = splitbar.prev(PANECLASS).data(PANE),
+                    nextPane = splitbar.next(PANECLASS).data(PANE);
 
                 if (!nextPane) {
                     return;
@@ -464,6 +671,9 @@
 
                 that._updateSplitBar(splitbar, previousPane, nextPane);
             });
+        },
+        _contentFrames: function(splitbar) {
+            return $(splitbar).siblings(PANECLASS).find("> .k-content-frame");
         },
         _resize: function() {
             var that = this,
@@ -499,6 +709,7 @@
 
                     if (config.collapsed) {
                         size = 0;
+                        $(this).css("overflow", "hidden");
                     } else if (isFluid(config.size)) {
                         freeSizedPanes = freeSizedPanes.add(this);
                         return;
@@ -534,6 +745,14 @@
                 positioningProperty = isHorizontal ? "left" : "top",
                 sizingDomProperty = isHorizontal ? "offsetWidth" : "offsetHeight";
 
+            if (freeSizePanesCount === 0) {
+                var lastNonCollapsedPane = panes.filter(function() {
+                    return !(($(this).data(PANE) || {}).collapsed);
+                }).last();
+
+                lastNonCollapsedPane[sizingProperty](totalSize + lastNonCollapsedPane[0][sizingDomProperty]);
+            }
+
             element.children()
                 .css(alternateSizingProperty, element[alternateSizingProperty]())
                 .each(function (i, child) {
@@ -543,9 +762,36 @@
 
             that.trigger(LAYOUTCHANGE);
         },
+
+        /**
+         * Toggles the state of a specified pane (i.e. collapsed or expanded). Invoking this method will force the
+         * <strong>Splitter</strong> to redraw and it will trigger layoutChange and resize events. Note: Invoking the
+         * method will not trigger collapse or expand events.
+         *
+         * @param {Selector | DOM Element} pane
+         * The pane to be collapsed.
+         *
+         * @param {Boolean} expand (Optional)
+         * Represents the desired state of the specified pane; to be expanded (<strong>true</strong>) or collapsed
+         * (<strong>false</strong>). If undefined, toggle() will collapse the pane if it is expanded or will expand the
+         * pane if it is collapsed.
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // toggle the state of the pane with ID, pane1
+         * splitter.toggle("#pane1");
+         * // toggle the state of the pane with ID, pane1 to be expanded
+         * splitter.toggle("#pane1", true);
+         * // toggle the state of the pane with ID, pane1 to be collapsed
+         * splitter.toggle("#pane1", false);
+         *
+         */
         toggle: function(pane, expand) {
-            var pane = $(pane),
-                paneConfig = pane.data(PANE);
+            var paneConfig;
+
+            pane = $(pane);
+            paneConfig = pane.data(PANE);
 
             if (arguments.length == 1) {
                 expand = paneConfig.collapsed === undefined ? false : paneConfig.collapsed;
@@ -553,55 +799,116 @@
 
             paneConfig.collapsed = !expand;
 
+            if (paneConfig.collapsed) {
+                pane.css("overflow", "hidden");
+            } else {
+                pane.css("overflow", "");
+            }
+
             this.trigger(RESIZE);
         },
+
         /**
-        * Collapses the specified Pane item
-        * @param {Selector|DomElement|jQueryObject} pane The pane, which will be collapsed.
-        * @example
-        * splitter.collapse("#Item1"); // id of the first pane
-        */
+         * Collapses a specified pane. Invoking this method will force the <strong>Splitter</strong> to redraw and it
+         * will trigger layoutChange and resize events. Note: Invoking the method will not trigger a collapse event.
+         *
+         * @param {Selector | DOM Element} pane
+         * The pane to be collapsed.
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // collapse the pane with ID, pane1
+         * splitter.collapse("#pane1");
+         *
+         */
         collapse: function(pane) {
             this.toggle(pane, false);
         },
+
         /**
-        * Expands the specified Pane item
-        * @param {Selector|DomElement|jQueryObject} pane The pane, which will be expanded.
-        * @example
-        * splitter.expand("#Item1"); // id of the first pane
-        */
+         * Expands a specified pane. Invoking this method will force the <strong>Splitter</strong> to redraw and it
+         * will trigger layoutChange and resize events. Note: Invoking the method will not trigger an expand event.
+         *
+         * @param {Selector | DOM Element} pane
+         * The pane to be expanded.
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // expand the pane with ID, pane1
+         * splitter.expand("#pane1");
+         *
+         */
         expand: function(pane) {
             this.toggle(pane, true);
         },
+
         /**
-        * Set the size of the pane.
-        * @name kendo.ui.Splitter#size
-        * @function
-        * @param {Selector|DomElement|jQueryObject} pane The pane
-        * @param {String} value The new size of the pane.
-        * @example
-        * splitter.size("#Item1", "200px");
-        */
+         * Set the size of the pane. Setting this value will cause the <strong>Splitter</strong> to redraw and it will
+         * trigger layoutChange and resize events.
+         *
+         * @name kendo.ui.Splitter#size
+         * @function
+         *
+         * @param {Selector | DOM Element} pane
+         * The pane to be resized.
+         *
+         * @param {String} value
+         * The new size of the pane defined as pixels (i.e. "200px") or as a percentage (i.e. "50%"). Note: This value
+         * must not exceed <strong>panes.max</strong> or be less then <strong>panes.min</strong>.
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // set the size of the pane with ID, pane1
+         * splitter.size("#pane1", "200px");
+         *
+         */
         size: panePropertyAccessor("size", true),
+
         /**
-        * Set the minimum size of the pane.
-        * @name kendo.ui.Splitter#min
-        * @function
-        * @param {Selector|DomElement|jQueryObject} pane The pane
-        * @param {String} value The minimum size value.
-        * @example
-        * splitter.min("#Item1", "100px");
-        */
+         * Sets the minimum size of a pane. Setting this value will not cause the <strong>Splitter</strong> to
+         * redraw, nor will it trigger any events.
+         *
+         * @name kendo.ui.Splitter#min
+         * @function
+         *
+         * @param {Selector | DOM Element} pane
+         * The pane being targetted for a new minimum size configuration value.
+         *
+         * @param {String} value
+         * The minimum size value of the pane defined as pixels (i.e. "200px") or as a percentage (i.e. "50%").
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // set the minimum size of the pane with ID, pane1
+         * splitter.min("#pane1", "100px");
+         *
+         */
         min: panePropertyAccessor("min"),
+
         /**
-        * Set the maximum size of the pane.
-        * @name kendo.ui.Splitter#max
-        * @function
-        * @param {Selector|DomElement|jQueryObject} pane The pane
-        * @param {String} value The maximum size value.
-        * @example
-        * splitter.max("#Item1", "300px");
-        */
+         * Sets the maximum size of a pane. Setting this value will not cause the <strong>Splitter</strong> to
+         * redraw, nor will it trigger any events.
+         *
+         * @name kendo.ui.Splitter#max
+         * @function
+         *
+         * @param {Selector | DOM Element} pane
+         * The pane being targetted for a new minimum size configuration value.
+         *
+         * @param {String} value
+         * The maximum size value of the pane defined as pixels (i.e. "200px") or as a percentage (i.e. "50%").
+         *
+         * @example
+         * // get a reference to the splitter
+         * var splitter = $("#splitter").data("kendoSplitter");
+         * // set the maximum size of the pane with ID, pane1
+         * splitter.max("#pane1", "300px");
+         *
+         */
         max: panePropertyAccessor("max")
     });
 
@@ -635,7 +942,7 @@
 
         that._resizable = new kendo.ui.Resizable(splitter.element, {
             orientation: orientation,
-            handle: ".k-splitbar-draggable-" + orientation,
+            handle: splitter.element.children(".k-splitbar-draggable-" + orientation),
             hint: proxy(that._createHint, that),
             start: proxy(that._start, that),
             max: proxy(that._max, that),
@@ -649,17 +956,17 @@
         _createHint: function(handle) {
             var that = this;
             return $("<div class='k-ghost-splitbar k-ghost-splitbar-" + that.orientation + " k-state-default' />")
-                        .css(that.alternateSizingProperty, handle[that.alternateSizingProperty]())
+                        .css(that.alternateSizingProperty, handle[that.alternateSizingProperty]());
         },
         _start: function(e) {
             var that = this,
-                splitBar = $(e.currentTarget),
-                previousPane = splitBar.prev(),
-                nextPane = splitBar.next(),
+                splitbar = $(e.currentTarget),
+                previousPane = splitbar.prev(),
+                nextPane = splitbar.next(),
                 previousPaneConfig = previousPane.data(PANE),
                 nextPaneConfig = nextPane.data(PANE),
-                prevBoundary = parseInt(previousPane[0].style[that.positioningProperty]),
-                nextBoundary = parseInt(nextPane[0].style[that.positioningProperty]) + nextPane[0][that.sizingDomProperty] - splitBar[0][that.sizingDomProperty],
+                prevBoundary = parseInt(previousPane[0].style[that.positioningProperty], 10),
+                nextBoundary = parseInt(nextPane[0].style[that.positioningProperty], 10) + nextPane[0][that.sizingDomProperty] - splitbar[0][that.sizingDomProperty],
                 totalSize = that._element.css(that.sizingProperty),
                 toPx = function (value) {
                     var val = parseInt(value, 10);
@@ -683,19 +990,20 @@
         },
         _stop: function(e) {
             var that = this,
-                splitBar = $(e.currentTarget);
+                splitbar = $(e.currentTarget),
+                owner = that.owner;
 
-            splitBar.siblings(".k-pane").find("> .k-content-frame + .k-overlay").remove();
+            owner._contentFrames(splitbar).next(".k-overlay").remove();
 
             if (e.keyCode !== kendo.keys.ESC) {
                 var ghostPosition = e.position,
-                    previousPane = splitBar.prev(),
-                    nextPane = splitBar.next(),
+                    previousPane = splitbar.prev(),
+                    nextPane = splitbar.next(),
                     previousPaneConfig = previousPane.data(PANE),
                     nextPaneConfig = nextPane.data(PANE),
-                    previousPaneNewSize = ghostPosition - parseInt(previousPane[0].style[that.positioningProperty]),
-                    nextPaneNewSize = parseInt(nextPane[0].style[that.positioningProperty]) + nextPane[0][that.sizingDomProperty] - ghostPosition - splitBar[0][that.sizingDomProperty],
-                    fluidPanesCount = that._element.children(".k-pane").filter(function() { return isFluid($(this).data(PANE).size); }).length;
+                    previousPaneNewSize = ghostPosition - parseInt(previousPane[0].style[that.positioningProperty], 10),
+                    nextPaneNewSize = parseInt(nextPane[0].style[that.positioningProperty], 10) + nextPane[0][that.sizingDomProperty] - ghostPosition - splitbar[0][that.sizingDomProperty],
+                    fluidPanesCount = that._element.children(PANECLASS).filter(function() { return isFluid($(this).data(PANE).size); }).length;
 
                 if (!isFluid(previousPaneConfig.size) || fluidPanesCount > 1) {
                     if (isFluid(previousPaneConfig.size)) {
@@ -709,11 +1017,12 @@
                     nextPaneConfig.size = nextPaneNewSize + "px";
                 }
 
-                that.owner.trigger(RESIZE);
+                owner.trigger(RESIZE);
             }
 
             return false;
         }
-    }
+    };
 
 })(jQuery);
+;

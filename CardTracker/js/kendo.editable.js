@@ -1,13 +1,12 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -16,18 +15,39 @@
         isFunction = $.isFunction,
         isPlainObject = $.isPlainObject,
         inArray = $.inArray,
-        Binder = kendo.data.ModelViewBinder,
-        Validator = ui.Validator,
+        ERRORTEMPLATE = '<div class="k-widget k-tooltip k-tooltip-validation" style="margin:0.5em"><span class="k-icon k-warning"> </span>' +
+                    '${message}<div class="k-callout k-callout-n"></div></div>',
         CHANGE = "change";
 
     var specialRules = ["url", "email", "number", "date", "boolean"];
 
+    function fieldType(field) {
+        field = field != null ? field : "";
+        return field.type || $.type(field) || "string";
+    }
+
+    function convertToValueBinding(container) {
+        container.find(":input:not(:button, [" + kendo.attr("role") + "=upload], [" + kendo.attr("skip") + "]), select").each(function() {
+            var bindAttr = kendo.attr("bind"),
+                binding = this.getAttribute(bindAttr) || "",
+                bindingName = this.type === "checkbox" ? "checked:" : "value:",
+                fieldName = this.name;
+
+            if (binding.indexOf(bindingName) === -1 && fieldName) {
+                binding += (binding.length ? "," : "") + bindingName + fieldName;
+
+                $(this).attr(bindAttr, binding);
+            }
+        });
+    }
+
     function createAttributes(options) {
-        var field = options.model.fields[options.field],
-            type = field.type,
-            validation = field.validation,
+        var field = (options.model.fields || options.model)[options.field],
+            type = fieldType(field),
+            validation = field ? field.validation : {},
             ruleName,
             DATATYPE = kendo.attr("type"),
+            BINDING = kendo.attr("bind"),
             rule,
             attr = {
                 name: options.field
@@ -49,7 +69,30 @@
             attr[DATATYPE] = type;
         }
 
+        attr[BINDING] = (type === "boolean" ? "checked:" : "value:") + options.field;
+
         return attr;
+    }
+
+    function convertItems(items) {
+        var idx,
+            length,
+            item,
+            value,
+            text,
+            result;
+
+        if (items && items.length) {
+            result = [];
+            for (idx = 0, length = items.length; idx < length; idx++) {
+                item = items[idx];
+                text = item.text || item.value || item;
+                value = item.value == null ? (item.text || item) : item.value;
+
+                result[idx] = { text: text, value: value };
+            }
+        }
+        return result;
     }
 
     var editors = {
@@ -67,11 +110,19 @@
         },
         "string": function(container, options) {
             var attr = createAttributes(options);
+
             $('<input type="text" class="k-input k-textbox"/>').attr(attr).appendTo(container);
         },
         "boolean": function(container, options) {
             var attr = createAttributes(options);
             $('<input type="checkbox" />').attr(attr).appendTo(container);
+        },
+        "values": function(container, options) {
+            var attr = createAttributes(options);
+            $('<select ' + kendo.attr("text-field") + '="text"' + kendo.attr("value-field") + '="value"' +
+                kendo.attr("source") + "=\'" + kendo.stringify(convertItems(options.values)) +
+                "\'" + kendo.attr("role") + '="dropdownlist"/>') .attr(attr).appendTo(container);
+            $('<span ' + kendo.attr("for") + '="' + options.field + '" class="k-invalid-msg"/>').hide().appendTo(container);
         }
     };
 
@@ -80,15 +131,17 @@
             var that = this;
 
             Widget.fn.init.call(that, element, options);
-
-            that.bind([CHANGE], that.options);
-
+            that._validateProxy = $.proxy(that._validate, that);
             that.refresh();
         },
 
+        events: [CHANGE],
+
         options: {
             name: "Editable",
-            editors: editors
+            editors: editors,
+            clearContainer: true,
+            errorTemplate: ERRORTEMPLATE
         },
 
         editor: function(field, modelField) {
@@ -97,28 +150,55 @@
                 isObject = isPlainObject(field),
                 fieldName = isObject ? field.field : field,
                 model = that.options.model || {},
-                fieldType = modelField && modelField.type ? modelField.type : "string",
-                editor = isObject && field.editor ? field.editor : editors[fieldType];
+                isValuesEditor = isObject && field.values,
+                type = isValuesEditor ? "values" : fieldType(modelField),
+                isCustomEditor = isObject && field.editor,
+                editor = isCustomEditor ? field.editor : editors[type],
+                container = that.element.find("[data-container-for=" + fieldName + "]");
 
             editor = editor ? editor : editors["string"];
 
-            if (modelField) {
-                editor(that.element, extend(true, {}, isObject ? field : { field: fieldName }, { model: model }));
+            if (isCustomEditor && typeof field.editor === "string") {
+                editor = function(container) {
+                    container.append(field.editor);
+                };
             }
+
+            container = container.length ? container : that.element;
+            editor(container, extend(true, {}, isObject ? field : { field: fieldName }, { model: model }));
         },
 
-        _binderChange: function(e) {
-            var that = this;
-            if (!that.validatable.validate() || that.trigger(CHANGE, { values: e.values })) {
-                e.preventDefault();
+        _validate: function(e) {
+            var that = this,
+                isBoolean = typeof e.value === "boolean",
+                input,
+                preventChangeTrigger = that._validationEventInProgress,
+                values = {};
+
+            values[e.field] = e.value;
+
+            input = $(':input[' + kendo.attr("bind") + '="' + (isBoolean ? 'checked:' : 'value:') + e.field + '"]', that.element);
+
+            try {
+                that._validationEventInProgress = true;
+
+                if (!that.validatable.validateInput(input) || (!preventChangeTrigger && that.trigger(CHANGE, { values: values }))) {
+                    e.preventDefault();
+                }
+
+            } finally {
+                that._validationEventInProgress = false;
             }
         },
 
         end: function() {
-            return this.binder.bindModel();
+            return this.validatable.validate();
         },
 
-        distroy: function() {
+        destroy: function() {
+            this.options.model.unbind("set", this._validateProxy);
+            kendo.unbind(this.element);
+
             this.element.removeData("kendoValidator")
                 .removeData("kendoEditable");
         },
@@ -128,10 +208,9 @@
                 idx,
                 length,
                 fields = that.options.fields || [],
-                container = that.element.empty(),
+                container = that.options.clearContainer ? that.element.empty() : that.element,
                 model = that.options.model || {},
-                rules = {},
-                settings = {};
+                rules = {};
 
             if (!$.isArray(fields)) {
                 fields = [fields];
@@ -141,8 +220,7 @@
                 var field = fields[idx],
                     isObject = isPlainObject(field),
                     fieldName = isObject ? field.field : field,
-                    modelField = (model.fields || {})[fieldName],
-                    type = modelField ? modelField.type : null,
+                    modelField = (model.fields || model)[fieldName],
                     validation = modelField ? (modelField.validation || {}) : {};
 
                 for (var rule in validation) {
@@ -151,22 +229,19 @@
                     }
                 }
 
-                if (isObject && field.format && type == "date") {
-                    settings[fieldName] = {
-                        format: function(value) { return kendo.format(field.format, value); },
-                        parse: function(value) { return kendo.parseDate(value, field.format); }
-                    };
-                }
-
                 that.editor(field, modelField);
             }
 
-            settings[CHANGE] = $.proxy(that._binderChange, that);
-            that.binder = new Binder(container, that.options.model, settings);
+            convertToValueBinding(container);
+
+            kendo.bind(container, that.options.model);
+
+            that.options.model.bind("set", that._validateProxy);
 
             that.validatable = container.kendoValidator({
-                errorTemplate: '<div class="k-widget k-tooltip k-tooltip-validation" style="margin:0.5em"><span class="k-icon k-warning"> </span>' +
-                                '${message}<div class="k-callout k-callout-n"></div></div>', rules: rules }).data("kendoValidator");
+                validateOnBlur: false,
+                errorTemplate: that.options.errorTemplate || undefined,
+                rules: rules }).data("kendoValidator");
 
             container.find(":input:visible:first").focus();
         }
@@ -174,3 +249,4 @@
 
    ui.plugin(Editable);
 })(jQuery);
+;

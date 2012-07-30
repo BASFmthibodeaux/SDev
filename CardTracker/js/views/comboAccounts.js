@@ -15,6 +15,8 @@ function comboAccounts() {
 	this.connectionString = "";
 	this.account = "";
 	this.destinationDiv = "";
+	this.hash = "Nada";
+	
 	// ---------------------------------------------------------------------------
 	this.createCombo = 
 			function () {
@@ -23,11 +25,12 @@ function comboAccounts() {
 		    				read: {
 		    					url: ConnectionString+"/views/list_accounts.php",
 		    					data: {
-		    						cHash: "nada1",
+		    						cHash: this.hash,
 		    						account: this.account
 		    					}
 		    				},
 		    			},
+
 	    				schema: {
 	    					type: "xml",
 	    					data: "/accounts/account",
@@ -50,17 +53,24 @@ function comboAccounts() {
 		    		alert ("WARNING: comboAccounts.js -can't find "+this.destinationDiv+" div tag in HTML file.");
 		    	}
 		    	
-		    	if (onComboAccountsChangeValue == undefined) {
-		    		alert ("WARNING: comboAccounts.js -onComboAccountsChangeValue function in HTML file is missing.");
-		    	}
-		    	
                 $(this.destinationDiv).kendoDropDownList({
 	            	dataSource: ds,
-			        dataTextField: "bank",
+			        dataTextField: "card_type",
         			dataValueField: "acc_id",
-        			suggest: true,
-        			template: '<div width="300">${ data.bank } / <b>${ data.card_type }</b></div>', 
-        			change: onComboAccountsChangeValue
+        			suggest: true,		    	        
+        			animation: {
+	    	             open: {
+	    	                 effects: "fadeIn",
+	    	                 duration: 300,
+	    	                 show: true
+	    	             },
+	    	             close: {
+	    	                 effects: "fadeOut",
+	    	                 duration: 300,
+	    	                 show: true
+	    	             }
+	    	        },
+        			template: '<div width="250"><b>${ data.card_type }</b> - ${ data.bank } </div>'
 	            });
             };
 }

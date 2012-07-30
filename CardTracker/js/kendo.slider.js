@@ -1,93 +1,134 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
+/**
+ * @fileOverview Provides a Slider and RangeSlider implementation which can be used to display a rich input for
+ * selecting values or ranges of values.
+ */
 
-(function ($, undefined) {
+(function($, undefined) {
     /**
+     *
      * @name kendo.ui.Slider.Description
-     * @section
-     *  <p>
-     *      The Slider widget provides a rich input for selecting values or ranges of values.
-     *      Unlike the plain HTML5 range input, the Slider presents a consistent experience across
-     *      all browsers and has a rich API and event model.
-     *  </p>
-     *  <h3>Getting Started</h3>
-     *  There are two basic types of Sliders:
-     *  <ol>
-     *      <li><strong>Slider</strong>, which presents one thumb and two opposing buttons for selecting a single value</li>
-     *      <li><strong>RangeSlider</strong>, which present two thumbs for defining a range of values</li>
-     *  </ol>
-     *  <h4>Slider</h4>
-     * @exampleTitle Create simple HTML input element
-     * @example
-     *  <input id="slider" />
-     * @exampleTitle Initialize the Slider using a jQuery selector
-     * @example
-     *  $("#slider").kendoSlider();
      *
      * @section
-     *  <h4>RangeSlider</h4>
-     * @exampleTitle Create two simple HTML input elements in a div
-     * @example
-     *  <div id="rangeSlider">
-     *      <input />
-     *      <input />
-     *  </div>
+     * <p>
+     *  The <strong>Slider</strong> provides a rich input for selecting values or ranges of values. Unlike the HTML5
+     *  range input, the <strong>Slider</strong> presents a consistent experience across browsers and features a rich
+     *  API and event model.
+     * </p>
+     * <h3>Getting Started</h3>
+     * <p>There are two types of <strong>Slider</strong>:</p>
+     * <ol>
+     *  <li><strong>Slider</strong>, which presents one thumb and two opposing buttons for selecting a single value</li>
+     *  <li><strong>RangeSlider</strong>, which present two thumbs for defining a range of values</li>
+     * </ol>
+     * <h4>Slider</h4>
      *
-     * @exampleTitle Initialize the RangeSlider using a jQuery selector targeting the div
+     * @exampleTitle Create an input element
      * @example
-     *  $("#rangeSlider").kendoRangeSlider();
+     * <input id="slider" />
      *
      * @section
-     *  <p>
-     *      The RangeSlider requires two inputs to capture both ends of the value range. This
-     *      benefits scenarios where JavaScript is disabled, in which case users will be presented
-     *      with two inputs, still allowing them to input a valid range.
-     *  </p>
+     * <p>
+     *  Initialization of a <strong>Slider</strong> should occur after the DOM is fully loaded. It is recommended that
+     *  initialization the <strong>Slider</strong> occur within a handler is provided to $(document).ready().
+     * </p>
      *
-     *  <h3>Customizing Slider Behavior</h3>
-     *  Many facets of the Slider and RangeSlider behavior can be configured via simple properties, including:
-     *  <ul>
-     *      <li>Min/Max values</li>
-     *      <li>Orientation (horizontal or vertical)</li>
-     *      <li>Small/Large step</li>
-     *      <li>Tooltip format/placement</li>
-     *  </ul>
-     *  <p>
-     *      To see a full list of available properties and values, review the Slider Configuration API documentation tab.
-     *  </p>
-     * @exampleTitle Customizing Slider default settings
+     * @exampleTitle Initialize a Slider using a selector within $(document).ready()
      * @example
-     *  $("#slider").kendoSlider({
-     *      min:10,
-     *      max:50,
-     *      orientation: "vertical",
-     *      smallStep: 1,
-     *      largeStep: 10
-     *  });
+     * $(document).ready(function() {
+     *     $("#slider").kendoSlider();
+     * });
+     *
+     * @section
+     * <h4>RangeSlider</h4>
+     * @exampleTitle Create two HTML input elements in a div
+     * @example
+     * <div id="rangeSlider">
+     *     <input />
+     *     <input />
+     * </div>
+     *
+     * @section
+     * <p>
+     *  Initialization of a <strong>RangeSlider</strong> should occur after the DOM is fully loaded. It is recommended
+     *  that initialization the <strong>RangeSlider</strong> occur within a handler is provided to $(document).ready().
+     * </p>
+     *
+     * @exampleTitle Initialize a RangeSlider using a selector within $(document).ready()
+     * @example
+     * $(document).ready(function() {
+     *     $("#rangeSlider").kendoRangeSlider();
+     * });
+     *
+     * @section
+     * <p>
+     *  The <strong>RangeSlider</strong> requires two inputs to capture both ends of the value range. This benefits
+     *  scenarios where JavaScript is disabled, in which case users will be presented with two inputs, still allowing
+     *  them to input a valid range.
+     * </p>
+     * <h3>Customizing Slider Behaviors</h3>
+     * <p>
+     *  Many facets of the <strong>Slider</strong> and <strong>RangeSlider</strong> behavior can be configured through
+     *  properties, including:
+     * </p>
+     * <ul>
+     *  <li>Minimum and/or maximum values</li>
+     *  <li>Orientation (horizontal or vertical)</li>
+     *  <li>Small or large step</li>
+     *  <li>Tooltip format/placement</li>
+     * </ul>
+     *
+     * @exampleTitle Initialize a Slider and its properties
+     * @example
+     * $("#slider").kendoSlider({
+     *     min: 10,
+     *     max: 50,
+     *     orientation: "vertical",
+     *     smallStep: 1,
+     *     largeStep: 10
+     * });
+     *
+     * @section
+     * <h3>Accessing an Existing Slider</h3>
+     * <p>
+     *  You can reference an existing <strong>Slider</strong> instance via
+     *  <a href="http://api.jquery.com/jQuery.data/">jQuery.data()</a>. Once a reference has been established, you can
+     *  use the API to control its behavior.
+     * </p>
+     *
+     * @exampleTitle Accessing an existing Slider instance
+     * @example
+     * var slider = $("#slider").data("kendoSlider");
      *
      */
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
         Draggable = kendo.ui.Draggable,
-        keys = kendo.keys,
         extend = $.extend,
+        format = kendo.format,
         parse = kendo.parseFloat,
         proxy = $.proxy,
+        isArray = $.isArray,
         math = Math,
-        touch = kendo.support.touch,
+        support = kendo.support,
+        touch = support.touch,
+        pointers = support.pointers,
         CHANGE = "change",
         SLIDE = "slide",
         MOUSE_DOWN = touch ? "touchstart" : "mousedown",
+        TRACK_MOUSE_DOWN = touch ? "touchstart" : pointers ? "MSPointerDown" : "mousedown",
         MOUSE_UP = touch ? "touchend" : "mouseup",
         MOVE_SELECTION = "moveSelection",
         KEY_DOWN = "keydown",
+        CLICK = "click",
         MOUSE_OVER = "mouseover",
         DRAG_HANDLE = ".k-draghandle",
         TRACK_SELECTOR = ".k-slider-track",
@@ -96,7 +137,8 @@
         STATE_DEFAULT = "k-state-default",
         STATE_DISABLED = "k-state-disabled",
         PRECISION = 3,
-        DISABLED = "disabled";
+        DISABLED = "disabled",
+        UNDEFINED = "undefined";
 
     var SliderBase = Widget.extend({
         init: function(element, options) {
@@ -147,41 +189,44 @@
                 34: step(-options.largeStep)  // page down
             };
 
-            that.bind([
-                /**
-                 * Fires when the slider value changes as a result of selecting a new value with the drag handle, buttons or keyboard.
-                 * @name kendo.ui.Slider#change
-                 * @event
-                 * @param {Event} e
-                 * @param {Number} e.value Represents the updated value of the slider.
-                 */
-
-                /**
-                 * Fires when the rangeSlider value changes as a result of selecting a new value with one of the drag handles or the keyboard.
-                 * @name kendo.ui.RangeSlider#change
-                 * @event
-                 * @param {Event} e
-                 * @param {Number} e.values Represents the updated array of values of the first and second drag handle.
-                 */
-                CHANGE,
-
-                /**
-                 * Fires when the user drags the drag handle to a new position.
-                 * @name kendo.ui.Slider#slide
-                 * @event
-                 * @param {Event} e
-                 * @param {Number} e.value Represents the value from the current position of the drag handle.
-                 */
-
-                /**
-                 * Fires when the user drags the drag handle to a new position.
-                 * @name kendo.ui.RangeSlider#slide
-                 * @event
-                 * @param {Event} e
-                 * @param {Number} e.values Represents an array of values of the current positions of the first and second drag handle.
-                 */
-                SLIDE], options);
+            kendo.notify(that);
         },
+
+        events: [
+            /**
+            * Fires when the slider value changes as a result of selecting a new value with the drag handle, buttons or keyboard.
+            * @name kendo.ui.Slider#change
+            * @event
+            * @param {Event} e
+            * @param {Number} e.value Represents the updated value of the slider.
+            **/
+
+            /**
+            * Fires when the rangeSlider value changes as a result of selecting a new value with one of the drag handles or the keyboard.
+            * @name kendo.ui.RangeSlider#change
+            * @event
+            * @param {Event} e
+            * @param {Number} e.value Represents the updated array of values of the first and second drag handle.
+            **/
+            CHANGE,
+
+            /**
+            * Fires when the user drags the drag handle to a new position.
+            * @name kendo.ui.Slider#slide
+            * @event
+            * @param {Event} e
+            * @param {Number} e.value Represents the value from the current position of the drag handle.
+            **/
+
+            /**
+            * Fires when the user drags the drag handle to a new position.
+            * @name kendo.ui.RangeSlider#slide
+            * @event
+            * @param {Event} e
+            * @param {Number} e.value Represents an array of values of the current positions of the first and second drag handle.
+            **/
+            SLIDE
+        ],
 
         options: {
             enabled: true,
@@ -210,9 +255,10 @@
                 i,
                 paddingTop = 0,
                 bordersWidth = 2,
+                count = items.length,
                 selection = 0;
 
-            for (i = 0; i < items.length - 2; i++) {
+            for (i = 0; i < count - 2; i++) {
                 $(items[i + 1])[that._size](pixelWidths[i]);
             }
 
@@ -224,7 +270,7 @@
                 $(items[first]).addClass("k-last")[that._size](pixelWidths[last - 1]);
             }
 
-            if (that._distance % options.smallStep != 0 && !that._isHorizontal) {
+            if (that._distance % options.smallStep !== 0 && !that._isHorizontal) {
                 for (i = 0; i < pixelWidths.length; i++) {
                     selection += pixelWidths[i];
                 }
@@ -241,12 +287,13 @@
                 options = that.options,
                 items = that.wrapper.find(TICK_SELECTOR),
                 titleNumber = options.min,
-                i = that._isHorizontal ? 0 : items.length - 1,
-                limit = that._isHorizontal ? items.length : -1,
+                count = items.length,
+                i = that._isHorizontal ? 0 : count - 1,
+                limit = that._isHorizontal ? count : -1,
                 increment = that._isHorizontal ? 1 : -1;
 
-            for (; i - limit != 0 ; i += increment) {
-                $(items[i]).attr("title", kendo.format(options.tooltip.format, round(titleNumber)));
+            for (; i - limit !== 0 ; i += increment) {
+                $(items[i]).attr("title", format(options.tooltip.format, round(titleNumber)));
                 titleNumber += options.smallStep;
             }
         },
@@ -259,7 +306,7 @@
                 item = {},
                 step = round(options.largeStep / options.smallStep);
 
-            if ((1000 * options.largeStep) % (1000 * options.smallStep) == 0) {
+            if ((1000 * options.largeStep) % (1000 * options.smallStep) === 0) {
                 if (that._isHorizontal) {
                     for (i = 0; i < items.length; i = round(i + step)) {
                         item = $(items[i]);
@@ -274,7 +321,7 @@
                         item.addClass("k-tick-large")
                             .html("<span class='k-label'>" + item.attr("title") + "</span>");
 
-                        if (i != 0 && i != items.length - 1) {
+                        if (i !== 0 && i !== items.length - 1) {
                             item.css("line-height", item[that._size]() + "px");
                         }
                     }
@@ -307,9 +354,11 @@
         },
 
         _roundWidths: function(pixelWidthsArray) {
-            var balance = 0;
+            var balance = 0,
+                count = pixelWidthsArray.length,
+                i;
 
-            for (i = 0; i < pixelWidthsArray.length; i++) {
+            for (i = 0; i < count; i++) {
                 balance += (pixelWidthsArray[i] - math.floor(pixelWidthsArray[i]));
                 pixelWidthsArray[i] = math.floor(pixelWidthsArray[i]);
             }
@@ -320,7 +369,7 @@
         },
 
         _addAdditionalSize: function(additionalSize, pixelWidthsArray) {
-            if (additionalSize == 0) {
+            if (additionalSize === 0) {
                 return pixelWidthsArray;
             }
 
@@ -329,7 +378,7 @@
                 i;
 
             for (i = 0; i < additionalSize; i++) {
-                pixelWidthsArray[parseInt(math.round(step * i))] += 1;
+                pixelWidthsArray[parseInt(math.round(step * i), 10)] += 1;
             }
 
             return pixelWidthsArray;
@@ -340,17 +389,18 @@
                 options = that.options,
                 val = options.min,
                 selection = 0,
-                itemsCount = pixelWidths.length,
+                itemsCount = math.ceil(that._distance / options.smallStep),
                 i = 1,
                 lastItem;
 
+            itemsCount += (that._distance / options.smallStep) % 1 === 0 ? 1 : 0;
             pixelWidths.splice(0, 0, pixelWidths[itemsCount - 2] * 2);
             pixelWidths.splice(itemsCount -1, 1, pixelWidths.pop() * 2);
 
             that._pixelSteps = [selection];
             that._values = [val];
 
-            if (itemsCount == 0) {
+            if (itemsCount === 0) {
                 return;
             }
 
@@ -362,7 +412,7 @@
                 i++;
             }
 
-            lastItem = options.max % options.smallStep == 0 ? itemsCount - 1 : itemsCount;
+            lastItem = that._distance % options.smallStep === 0 ? itemsCount - 1 : itemsCount;
 
             that._pixelSteps[lastItem] = that._maxSelection;
             that._values[lastItem] = options.max;
@@ -374,7 +424,6 @@
                 step = math.max(options.smallStep * (that._maxSelection / that._distance), 0),
                 position = 0,
                 halfStep = (step / 2),
-                val = 0,
                 i;
 
             if (that._isHorizontal) {
@@ -383,7 +432,7 @@
                 position = dragableArea.startPoint - mousePosition;
             }
 
-            if (that._maxSelection - ((parseInt(that._maxSelection % step) - 3) / 2) < position) {
+            if (that._maxSelection - ((parseInt(that._maxSelection % step, 10) - 3) / 2) < position) {
                 return options.max;
             }
 
@@ -452,9 +501,9 @@
         var buttonCssClass = "";
 
         if (type == "increase") {
-            buttonCssClass = isHorizontal ? "k-arrow-next" : "k-arrow-up";
+            buttonCssClass = isHorizontal ? "k-i-arrow-e" : "k-i-arrow-n";
         } else {
-            buttonCssClass = isHorizontal ? "k-arrow-prev" : "k-arrow-down";
+            buttonCssClass = isHorizontal ? "k-i-arrow-w" : "k-i-arrow-s";
         }
 
         return "<a class='k-button k-button-" + type + "'><span class='k-icon " + buttonCssClass +
@@ -463,7 +512,8 @@
 
     function createSliderItems (options, distance) {
         var result = "<ul class='k-reset k-slider-items'>",
-            count = math.floor(round(distance / options.smallStep)) + 1;
+            count = math.floor(round(distance / options.smallStep)) + 1,
+            i;
 
         for(i = 0; i < count; i++) {
             result += "<li class='k-tick'>&nbsp;</li>";
@@ -478,21 +528,21 @@
         var dragHandleCount = element.is("input") ? 1 : 2;
 
         return "<div class='k-slider-track'><div class='k-slider-selection'><!-- --></div>" +
-               "<a href='javascript:void(0)' class='k-draghandle' title='Drag'>Drag</a>" +
-               (dragHandleCount > 1 ? "<a href='javascript:void(0)' class='k-draghandle' title='Drag'>Drag</a>" : "") +
+               "<a href='#' class='k-draghandle' title='Drag'>Drag</a>" +
+               (dragHandleCount > 1 ? "<a href='#' class='k-draghandle' title='Drag'>Drag</a>" : "") +
                "</div>";
     }
 
-    function step(step) {
+    function step(stepValue) {
         return function (value) {
-            return value + step;
-        }
+            return value + stepValue;
+        };
     }
 
     function setValue(value) {
         return function () {
             return value;
-        }
+        };
     }
 
     function formatValue(value) {
@@ -506,67 +556,155 @@
     }
 
     function parseAttr(element, name) {
-        return parse(element.getAttribute(name)) || undefined;
+        var value = parse(element.getAttribute(name));
+        if (value === null) {
+            value = undefined;
+        }
+        return value;
+    }
+
+    var touchLocation = function(e) {
+        return {
+            idx: 0,
+            x: e.pageX,
+            y: e.pageY
+        };
+    };
+
+    if (support.pointers) {
+        /** @ignore */
+        touchLocation = function(e) {
+            return {
+                idx: 0,
+                x: e.originalEvent.clientX,
+                y: e.originalEvent.clientY
+            };
+        };
+    }
+
+    if (support.touch) {
+        /** @ignore */
+        touchLocation = function(e, id) {
+            var changedTouches = e.changedTouches || e.originalEvent.changedTouches;
+
+            if (id) {
+                var output = null;
+                $.each(changedTouches, function(idx, value) {
+                    if (id == value.identifier) {
+                        output = {
+                            idx: value.identifier,
+                            x: value.pageX,
+                            y: value.pageY
+                        };
+                    }
+                });
+                return output;
+            } else {
+                return {
+                    idx: changedTouches[0].identifier,
+                    x: changedTouches[0].pageX,
+                    y: changedTouches[0].pageY
+                };
+            }
+        };
+    }
+
+    function defined(value) {
+        return typeof value !== UNDEFINED;
     }
 
     var Slider = SliderBase.extend(/** @lends kendo.ui.Slider.prototype */{
         /**
+         *
+         * Creates a Slider instance.
+         *
          * @constructs
          * @extends kendo.ui.Widget
-         * @param {DomElement} element DOM element
+         *
+         * @param {Element} element DOM element
          * @param {Object} options Configuration options.
-         * @option {Boolean} [enabled] <true> Can be used to enable/disable the slider.
-         * @option {Number} [min] <0> The minimum value of the slider.
-         * @option {Number} [max] <10> The maximum value of the slider.
-         * @option {Boolean} [showButtons] <true> Can be used to show or hide the slider increase and decrease buttons. The buttons are used to increase or decrease the value. They are not available in the RangeSlider.
-         * @option {Object} [tooltip] Confituration of the slider tooltip.
-         * @option {Boolean} [tooltip.enabled] <true> Can be used to enable/disable the tooltip.
-         * @option {String} [tooltip.format] <"{0}"> Can be used to formatting of the text of the tooltip. Note that the applied format will also influence the appearance of the slider tick labels.
-         * @option {Number} [value] <0> The value of the slider.
-         * @option {String} [orientation] <"horizontal"> The orientation of the slider. Available options are "horizontal" and "vertical".
-         * @option {String} [tickPlacement] <"both"> the location of the tick marks in the widget. Available options are:
-         *     <dl>
+         *
+         * @option {Number} [min] <0>
+         * The minimum value of the <strong>Slider</strong>.
+         *
+         * @option {Number} [max] <10>
+         * The maximum value of the <strong>Slider</strong>.
+         *
+         * @option {Boolean} [showButtons] <true>
+         * Can be used to show (<b>true</b>) or hide (<b>false</b>) the
+         * increase and decrease buttons of a <strong>Slider</strong>.
+         *
+         * @option {Object} [tooltip]
+         * Configuration of the <strong>Slider</strong> tooltip.
+         *
+         * @option {Boolean} [tooltip.enabled] <true>
+         * Disables (<b>false</b>) or enables (<b>true</b>) the tooltip of
+         * the <strong>Slider</strong>.
+         *
+         * @option {String} [tooltip.format] <"{0}">
+         * Format string for the text of the tooltip. Note: The applied
+         * format will also influence the appearance of the <strong>Slider</strong>
+         * tick labels.
+         *
+         * @option {Number} [value] <0>
+         * The underlying value of the <strong>Slider</strong>.
+         *
+         * @option {String} [orientation] <"horizontal">
+         * The orientation of a <strong>Slider</strong>; <strong>"horizontal"</strong> or <strong>"vertical"</strong>.
+         *
+         * @option {String} [tickPlacement] <"both">
+         * Denotes the location of the tick marks in the <strong>Slider</strong>. The available options are:
+         * <div class="details-list">
+         *    <dl>
          *         <dt>
-         *              "topLeft"
+         *              <code>"topLeft"</code>
          *         </dt>
          *         <dd>
-         *              Tick marks are located on the top of the horizontal widget or on the left of the vertical widget.
+         *              Tick marks are located on the top of the horizontal widget or on the left of
+         *   the vertical widget.
          *         </dd>
          *         <dt>
-         *              "bottomRight"
+         *              <code>"bottomRight"</code>
          *         </dt>
          *         <dd>
-         *              Tick marks are located on the bottom of the horizontal widget or on the right side of the vertical widget.
+         *             Tick marks are located on the bottom of the horizontal widget or on the
+         *   right side of the vertical widget.
          *         </dd>
          *         <dt>
-         *              "both"
+         *              <code>"both"</code>
          *         </dt>
          *         <dd>
-         *              Tick marks are located on both sides of the widget.
+         *             Tick marks are located on both sides of the widget.
          *         </dd>
-         *     </dl>
-         * @option {Number} [smallStep] <1> The small step of the slider. The Value will be changed with SmallStep when the end user:
-         *     <ul>
-         *         <li>
-         *             clicks on the Slider buttons
-         *         </li>
-         *         <li>
-         *             presses the arrow keys (the drag handle must be focused)
-         *         </li>
-         *         <li>
-         *             drag the drag handle
-         *         </li>
-         *     </ul>
-         * @option {Number} [largeStep] <5> The delta with which the value will change when the user presses the Page Up or Page Down key (the drag handle must be focused). Note that the allied largeStep will also set large tick for every large step.
-         * @option {String} [increaseButtonTitle] <"Increase"> The title of the increase button of the slider.
-         * @option {String} [decreaseButtonTitle] <"Decrease"> The title of the decrease button of the slider.
+         *         <dt>
+         *              <code>"none"</code>
+         *         </dt>
+         *         <dd>
+         *             Tick marks are not visible.
+         *         </dd>
+         *    </dl>
+         * </div>
+         * @option {Number} [smallStep] <1>
+         * The small step value of the <strong>Slider</strong>. The underlying value will be changed when the end user
+         * (1) clicks on the increase or decrease buttons of the <strong>Slider</strong>, (2) presses the arrow keys
+         * (the drag handle must be focused), or (3) drags the drag handle.
+         *
+         * @option {Number} [largeStep] <5>
+         * The delta with which the value will change when the user presses the Page Up or Page Down key (the drag
+         * handle must be focused). Note: The allied largeStep will also set large tick for every large step.
+         *
+         * @option {String} [increaseButtonTitle] <"Increase">
+         * The title of the increase button of the <strong>Slider</strong>.
+         *
+         * @option {String} [decreaseButtonTitle] <"Decrease">
+         * The title of the decrease button of the <strong>Slider</strong>.
+         *
          */
         init: function(element, options) {
             var that = this,
                 dragHandle;
 
             element.type = "text";
-
             options = extend({}, {
                 value: parseAttr(element, "value"),
                 min: parseAttr(element, "min"),
@@ -574,10 +712,19 @@
                 smallStep: parseAttr(element, "step")
             }, options);
 
+            element = $(element);
+
+            if (options && options.enabled === undefined) {
+                options.enabled = !element.is("[disabled]");
+            }
+
             SliderBase.fn.init.call(that, element, options);
             options = that.options;
+            if (!defined(options.value)) {
+                options.value = options.min;
+                element.val(options.min);
+            }
 
-            that._setValueInRange(options.value);
             dragHandle = that.wrapper.find(DRAG_HANDLE);
 
             new Slider.Selection(dragHandle, that, options);
@@ -586,40 +733,53 @@
 
         options: {
             name: "Slider",
-            value: 0,
             showButtons: true,
             increaseButtonTitle: "Increase",
-            decreaseButtonTitle: "Decrease"
+            decreaseButtonTitle: "Decrease",
+            tooltip: { format: "{0}" }
         },
 
         /**
-         * Enables the slider.
+         * Enable/Disable the <strong>Slider</strong> widget.
+         * @param {Boolean} enable
+         * The argument, which defines whether to enable/disable the <strong>Slider</strong>.
          * @example
+         * // get a reference to the slider widget
          * var slider = $("#slider").data("kendoSlider");
          *
+         * // disables the slider
+         * slider.enable(false);
+         *
          * // enables the slider
-         * slider.enable();
+         * slider.enable(true);
          */
-        enable: function () {
+        enable: function (enable) {
             var that = this,
                 options = that.options,
                 clickHandler,
                 move;
 
+            that.disable();
+            if (enable === false) {
+                return;
+            }
+
             that.wrapper
-                .removeAttr(DISABLED)
                 .removeClass(STATE_DISABLED)
                 .addClass(STATE_DEFAULT);
 
+            that.wrapper.find("input").removeAttr(DISABLED);
+
             clickHandler = function (e) {
-                if ($(e.target).hasClass("k-draghandle")) {
-                    $(e.target).addClass(STATE_SELECTED);
+                var location = touchLocation(e),
+                    mousePosition = that._isHorizontal ? location.x : location.y,
+                    dragableArea = that._getDragableArea(),
+                    target = $(e.target);
+
+                if (target.hasClass("k-draghandle")) {
+                    target.addClass(STATE_SELECTED);
                     return;
                 }
-
-                var location = kendo.touchLocation(e),
-                    mousePosition = that._isHorizontal ? location.x : location.y,
-                    dragableArea = that._getDragableArea();
 
                 that._update(that._getValueFromPosition(mousePosition, dragableArea));
 
@@ -627,32 +787,33 @@
             };
 
             that.wrapper
-                .find(TICK_SELECTOR).bind(MOUSE_DOWN, clickHandler)
-                .end()
-                .find(TRACK_SELECTOR).bind(MOUSE_DOWN, clickHandler);
+                .find(TICK_SELECTOR + ", " + TRACK_SELECTOR)
+                    .bind(TRACK_MOUSE_DOWN, clickHandler)
+                    .end().bind(TRACK_MOUSE_DOWN, function() {
+                        $(document.documentElement).one("selectstart", kendo.preventDefault);
+                    });
 
-            that.wrapper.find(DRAG_HANDLE).bind(MOUSE_UP, function (e) {
-                $(e.target).removeClass(STATE_SELECTED);
-            });
+            that.wrapper
+                .find(DRAG_HANDLE)
+                .bind(MOUSE_UP, function (e) {
+                    $(e.target).removeClass(STATE_SELECTED);
+                })
+                .bind(CLICK, function (e) {
+                    e.preventDefault();
+                });
 
-            move = proxy(function (e, sign) {
-                var index = math.ceil(options.value / options.smallStep) - math.abs(options.min);
-
-                if (index >= that._values.length - 1 || index <= 0) {
-                    that._setValueInRange(options.value + (sign * options.smallStep));
-                } else {
-                    that._setValueInRange(that._values[index + (sign * 1)]);
-                }
+            move = proxy(function (sign) {
+                that._setValueInRange(that._nextValueByIndex(that._valueIndex + (sign * 1)));
             }, that);
 
             if (options.showButtons) {
                 var mouseDownHandler = proxy(function(e, sign) {
-                    if (e.which == 1 || (touch && e.which == 0)) {
-                        move(e, sign);
+                    if (e.which === 1 || (touch && e.which === 0)) {
+                        move(sign);
 
                         this.timeout = setTimeout(proxy(function () {
                             this.timer = setInterval(function () {
-                                move(e, sign)
+                                move(sign);
                             }, 60);
                         }, this), 200);
                     }
@@ -688,42 +849,34 @@
             options.enabled = true;
         },
 
-        /**
-         * Disables the slider.
-         * @example
-         * var slider = $("#slider").data("kendoSlider");
-         *
-         * // disables the slider
-         * slider.disable();
-         */
         disable: function () {
             var that = this;
 
             that.wrapper
-                .attr(DISABLED, DISABLED)
                 .removeClass(STATE_DEFAULT)
                 .addClass(STATE_DISABLED);
+
+            $(that.element).attr(DISABLED, DISABLED);
 
             that.wrapper
                 .find(".k-button")
                 .unbind(MOUSE_DOWN)
-                .bind(MOUSE_DOWN, false)
+                .bind(MOUSE_DOWN, kendo.preventDefault)
                 .unbind(MOUSE_UP)
-                .bind(MOUSE_UP, false)
+                .bind(MOUSE_UP, kendo.preventDefault)
                 .unbind("mouseleave")
-                .bind("mouseleave", false)
+                .bind("mouseleave", kendo.preventDefault)
                 .unbind(MOUSE_OVER)
-                .bind(MOUSE_OVER, false);
+                .bind(MOUSE_OVER, kendo.preventDefault);
 
             that.wrapper
-                .find(TICK_SELECTOR).unbind(MOUSE_DOWN)
-                .end()
-                .find(TRACK_SELECTOR).unbind(MOUSE_DOWN);
+                .find(TICK_SELECTOR + ", " + TRACK_SELECTOR).unbind(TRACK_MOUSE_DOWN);
 
             that.wrapper
                 .find(DRAG_HANDLE)
                 .unbind(MOUSE_UP)
                 .unbind(KEY_DOWN)
+                .unbind(CLICK)
                 .bind(KEY_DOWN, false);
 
             that.options.enabled = false;
@@ -741,33 +894,37 @@
         },
 
         /**
-         * The value method gets or sets the value of the slider.
-         * The value method accepts a {String} or a {Number} as parameters, and returns a {Nubmer}.
+         *
+         * Gets or sets the value of a <strong>Slider</strong>. It accepts a string or number as parameters and returns
+         * a number representing the underlying value.
+         *
+         * @param {String} [value]
+         * The value to be set for a Slider.
+         *
          * @example
          * var slider = $("#slider").data("kendoSlider");
+         * var sliderValue = slider.value();
          *
-         * // Get or sets the value of the slider
-         * slider.value();
          */
-        value: function (val) {
+        value: function (value) {
             var that = this,
                 options = that.options;
 
-            val = round(val);
-            if (isNaN(val)) {
+            value = round(value);
+            if (isNaN(value)) {
                 return options.value;
             }
 
-            if (val >= options.min && val <= options.max) {
-                if (options.value != val) {
-                    that.element.attr("value", formatValue(val));
-                    options.value = val;
-                    that.refresh();
+            if (value >= options.min && value <= options.max) {
+                if (options.value != value) {
+                    that.element.attr("value", formatValue(value));
+                    options.value = value;
+                    that._refresh();
                 }
             }
         },
 
-        refresh: function () {
+        _refresh: function () {
             this.trigger(MOVE_SELECTION, { value: this.options.value });
         },
 
@@ -797,14 +954,19 @@
 
             val = math.max(math.min(val, options.max), options.min);
             that._update(val);
+        },
+
+        _nextValueByIndex: function (index) {
+            var count = this._values.length;
+            return this._values[math.max(0, math.min(index, count - 1))];
         }
     });
 
     Slider.Selection = function (dragHandle, that, options) {
         function moveSelection (val) {
             var selectionValue = val - options.min,
-                index = math.ceil(selectionValue / options.smallStep),
-                selection = parseInt(that._pixelSteps[index]),
+                index = that._valueIndex = math.ceil(round(selectionValue / options.smallStep)),
+                selection = parseInt(that._pixelSteps[index], 10),
                 selectionDiv = that._trackDiv.find(".k-slider-selection"),
                 halfDragHanndle = parseInt(dragHandle[that._outerSize]() / 2, 10);
 
@@ -828,27 +990,35 @@
         that.type = type;
 
         that.draggable = new Draggable(dragHandle, {
+            threshold: 0,
             dragstart: proxy(that._dragstart, that),
             drag: proxy(that.drag, that),
-            dragend: proxy(that.dragend, that)
+            dragend: proxy(that.dragend, that),
+            dragcancel: proxy(that.dragcancel, that)
         });
 
         dragHandle.click(false);
     };
 
     Slider.Drag.prototype = {
-        dragstart: function (e) {
-            this.draggable._startDrag(e);
+        dragstart: function(e) {
+            // HACK to initiate click on the line
+            this.draggable.drag._start(e);
         },
 
-        _dragstart: function (e) {
+        _dragstart: function(e) {
             var that = this,
                 owner = that.owner,
-                options = that.options;
+                options = that.options,
+                tooltip = options.tooltip,
+                html = '',
+                tooltipTemplate,
+                formattedSelectionStart,
+                formattedSelectionEnd;
 
             if (!options.enabled) {
                 e.preventDefault();
-                return false;
+                return;
             }
 
             owner.element.unbind(MOUSE_OVER);
@@ -865,18 +1035,35 @@
                 that.oldVal = that.val = options.value;
             }
 
-            if (options.tooltip.enabled) {
+            if (tooltip.enabled) {
+                if (tooltip.template) {
+                    tooltipTemplate = that.tooltipTemplate = kendo.template(tooltip.template);
+                }
+
                 that.tooltipDiv = $("<div class='k-widget k-tooltip'><!-- --></div>").appendTo(document.body);
-                var html = "";
 
                 if (that.type) {
-                    var formattedSelectionStart = kendo.format(options.tooltip.format, that.selectionStart),
-                        formattedSelectionEnd = kendo.format(options.tooltip.format, that.selectionEnd);
+                    if (that.tooltipTemplate) {
+                        html = tooltipTemplate({
+                            selectionStart: that.selectionStart,
+                            selectionEnd: that.selectionEnd
+                        });
+                    } else {
+                        formattedSelectionStart = format(tooltip.format, that.selectionStart);
+                        formattedSelectionEnd = format(tooltip.format, that.selectionEnd);
 
-                    html = formattedSelectionStart + " - " + formattedSelectionEnd;
+                        html = formattedSelectionStart + ' - ' + formattedSelectionEnd;
+                    }
                 } else {
-                    that.tooltipInnerDiv = "<div class='k-callout k-callout-" + (owner._isHorizontal ? "s" : "e") + "'><!-- --></div>";
-                    html = kendo.format(options.tooltip.format, that.val) + that.tooltipInnerDiv;
+                    that.tooltipInnerDiv = "<div class='k-callout k-callout-" + (owner._isHorizontal ? 's' : 'e') + "'><!-- --></div>";
+                    if (that.tooltipTemplate) {
+                        html = tooltipTemplate({
+                            value: that.val
+                        });
+                    } else {
+                        html = format(tooltip.format, that.val);
+                    }
+                    html += that.tooltipInnerDiv;
                 }
 
                 that.tooltipDiv.html(html);
@@ -889,14 +1076,23 @@
             var that = this,
                 owner = that.owner,
                 options = that.options,
-                location = kendo.touchLocation(e),
+                x = e.x.location,
+                y = e.y.location,
                 startPoint = that.dragableArea.startPoint,
-                endPoint = that.dragableArea.endPoint;
+                endPoint = that.dragableArea.endPoint,
+                tooltip = options.tooltip,
+                html = "",
+                tooltipTemplate = that.tooltipTemplate,
+                slideParams,
+                formattedSelectionStart,
+                formattedSelectionEnd;
+
+            e.preventDefault();
 
             if (owner._isHorizontal) {
-                that.val = that.constrainValue(location.x, startPoint, endPoint, location.x >= endPoint);
+                that.val = that.constrainValue(x, startPoint, endPoint, x >= endPoint);
             } else {
-                that.val = that.constrainValue(location.y, endPoint, startPoint, location.y <= endPoint);
+                that.val = that.constrainValue(y, endPoint, startPoint, y <= endPoint);
             }
 
             if (that.oldVal != that.val) {
@@ -916,44 +1112,68 @@
                             that.selectionStart = that.selectionEnd = that.val;
                         }
                     }
-
-                    owner.trigger(SLIDE, { values: [that.selectionStart, that.selectionEnd] });
-
-                    if (options.tooltip.enabled) {
-                        var formattedSelectionStart = kendo.format(options.tooltip.format, that.selectionStart),
-                            formattedSelectionEnd = kendo.format(options.tooltip.format, that.selectionEnd);
-
-                        that.tooltipDiv.html(formattedSelectionStart + " - " + formattedSelectionEnd );
-                    }
+                    slideParams = {
+                        values: [that.selectionStart, that.selectionEnd],
+                        value: [that.selectionStart, that.selectionEnd]
+                    };
                 } else {
-                    owner.trigger(SLIDE, { value: that.val });
-
-                    if (options.tooltip.enabled) {
-                        that.tooltipDiv.html(kendo.format(options.tooltip.format, that.val) + that.tooltipInnerDiv);
-                    }
+                    slideParams = { value: that.val };
                 }
 
-                if (options.tooltip.enabled) {
+                owner.trigger(SLIDE, slideParams);
+
+                if (tooltip.enabled) {
+                    if (that.type) {
+                        if (that.tooltipTemplate) {
+                            html = tooltipTemplate({
+                                selectionStart: that.selectionStart,
+                                selectionEnd: that.selectionEnd
+                        });
+                        } else {
+                            formattedSelectionStart = format(tooltip.format, that.selectionStart);
+                            formattedSelectionEnd = format(tooltip.format, that.selectionEnd);
+                            html = formattedSelectionStart + " - " + formattedSelectionEnd;
+                        }
+                    } else {
+                        if (that.tooltipTemplate) {
+                            html = tooltipTemplate({
+                                value: that.val
+                            });
+                        } else {
+                            html = format(tooltip.format, that.val);
+                        }
+
+                        html += that.tooltipInnerDiv;
+                    }
+                    that.tooltipDiv.html(html);
                     that.moveTooltip();
                 }
             }
         },
 
-        dragend: function (e) {
+        dragcancel: function(e) {
+            this.owner._refresh();
+            return this._end();
+        },
+
+        dragend: function(e) {
             var that = this,
                 owner = that.owner;
 
-            if (e.keyCode == kendo.keys.ESC) {
-                owner.refresh();
+            if (that.type) {
+                owner._update(that.selectionStart, that.selectionEnd);
             } else {
-                if (that.type) {
-                    owner._update(that.selectionStart, that.selectionEnd);
-                } else {
-                    owner._update(that.val);
-                }
+                owner._update(that.val);
             }
 
-            if (owner.options.tooltip.enabled) {
+            return that._end();
+        },
+
+        _end: function() {
+            var that = this,
+                owner = that.owner;
+
+            if (owner.options.tooltip.enabled && owner.options.enabled) {
                 that.tooltipDiv.remove();
             }
 
@@ -971,12 +1191,14 @@
                 dragHandleOffset = that.dragHandle.offset(),
                 margin = 4,
                 callout = that.tooltipDiv.find(".k-callout"),
-                padding;
+                dragHandles,
+                firstDragHandleOffset,
+                secondDragHandleOffset;
 
             if (that.type) {
-                var dragHandles = owner.wrapper.find(DRAG_HANDLE),
-                    firstDragHandleOffset = dragHandles.eq(0).offset(),
-                    secondDragHandleOffset = dragHandles.eq(1).offset();
+                dragHandles = owner.wrapper.find(DRAG_HANDLE);
+                firstDragHandleOffset = dragHandles.eq(0).offset();
+                secondDragHandleOffset = dragHandles.eq(1).offset();
 
                 if (owner._isHorizontal) {
                     positionTop = secondDragHandleOffset.top;
@@ -990,10 +1212,10 @@
                 positionLeft = dragHandleOffset.left;
             }
             if (owner._isHorizontal) {
-                positionLeft -= parseInt((that.tooltipDiv.outerWidth() - that.dragHandle[owner._outerSize]()) / 2);
+                positionLeft -= parseInt((that.tooltipDiv.outerWidth() - that.dragHandle[owner._outerSize]()) / 2, 10);
                 positionTop -= that.tooltipDiv.outerHeight() + callout.height() + margin;
             } else {
-                positionTop -= parseInt((that.tooltipDiv.outerHeight() - that.dragHandle[owner._outerSize]()) / 2);
+                positionTop -= parseInt((that.tooltipDiv.outerHeight() - that.dragHandle[owner._outerSize]()) / 2, 10);
                 positionLeft -= that.tooltipDiv.outerWidth() + callout.width() + margin;
             }
 
@@ -1020,59 +1242,85 @@
 
     kendo.ui.plugin(Slider);
 
-    //
-    // RangeSlider
-    //
-
     var RangeSlider = SliderBase.extend(/** @lends kendo.ui.RangeSlider.prototype */{
         /**
+         *
+         * Creates a RangeSlider instance.
+         *
          * @constructs
          * @extends kendo.ui.Widget
-         * @param {DomElement} element DOM element
+         *
+         * @param {Element} element DOM element
          * @param {Object} options Configuration options.
-         * @option {Boolean} [enabled] <true> Can be used to enable/disable the rangeSlider.
-         * @option {Number} [min] <0> The minimum value of the rangeSlider.
-         * @option {Number} [max] <10> The maximum value of the rangeSlider.
-         * @option {Object} [tooltip] Confituration of the Rangelider tooltip.
-         * @option {Boolean} [tooltip.enabled] <true> Can be used to enable/disable the tooltip.
-         * @option {String} [tooltip.format] <"{0}"> Can be used to formatting of the text of the tooltip. Note that the applied format will also influence the appearance of the rangeSlider tick labels.
-         * @option {Number} [selectionStart] <0> The selection start value of the rangeSlider.
-         * @option {Number} [selectionEnd] <10> The selection end value of the rangeSlider.
-         * @option {String} [orientation] <"horizontal"> The orientation of the rangeSlider. Available options are "horizontal" and "vertical".
-         * @option {String} [tickPlacement] <"both"> the location of the tick marks in the widget. Available options are:
-         *     <dl>
+         *
+         * @option {Number} [min] <0>
+         * The minimum value of the <strong>RangeSlider</strong>.
+         *
+         * @option {Number} [max] <10>
+         * The maximum value of the <strong>RangeSlider</strong>.
+         *
+         * @option {Object} [tooltip]
+         * Configuration of the <strong>RangeSlider</strong> tooltip.
+         *
+         * @option {String} [tooltip.format] <"{0}">
+         * Format string for the text of the tooltip. Note: The applied format will also influence the appearance of
+         * the <strong>RangeSlider</strong> tick labels.
+         *
+         * @option {Boolean} [tooltip.enabled] <true>
+         * Disables (<b>false</b>) or enables (<b>true</b>) the tooltip of the <strong>RangeSlider</strong>.
+         *
+         * @option {String} [orientation] <"horizontal">
+         * The orientation of a <strong>RangeSlider</strong>; <strong>"horizontal"</strong> or
+         * <strong>"vertical"</strong>.
+         *
+         * @option {String} [tickPlacement] <"both">
+         * Denotes the location of the tick marks in the <strong>RangeSlider</strong>. The available options are:
+         * <div class="details-list">
+         *    <dl>
          *         <dt>
-         *              "topLeft"
+         *              <code>"topLeft"</code>
          *         </dt>
          *         <dd>
-         *              Tick marks are located on the top of the horizontal widget or on the left of the vertical widget.
+         *              Tick marks are located on the top of the horizontal widget or on the left of
+         *   the vertical widget.
          *         </dd>
          *         <dt>
-         *              "bottomRight"
+         *              <code>"bottomRight"</code>
          *         </dt>
          *         <dd>
-         *              Tick marks are located on the bottom of the horizontal widget or on the right side of the vertical widget.
+         *             Tick marks are located on the bottom of the horizontal widget or on the
+         *   right side of the vertical widget.
          *         </dd>
          *         <dt>
-         *              "both"
+         *              <code>"both"</code>
          *         </dt>
          *         <dd>
-         *              Tick marks are located on both sides of the widget.
+         *             Tick marks are located on both sides of the widget.
          *         </dd>
-         *     </dl>
-         * @option {Number} [smallStep] <1> The small step of the rangeSlider. The Value will be changed with SmallStep when the end user:
-         *     <ul>
-         *         <li>
-         *             clicks on the Slider buttons
-         *         </li>
-         *         <li>
-         *             presses the arrow keys (the drag handle must be focused)
-         *         </li>
-         *         <li>
-         *             drag the drag handle
-         *         </li>
-         *     </ul>
-         * @option {Number} [largeStep] <5> The delta with which the value will change when the user presses the Page Up or Page Down key (the drag handle must be focused). Note that the allied largeStep will also set large ticks for every large step.
+         *         <dt>
+         *              <code>"none"</code>
+         *         </dt>
+         *         <dd>
+         *             Tick marks are not visible.
+         *         </dd>
+         *    </dl>
+         * </div>
+         *
+         * @option {Number} [smallStep] <1>
+         * The small step value of the <strong>RangeSlider</strong>. The underlying value will be changed when the end
+         * user (1) clicks on the increase or decrease buttons of the <strong>RangeSlider</strong>, (2) presses the
+         * arrow keys (the drag handle must be focused), or (3) drags the drag handle.
+         *
+         * @option {Number} [largeStep] <5>
+         * The delta with which the value will change when the user presses the Page Up or Page Down key (the drag
+         * handle must be focused). Note: The allied largeStep will also set large tick for every large step.
+         *
+         * @option {Number} [selectionStart] <0>
+         * The selection start value of the <strong>RangeSlider</strong>.
+         *
+         * @option {Number} [selectionEnd] <10>
+         * The selection end value of the <strong>RangeSlider</strong>.
+         *
          */
         init: function(element, options) {
             var that = this,
@@ -1095,9 +1343,21 @@
                 smallStep: parseAttr(secondInput, "step")
             }, options);
 
+            if (options && options.enabled === undefined) {
+                options.enabled = !inputs.is("[disabled]");
+            }
+
             SliderBase.fn.init.call(that, element, options);
             options = that.options;
-            that._setValueInRange(options.selectionStart, options.selectionEnd);
+            if (!defined(options.selectionStart)) {
+                options.selectionStart = options.min;
+                inputs.eq(0).val(options.min);
+            }
+
+            if (!defined(options.selectionEnd)) {
+                options.selectionEnd = options.max;
+                inputs.eq(1).val(options.max);
+            }
 
             var dragHandles = that.wrapper.find(DRAG_HANDLE);
 
@@ -1108,38 +1368,50 @@
 
         options: {
             name: "RangeSlider",
-            selectionStart: 0,
-            selectionEnd: 10
+            tooltip: { format: "{0}" }
         },
 
         /**
-         * Enables the rangeSlider.
+         * Enable/Disable the <strong>RangeSlider</strong> widget.
+         * @param {Boolean} enable
+         * The argument, which defines whether to enable/disable the <strong>RangeSlider</strong>.
          * @example
+         * // get a reference to the range slider widget
          * var rangeSlider = $("#rangeSlider").data("kendoRangeSlider");
          *
-         * // enables the rangeSlider
-         * rangeSlider.enable();
+         * // disables the range slider
+         * rangeSlider.enable(false);
+         *
+         * // enables the range slider
+         * rangeSlider.enable(true);
          */
-        enable: function () {
+        enable: function (enable) {
             var that = this,
                 options = that.options,
                 clickHandler;
 
+            that.disable();
+            if (enable === false) {
+                return;
+            }
+
             that.wrapper
-                .removeAttr(DISABLED)
                 .removeClass(STATE_DISABLED)
                 .addClass(STATE_DEFAULT);
 
-            clickHandler = function (e) {
-                if ($(e.target).hasClass("k-draghandle")) {
-                    $(e.target).addClass(STATE_SELECTED);
-                    return;
-                }
+            that.wrapper.find("input").removeAttr(DISABLED);
 
-                var location = kendo.touchLocation(e),
+            clickHandler = function (e) {
+                var location = touchLocation(e),
                     mousePosition = that._isHorizontal ? location.x : location.y,
                     dragableArea = that._getDragableArea(),
-                    val = that._getValueFromPosition(mousePosition, dragableArea);
+                    val = that._getValueFromPosition(mousePosition, dragableArea),
+                    target = $(e.target);
+
+                if (target.hasClass("k-draghandle")) {
+                    target.addClass(STATE_SELECTED);
+                    return;
+                }
 
                 if (val < options.selectionStart) {
                     that._setValueInRange(val, options.selectionEnd);
@@ -1158,14 +1430,22 @@
                 }
             };
 
-            that.wrapper
-                .find(TICK_SELECTOR).bind(MOUSE_DOWN, clickHandler)
-                .end()
-                .find(TRACK_SELECTOR).bind(MOUSE_DOWN, clickHandler);
 
-            that.wrapper.find(DRAG_HANDLE).bind(MOUSE_UP, function (e) {
-                $(e.target).removeClass(STATE_SELECTED);
-            });
+            that.wrapper
+                .find(TICK_SELECTOR + ", " + TRACK_SELECTOR)
+                    .bind(TRACK_MOUSE_DOWN, clickHandler)
+                    .end().bind(TRACK_MOUSE_DOWN, function() {
+                        $(document.documentElement).one("selectstart", kendo.preventDefault);
+                    });
+
+            that.wrapper
+                .find(DRAG_HANDLE)
+                .bind(MOUSE_UP, function (e) {
+                    $(e.target).removeClass(STATE_SELECTED);
+                })
+                .bind(CLICK, function (e) {
+                    e.preventDefault();
+                });
 
             that.wrapper.find(DRAG_HANDLE)
                 .eq(0).bind(KEY_DOWN,
@@ -1183,33 +1463,24 @@
             that.options.enabled = true;
         },
 
-        /**
-         * Disables the rangeSlider.
-         * @example
-         * var rangeSlider = $("#rangeSlider").data("kendoRangeSlider");
-         *
-         * // disables the rangeSlider
-         * rangeSlider.disable();
-         */
         disable: function () {
-            var that = this,
-                options = that.options;
+            var that = this;
 
             that.wrapper
-                .attr(DISABLED, DISABLED)
                 .removeClass(STATE_DEFAULT)
                 .addClass(STATE_DISABLED);
 
+            that.wrapper.find("input").attr(DISABLED, DISABLED);
+
             that.wrapper
-                .find(TICK_SELECTOR).unbind(MOUSE_DOWN)
-                .end()
-                .find(TRACK_SELECTOR).unbind(MOUSE_DOWN);
+                .find(TICK_SELECTOR + ", " + TRACK_SELECTOR).unbind(TRACK_MOUSE_DOWN);
 
             that.wrapper
                 .find(DRAG_HANDLE)
                 .unbind(MOUSE_UP)
                 .unbind(KEY_DOWN)
-                .bind(KEY_DOWN, false);
+                .unbind(CLICK)
+                .bind(KEY_DOWN, kendo.preventDefault);
 
             that.options.enabled = false;
         },
@@ -1241,61 +1512,83 @@
 
         _update: function (selectionStart, selectionEnd) {
             var that = this,
-                values = that.values();
+                values = that.value();
 
             var change = values[0] != selectionStart || values[1] != selectionEnd;
 
-            that.values(selectionStart, selectionEnd);
+            that.value([selectionStart, selectionEnd]);
 
             if (change) {
-                that.trigger(CHANGE, { values: [selectionStart, selectionEnd] });
+                that.trigger(CHANGE, {
+                    values: [selectionStart, selectionEnd],
+                    value: [selectionStart, selectionEnd]
+                });
             }
         },
 
         /**
-         * The values method gets or sets the selection start and end of the RangeSlider. The values method accepts {String}, {Number} or {Array} object as parameters, and returns a {Array} object with start and end selection values.
+         *
+         * The value method gets or sets the start and end values of the <strong>RangeSlider</strong>. It
+         * accepts an array as parameter, and returns an object array with the start and end
+         * selection values.
+         *
          * @example
          * var rangeSider = $("#rangeSlider").data("kendoRangeSlider");
+         * rangeSlider.value();
          *
-         * // Get or sets the selection start and end of the rangeSlider
-         * rangeSlider.values();
          */
-        values: function () {
+        value: function(value) {
+            if (value && value.length) {
+                return this._value(value[0], value[1]);
+            } else {
+                return this._value();
+            }
+        },
+
+        _value: function(start, end) {
             var that = this,
                 options = that.options,
-                selectionStart = 0,
-                selectionEnd = 0;
+                selectionStart = options.selectionStart,
+                selectionEnd = options.selectionEnd;
 
-            if (arguments.length == 0) {
-                return [options.selectionStart, options.selectionEnd];
-            } else if (arguments.length == 1 && $.isArray(arguments[0])) {
-                selectionStart = arguments[0][0];
-                selectionEnd = arguments[0][1];
+            if (isNaN(start) && isNaN(end)) {
+                return [selectionStart, selectionEnd];
             } else {
-                selectionStart = round(arguments[0]);
-                selectionEnd = round(arguments[1]);
+                start = round(start);
+                end = round(end);
             }
 
-            if (selectionStart >= options.min && selectionStart <= options.max
-            && selectionEnd >= options.min && selectionEnd <= options.max && selectionStart <= selectionEnd) {
-                if (options.selectionStart != selectionStart || options.selectionEnd != selectionEnd) {
+            if (start >= options.min && start <= options.max &&
+                end >= options.min && end <= options.max && start <= end) {
+                if (selectionStart != start || selectionEnd != end) {
                     that.element.find("input")
-                                .eq(0).attr("value", formatValue(selectionStart))
-                                .end()
-                                .eq(1).attr("value", formatValue(selectionEnd));
+                        .eq(0).attr("value", formatValue(start))
+                        .end()
+                        .eq(1).attr("value", formatValue(end));
 
-                    options.selectionStart = selectionStart;
-                    options.selectionEnd = selectionEnd;
-                    that.refresh();
+                    options.selectionStart = start;
+                    options.selectionEnd = end;
+                    that._refresh();
                 }
             }
         },
 
-        refresh: function() {
+        values: function (start, end) {
+            if (isArray(start)) {
+                return this._value(start[0], start[1]);
+            } else {
+                return this._value(start, end);
+            }
+        },
+
+        _refresh: function() {
             var that = this,
                 options = that.options;
 
-            that.trigger(MOVE_SELECTION, { values: [options.selectionStart, options.selectionEnd] });
+            that.trigger(MOVE_SELECTION, {
+                values: [options.selectionStart, options.selectionEnd],
+                value: [options.selectionStart, options.selectionEnd]
+            });
 
             if (options.selectionStart == options.max && options.selectionEnd == options.max) {
                 that._setZIndex("firstHandle");
@@ -1324,11 +1617,12 @@
     });
 
     RangeSlider.Selection = function (dragHandles, that, options) {
-        function moveSelection(values) {
-            var selectionStartValue = values[0] - options.min,
-                selectionEndValue = values[1] - options.min,
-                selectionStartIndex = math.ceil(selectionStartValue / options.smallStep),
-                selectionEndIndex = math.ceil(selectionEndValue / options.smallStep),
+        function moveSelection(value) {
+            value = value || [];
+            var selectionStartValue = value[0] - options.min,
+                selectionEndValue = value[1] - options.min,
+                selectionStartIndex = math.ceil(round(selectionStartValue / options.smallStep)),
+                selectionEndIndex = math.ceil(round(selectionEndValue / options.smallStep)),
                 selectionStart = that._pixelSteps[selectionStartIndex],
                 selectionEnd = that._pixelSteps[selectionEndIndex],
                 halfHandle = parseInt(dragHandles.eq(0)[that._outerSize]() / 2, 10);
@@ -1352,7 +1646,7 @@
             selectionDiv.css(that._position, selectionPosition - 1);
         }
 
-        moveSelection(that.values());
+        moveSelection(that.value());
 
         that.bind([ CHANGE, SLIDE, MOVE_SELECTION ], function (e) {
             moveSelection(e.values);
@@ -1362,3 +1656,4 @@
     kendo.ui.plugin(RangeSlider);
 
 })(jQuery);
+;

@@ -3,15 +3,25 @@ function graphAccountEvolution() {
 	this.connectionString = "";
 	this.account = "";
 	this.destinationDiv = "";
+	this.hash = "Nada"; //default hasta que este bien...
 	
 	this.createChart = 
 			function () {
+				//VALIDACIONES internas de desarrollo, para avisar que no se esta configurando bien el control
+		    	if (this.destinationDiv == "" || this.destinationDiv == undefined) {
+		    		alert ("WARNING: comboAccounts.js - destinationDiv is not defined.");
+		    	}
+				
+		    	if ($(this.destinationDiv) == undefined) {
+		    		alert ("WARNING: comboAccounts.js -can't find "+this.destinationDiv+" div tag in HTML file.");
+		    	}
+    	
 		    	var ds = new kendo.data.DataSource({ 
 		    			transport: {
 		    				read: {
 		    					url: ConnectionString+"/views/graph.php",
 		    					data: {
-		    						cHash: "nada1",
+		    						cHash: this.hash,
 		    						account: this.account
 		    					}
 		    				},

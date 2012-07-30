@@ -1,2 +1,3 @@
 
-var ConnectionString = "http://192.168.0.3:8080/php";
+var ConnectionString = "http://localhost:8080/php";
+var Hash = "Nada";

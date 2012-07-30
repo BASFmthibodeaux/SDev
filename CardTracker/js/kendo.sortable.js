@@ -1,20 +1,19 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-
 (function($, undefined) {
     var kendo = window.kendo,
         proxy = $.proxy,
-        DIR = "dir",
+        DIR = "data-dir",
         ASC = "asc",
         SINGLE = "single",
-        FIELD = "field",
+        FIELD = "data-field",
         DESC = "desc",
         TLINK = ".k-link",
         Widget = kendo.ui.Widget;
@@ -50,34 +49,34 @@
                 descriptor,
                 dir,
                 element = that.element,
-                field = element.data(FIELD);
+                field = element.attr(FIELD);
 
-            element.removeData(DIR);
+            element.removeAttr(DIR);
 
             for (idx = 0, length = sort.length; idx < length; idx++) {
                descriptor = sort[idx];
 
                if (field == descriptor.field) {
-                   element.data(DIR, descriptor.dir);
+                   element.attr(DIR, descriptor.dir);
                }
             }
 
-            dir = element.data(DIR);
+            dir = element.attr(DIR);
 
-            element.find(".k-arrow-up,.k-arrow-down").remove();
+            element.find(".k-i-arrow-n,.k-i-arrow-s").remove();
 
             if (dir === ASC) {
-                $('<span class="k-icon k-arrow-up" />').appendTo(that.link);
+                $('<span class="k-icon k-i-arrow-n" />').appendTo(that.link);
             } else if (dir === DESC) {
-                $('<span class="k-icon k-arrow-down" />').appendTo(that.link);
+                $('<span class="k-icon k-i-arrow-s" />').appendTo(that.link);
             }
         },
 
         _click: function(e) {
             var that = this,
                 element = that.element,
-                field = element.data(FIELD),
-                dir = element.data(DIR),
+                field = element.attr(FIELD),
+                dir = element.attr(DIR),
                 options = that.options,
                 sort = that.dataSource.sort() || [],
                 idx,
@@ -111,3 +110,4 @@
 
     kendo.ui.plugin(Sortable);
 })(jQuery);
+;

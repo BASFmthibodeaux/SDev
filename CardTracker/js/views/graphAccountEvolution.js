@@ -6,7 +6,18 @@ function graphAccountEvolution() {
 	
 	this.createChart = 
 			function () {
-		    	var ds = new kendo.data.DataSource({ 
+		
+				//VALIDACIONES internas de desarrollo, para avisar que no se esta configurando bien el control
+		    	if (this.destinationDiv == "" || this.destinationDiv == undefined) {
+		    		alert ("WARNING: comboAccounts.js - destinationDiv is not defined.");
+		    	}
+				
+		    	if ($(this.destinationDiv) == undefined) {
+		    		alert ("WARNING: comboAccounts.js -can't find "+this.destinationDiv+" div tag in HTML file.");
+		    	}
+		    	
+		
+				var ds = new kendo.data.DataSource({ 
 		    			transport: {
 		    				read: {
 		    					url: ConnectionString+"/views/graph.php",

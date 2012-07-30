@@ -1,13 +1,12 @@
 ﻿/*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-
 ﻿(function( window, undefined ) {
     kendo.cultures["sr-Latn-ME"] = {
         name: "sr-Latn-ME",
@@ -37,8 +36,8 @@
         calendars: {
             standard: {
                 days: {
-                    names: ["nedelja","ponedeljak","utorak","sreda","četvrtak","petak","subota"],
-                    namesAbbr: ["ned","pon","uto","sre","čet","pet","sub"],
+                    names: ["neđelja","poneđeljak","utorak","srijeda","četvrtak","petak","subota"],
+                    namesAbbr: ["neđ","pon","uto","sri","čet","pet","sub"],
                     namesShort: ["ne","po","ut","sr","če","pe","su"]
                 },
                 months: {
@@ -69,3 +68,4 @@
         }
     }
 })(this);
+;

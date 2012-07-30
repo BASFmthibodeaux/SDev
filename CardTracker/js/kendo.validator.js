@@ -1,13 +1,12 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-
 ;(function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -41,10 +40,34 @@
                 return input[0].attributes[name] !== undefined;
             }
             return false;
-        };
+        },
+        nameSpecialCharRegExp = /(\[|\]|\$|\.|\:|\+)/g;
+
+    if (!kendo.ui.validator) {
+        kendo.ui.validator = { rules: {}, messages: {} };
+    }
+
+    function resolveRules(element) {
+        var resolvers = kendo.ui.validator.ruleResolvers || {},
+            rules = {},
+            name;
+
+        for (name in resolvers) {
+            $.extend(true, rules, resolvers[name].resolve(element));
+        }
+        return rules;
+    }
+
+    function decode(value) {
+        return value.replace(/&amp/g, '&amp;')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>');
+    }
 
     /**
-     *  @name kendo.ui.Validator.Description
+     *  @name kendo.Validator.Description
      *
      *  @section
      *  <p>
@@ -69,11 +92,105 @@
      *       });
      *   });
      *   </script>
+     *  @section <h4>Validation Rules</h4>
+     *
+     *  @exampleTitle <strong>required</strong>- element should have a value
+     *  @example
+     *  <input type="text" name="firstName" required />
+     *
+     *  @exampleTitle <strong>pattern</strong>- constrains the value to match a specific regular expression
+     *  @example
+     *  <input type="text" name="twitter" pattern="https?://(?:www\.)?twitter\.com/.+i" />
+     *
+     *  @exampleTitle <strong>max/min</strong>- constrain the minimum and/or maximum numeric values that can be entered
+     *  @example
+     *  <input type="number" name="age" min="1" max="42" />
+     *
+     *  @exampleTitle <strong>step</strong>- when used in combination with the min and max attributes, constrains the granularity of values that can be entered
+     *  @example
+     *  <input type="number" name="age" min="1" max="100" step="2" />
+     *
+     *  @exampleTitle <strong>url</strong>- constrain the value to being a valid URL
+     *  @example
+     *  <input type="url" name="url" />
+     *
+     *  @exampleTitle <strong>email</strong>- constrain the value to being a valid email
+     *  @example
+     *  <input type="email" name="email" />
+     *
+     *  @section
+     *  <p>Beside the built-in validation rules, KendoUI Validator also provides a convenient way for setting custom rules through its rules configuration option. </p>
+     *
+     *  @exampleTitle
+     *  @example
+     *  $("#myform").kendoValidator({
+     *      rules: {
+     *        custom: function(input) {
+     *          // Only Tom will be a valid value for FirstName input
+     *          return input.is("[name=firstname]") && input.val() === "Tom";
+     *        }
+     *      }
+     * });
+     *
+     *  @section <h4>Validation Messages</h4>
+     *  <p>There are several ways to control the messages which appears if validation fails:</p>
+     *
+     *  @exampleTitle Set the validation messages for all input elements, through configuration options
+     *  @example
+     *   $("#myform").kendoValidator({
+     *      rules: {
+     *          custom: function(input) {
+     *                  //...
+     *          }
+     *      },
+     *      messages: {
+     *        // defines message for the 'custom' validation rule
+     *        custom: "Please enter valid value for my custom rule",
+     *        // overrides the built-in message for required rule
+     *        required: "My custom required message",
+     *        // overrides the built-in email rule message with a custom function which return the actual message
+     *        email: function(input) {
+     *          return getMessage(input);
+     *        }
+     *     }
+     *  });
+     *  @exampleTitle Use the title and validationMessage attributes to set per input element messages
+     *  @example
+     *     <input type="tel" pattern="\d{10}" validationMessage="Plase enter a ten digit phone number" />
+     *
+     *  @section <h4>Triggering validation</h4>
+     *  <p>In order to trigger the element(s) validation, <strong>validate</strong> method should be used. It will return either <em>true</em> if validation succeeded or <em>false</em> in case of a failure. </p>
+     *  <p>
+     *  Note that if a HTML form element is set as validation container, the form submits will be automatically prevented if validation fails.
+     *  </p>
+     *  @section <h4>Initialize Kendo Validator with specific tooltip position</h4>
+     *
+     *  <p>
+     *      Ideally Kendo Validator places its tooltips besides the validated input. However, if the input is later enhanced to a ComboBox, AutoComplete or other Kendo Widget, placing the
+     *      tooltip beside the input may cover important information or break the widget rendering. In this case, you can specify where exactly do you want the tooltip to be placed by
+     *      adding a span with data-for attribute set to the validated input name and a class .k-invalid-msg. Check the example below:
+     *  </p>
+     *
+     *  @exampleTitle <b>Validator</b> initialization with specific tooltip placement (the tooltip will remain outside of the AutoComplete widget after enhancement)
+     *  @example
+     *  <div id="myform">
+     *      <input type="text" id="name" name="name" required />
+     *      <span class="k-invalid-msg" data-for="name"></span>
+     *  </div>
+     *
+     *  <script>
+     *      $("#name").kendoAutoComplete({
+     *                     dataSource: data,
+     *                     separator: ", "
+     *                 });
+     *
+     *      $("#myform").kendoValidator();
+     *  </script>
      */
-    var Validator = Widget.extend(/** @lends kendo.ui.Validator.prototype */{ /**
+    var Validator = Widget.extend(/** @lends kendo.Validator.prototype */{ /**
          * @constructs
-         * @extends kendo.ui.Widget
-         * @param {DomElement} element DOM element
+         * @extends kendo.Widget
+         * @param {Element} element DOM element
          * @param {Object} options Configuration options.
          * @option {Object} [rules] Set of validation rules. Those rules will extend the built-in ones.
          * _example
@@ -101,9 +218,16 @@
          *          }
          *      }
          * });
+         * @option {Boolean} [validateOnBlur] Determines if validation will be triggered when element loses focus. Default value is true.
          */
         init: function(element, options) {
-            var that = this;
+            var that = this,
+                resolved = resolveRules(element);
+
+            options = options || {};
+
+            options.rules = $.extend({}, kendo.ui.validator.rules, resolved.rules, options.rules);
+            options.messages = $.extend({}, kendo.ui.validator.messages, resolved.messages, options.messages);
 
             Widget.fn.init.call(that, element, options);
 
@@ -124,8 +248,8 @@
             messages: {
                 required: "{0} is required",
                 pattern: "{0} is not valid",
-                min: "{0} should be greater than {1}",
-                max: "{0} should be smaller than {1}",
+                min: "{0} should be greater than or equal to {1}",
+                max: "{0} should be smaller than or equal to {1}",
                 step: "{0} is not valid",
                 email: "{0} is not valid email",
                 url: "{0} is not valid URL",
@@ -133,22 +257,21 @@
             },
             rules: {
                 required: function(input) {
-                    var checkbox = input.filter("[type=checkbox]").length && input.attr("checked") !== "checked";
-                    if (hasAttribute(input, "required") && (input.val() === "" || checkbox)) {
-                        return false;
-                    }
-                    return true;
+                    var checkbox = input.filter("[type=checkbox]").length && input.attr("checked") !== "checked",
+                        value = input.val();
+
+                    return !(hasAttribute(input, "required") && (value === "" || !value  || checkbox));
                 },
                 pattern: function(input) {
-                    if (input.filter("[type=text],[type=email],[type=url],[type=tel],[type=search]").filter("[pattern]").length && input.val() !== "") {
+                    if (input.filter("[type=text],[type=email],[type=url],[type=tel],[type=search],[type=password]").filter("[pattern]").length && input.val() !== "") {
                         return patternMatcher(input.val(), input.attr("pattern"));
                     }
                     return true;
                 },
                 min: function(input) {
                     if (input.filter(NUMBERINPUTSELECTOR + ",[" + kendo.attr("type") + "=number]").filter("[min]").length && input.val() !== "") {
-                        var min = parseInt(input.attr("min"), 10) || 0,
-                            val = parseInt(input.val(), 10);
+                        var min = parseFloat(input.attr("min")) || 0,
+                            val = parseFloat(input.val());
 
                         return min <= val;
                     }
@@ -156,8 +279,8 @@
                 },
                 max: function(input) {
                     if (input.filter(NUMBERINPUTSELECTOR + ",[" + kendo.attr("type") + "=number]").filter("[max]").length && input.val() !== "") {
-                        var max = parseInt(input.attr("max"), 10) || 0,
-                            val = parseInt(input.val(), 10);
+                        var max = parseFloat(input.attr("max")) || 0,
+                            val = parseFloat(input.val());
 
                         return max >= val;
                     }
@@ -165,11 +288,11 @@
                 },
                 step: function(input) {
                     if (input.filter(NUMBERINPUTSELECTOR + ",[" + kendo.attr("type") + "=number]").filter("[step]").length && input.val() !== "") {
-                        var min = parseInt(input.attr("min"), 10) || 0,
-                            step = parseInt(input.attr("step"), 10) || 0,
-                            val = parseInt(input.val(), 10);
+                        var min = parseFloat(input.attr("min")) || 0,
+                            step = parseFloat(input.attr("step")) || 0,
+                            val = parseFloat(input.val());
 
-                        return (val-min)%step === 0;
+                        return (((val-min)*10)%(step*10)) / 100 === 0;
                     }
                     return true;
                 },
@@ -185,7 +308,8 @@
                     }
                     return true;
                 }
-            }
+            },
+            validateOnBlur: true
         },
 
         _submit: function(e) {
@@ -205,20 +329,31 @@
                 that.element.submit(proxy(that._submit, that));
             }
 
-            if (!that.element.is(INPUTSELECTOR)) {
-                that.element.delegate(INPUTSELECTOR, BLUR, function() {
-                    that._validateInput($(this));
-                });
-            } else {
-                that.element.bind(BLUR, function() {
-                    that._validateInput(that.element);
-                });
+            if (that.options.validateOnBlur) {
+                if (!that.element.is(INPUTSELECTOR)) {
+                    that.element.delegate(INPUTSELECTOR, BLUR, function() {
+                        that.validateInput($(this));
+                    });
+                } else {
+                    that.element.bind(BLUR, function() {
+                        that.validateInput(that.element);
+                    });
+                }
             }
         },
 
         /**
          * Validates the input element(s) against the declared validation rules.
          * @returns {Boolean} If all rules are passed successfully.
+         * @example
+         * // get a reference to the validatable form
+         * var validatable = $("#myform").kendoValidator().data("kendoValidator");
+         * // check validation on save button click
+         * $("#save").click(function() {
+         *     if (validatable.validate()) {
+         *         save();
+         *     }
+         * });
          */
         validate: function() {
             var that = this,
@@ -233,34 +368,41 @@
                 inputs = that.element.find(INPUTSELECTOR);
 
                 for (idx = 0, length = inputs.length; idx < length; idx++) {
-                    if (!that._validateInput(inputs.eq(idx))) {
+                    if (!that.validateInput(inputs.eq(idx))) {
                         invalid = true;
                     }
                 }
                 return !invalid;
             }
-            return that._validateInput(that.element);
+            return that.validateInput(that.element);
         },
 
-        _validateInput: function(input) {
+        /**
+         * Validates the input element against the declared validation rules.
+         * @param {Element} input Input element to be validated.
+         * @returns {Boolean} If all rules are passed successfully.
+         */
+        validateInput: function(input) {
+            input = $(input);
+
             var that = this,
                 template = that._errorTemplate,
-                customMessages = that.options.messages,
                 result = that._checkValidity(input),
                 valid = result.valid,
                 className = "." + INVALIDMSG,
-                fieldName = input.attr(NAME),
-                DATAFOR = kendo.attr("for"),
-                lbl = that.element.find(className + "[" + DATAFOR +"=" + fieldName + "]").add(input.next(className)).hide(),
+                fieldName = (input.attr(NAME) || ""),
+                lbl = that._findMessageContainer(fieldName).add(input.next(className)).hide(),
                 messageText;
 
             if (!valid) {
                 messageText = that._extractMessage(input, result.key);
                 that._errors[fieldName] = messageText;
+                var messageLabel = $(template({ message: decode(messageText) }));
 
-                var messageLabel = $(template({ message: messageText })).addClass(INVALIDMSG).attr(DATAFOR, fieldName || "");
+                that._decorateMessageContainer(messageLabel, fieldName);
+
                 if (!lbl.replaceWith(messageLabel).length) {
-                    messageLabel.insertAfter(input)
+                    messageLabel.insertAfter(input);
                 }
                 messageLabel.show();
             }
@@ -268,6 +410,29 @@
             input.toggleClass(INVALIDINPUT, !valid);
 
             return valid;
+        },
+
+        _findMessageContainer: function(fieldName) {
+            var locators = kendo.ui.validator.messageLocators,
+                name,
+                containers = this.element.find("." + INVALIDMSG + "[" + kendo.attr("for") +"=" + fieldName.replace(nameSpecialCharRegExp, "\\$1") + "]");
+
+            for (name in locators) {
+                containers = containers.add(locators[name].locate(this.element, fieldName));
+            }
+
+            return containers;
+        },
+
+        _decorateMessageContainer: function(container, fieldName) {
+            var locators = kendo.ui.validator.messageLocators,
+                name;
+
+            container.addClass(INVALIDMSG).attr(kendo.attr("for"), fieldName || "");
+
+            for (name in locators) {
+                locators[name].decorate(container, fieldName);
+            }
         },
 
         _extractMessage: function(input, ruleKey) {
@@ -296,6 +461,18 @@
         /**
          * Get the error messages if any.
          * @returns {Array} Messages for the failed validation rules.
+         * @example
+         * // get a reference to the validatable form
+         * var validatable = $("#myform").kendoValidator().data("kendoValidator");
+         * $("#save").click(function() {
+         *     if (validatable.validate() === false) {
+         *         // get the errors and write them out to the "errors" html container
+         *         var errors = validatable.errors();
+         *         $(errors).each(function() {
+         *             $("#errors").html(this);
+         *         });
+         *     }
+         * });
          */
         errors: function() {
             var results = [],
@@ -311,3 +488,4 @@
 
     kendo.ui.plugin(Validator);
 })(jQuery);
+;

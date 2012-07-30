@@ -1,148 +1,16 @@
 /*
-* Kendo UI v2011.3.1129 (http://kendoui.com)
-* Copyright 2011 Telerik AD. All rights reserved.
+* Kendo UI Web v2012.2.710 (http://kendoui.com)
+* Copyright 2012 Telerik AD. All rights reserved.
 *
-* Kendo UI commercial licenses may be obtained at http://kendoui.com/license.
+* Kendo UI Web commercial licenses may be obtained at http://kendoui.com/web-license
 * If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3. For GPL requirements, please
-* review: http://www.gnu.org/copyleft/gpl.html
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-
 (function($, undefined) {
-    /**
-     * @name kendo.ui.Upload.Description
-     *
-     * @section
-     * <p>
-     * The Upload widget uses progressive enhancement to deliver the best possible
-     * uploading experience to users without requiring any extra developer effort.
-     * Upload is packed with features, including:
-     * </p>
-     *
-     * <ul>
-     *    <li>Asynchronous and synchronous (on form submit) file upload</li>
-     *    <li>Multiple file selection</li>
-     *    <li>Removing uploaded files</li>
-     *    <li>Progress tracking *</li>
-     *    <li>File Drag-and-Drop *</li>
-     *    <li>Cancelling upload in progress *</li>
-     * </ul>
-     * <p>
-     * * These features are automatically enabled if supported by the browser.
-     * </p>
-     * <p>
-     * Upload is a standards-based widget. No plug-ins required.
-     * </p>
-     *
-     * <h3>
-     * Getting Started
-     * </h3>
-     * <p>
-     * There are two primary ways to configure Upload:
-     * </p>
-     * <ol>
-     *     <li>For synchronous upload using an HTML form and input</li>
-     *     <li>For asynchronous upload using a simple HTML input</li>
-     * </ol>
-     * <p>
-     * The async upload is implemented using the new HTML5 File API,
-     * but it will gracefully degrade and continue to function
-     * in legacy browsers (using a hidden IFRAME). If placed inside a form,
-     * queued and partially uploaded files will be sent synchronously if
-     * the async upload is submitted with the form.
-     * </p>
-     *
-     * <h3>
-     * Configuring for synchronous upload
-     * </h3>
-     * @exampleTitle 1. Create a simple HTML form and input element of type "file"
-     * @example
-     * <!-- Kendo will automatically set the proper FORM enctype attribute -->
-     * <form method="post" action="handler.php">
-     *     <div>
-     *         <input name="files" id="files" type="file" />
-     *     </div>
-     * </form>
-     *
-     * @exampleTitle 2. Initialize Upload with a jQuery selector
-     * @example
-     *    $(document).ready(function() {
-     *        $("#files").kendoUpload();
-     *    });
-     *
-     * @section
-     * <p>
-     * It’s important to note that some type of server-side handler is needed
-     * to process and save the uploaded files. There are different server-side
-     * techniques for handling file uploads depending on the technology you use.
-     * Please consult the documentation for your server technology
-     * to understand how to implement a basic file handler.
-     * </p>
-     *
-     * <h3>
-     * Configure for async upload
-     * </h3>
-     * @exampleTitle
-     * 1. Create a simple HTML input of type "file" (no HTML form is required*)
-     * @example
-     * <input name="files[]" id="files" type="file" />
-     *
-     * @exampleTitle
-     * 2. Initialize Upload and configure async upload end-points
-     *
-     * @example
-     * $("#files").kendoUpload({
-     *     async: {
-     *         saveUrl: "saveHandler.php",
-     *         removeUrl: "removeHandler.php",
-     *         removeField: "fileNames[]",
-     *         autoUpload: true
-     *     }
-     * });
-     *
-     * @section
-     * <p>
-     * Like synchronous uploads, the async upload requires a server-side handler
-     * to process and save (or remove) the uploaded files. The handlers need to
-     * accept POST requests. The save action will POST the file upload to the handler
-     * (similar to synchronous uploads). The remove action will POST only the name of
-     * the file that should be removed on the server.
-     * </p>
-     * <p>
-     * Both handlers should return either:
-     * </p>
-     * <ul>
-     *     <li>
-     *         An empty response to signify success.
-     *     </li>
-     *     <li>
-     *         Response containing JSON string with "text/plain" content encoding.
-     *         The deserialized object can be accessed in the <strong>success</strong> event handler.
-     *     </li>
-     *     <li>
-     *         Any other response to signify error.
-     *     </li>
-     * </ul>
-     *
-     * <h3>
-     * Configuring Upload behavior
-     * </h3>
-     * <p>
-     * Upload enables most behaviors by default, providing the richest experience possible
-     * depending on browser capabilities. Behaviors can be easily configured, though,
-     * using simple configuration properties. Refer to the Upload demo Configuration
-     * tab for more information on available properties.
-     * </p>
-     * @exampleTitle
-     * Disable Upload default behaviors
-     * @example
-     * $("#upload").kendoUpload({
-     *     multiple: false,
-     *     showFileList: false
-     * });
-     */
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
+        logToConsole = kendo.logToConsole,
         rFileExtension = /\.([^\.]+)$/,
         SELECT = "select",
         UPLOAD = "upload",
@@ -151,100 +19,10 @@
         COMPLETE = "complete",
         CANCEL = "cancel",
         LOAD = "load",
+        PROGRESS = "progress",
         REMOVE = "remove";
 
-    var Upload = Widget.extend(/** @lends kendo.ui.Upload.prototype */{
-        /**
-         * @constructs
-         * @extends kendo.ui.Widget
-         * @param {DomElement} element DOM element
-         * @param {Object} options Configuration options.
-         * @option {Boolean} [enabled] <true>
-         * Can be used to disable the upload. A disabled upload can be enabled by calling enable().
-         * @option {Boolean} [multiple] <true>
-         * Enables or disables multiple file selection.
-         * If set to false, users will be able to select only one file at a time.
-         * Note: This option does not limit the total number of uploaded files
-         * in asynchronous configuration.
-         * @option {Boolean} [showFileList] <true>
-         * Controls whether to show the list of uploaded files.
-         * Hiding the list can be useful when you want to fully customize the UI.
-         * Use the client-side events to build your own UI.
-         * @option {Object} [async]
-         * Configures the upload for asynchronous operation.
-         * <dl>
-         *     <dt>
-         *         saveUrl: (String)
-         *     </dt>
-         *     <dd>
-         *         The URL of the handler that will receive the submitted files.
-         *         The handler must accept POST requests containing one or more
-         *         fields with the same name as the original input name.
-         *     </dd>
-         *     <dt>
-         *         saveField: (String)
-         *     </dt>
-         *     <dd>
-         *         The name of the form field submitted to the Save URL.
-         *         The default value is the input name.
-         *     </dd>
-         *     <dt>
-         *         removeUrl: (String)
-         *     </dt>
-         *     <dd>
-         *         The URL of the handler responsible for removing uploaded files (if any).
-         *         The handler must accept POST requests containing one or more
-         *         "fileNames" fields specifying the files to be deleted.
-         *     </dd>
-         *     <dt>
-         *         removeVerb: (String)
-         *     </dt>
-         *     <dd>
-         *         The HTTP verb to be used by the remove action.
-         *         The default value is "DELETE".
-         *     </dd>
-         *     <dt>
-         *         removeField: (String)
-         *     </dt>
-         *     <dd>
-         *         The name of the form field submitted to the Remove URL.
-         *         The default value is fileNames.
-         *     </dd>
-         *     <dt>
-         *         autoUpload: (Boolean)
-         *     </dt>
-         *     <dd>
-         *         The selected files will be uploaded immediately by default.
-         *         You can change this behavior by setting autoUpload to false.
-         *     </dd>
-         * </dl>
-         * <p>
-         * The save and remove handlers should return either:
-         * </p>
-         * <ul>
-         *     <li>
-         *         An empty response to signify success.
-         *     </li>
-         *     <li>
-         *         Response containing JSON string with "text/plain" content encoding.
-         *         The deserialized object can be accessed in the <strong>success</strong> event handler.
-         *     </li>
-         *     <li>
-         *         Any other response to signify error.
-         *     </li>
-         * </ul>
-         * <p>
-         *     <strong>Fallback to synchronous upload</strong>
-         * </p>
-         * The Upload has a fallback mechanism when it is placed inside a form
-         * and is configured for asynchronous operation.
-         * Any files that were not fully uploaded will be sent as part of the form
-         * when the user submits it. This ensures that no files will be lost,
-         * even if you do not take any special measures to block the submit button during upload.
-         * <p><em>
-         * You have to handle the uploaded files both in the save handler and in the form submit action.
-         * </em></p>
-         */
+    var Upload = Widget.extend({
         init: function(element, options) {
             var that = this;
 
@@ -272,6 +50,7 @@
                 that._module = that._supportsFormData() ?
                 new formDataUploadModule(that) :
                 new iframeUploadModule(that);
+                that._async = true;
             } else {
                 that._module = new syncUploadModule(that);
             }
@@ -286,150 +65,18 @@
             .delegate(".k-file", "t:progress", $.proxy(that._onFileProgress, that))
             .delegate(".k-file", "t:upload-success", $.proxy(that._onUploadSuccess, that))
             .delegate(".k-file", "t:upload-error", $.proxy(that._onUploadError, that));
-
-            that.bind([
-                /**
-                 * Fires when one or more files are selected.
-                 * Cancelling the event will prevent the selection.
-                 * @name kendo.ui.Upload#select
-                 * @event
-                 * @param {Event} e
-                 * @param {Array} e.files
-                 * List of the selected files. Each file has:
-                 * <ul>
-                 *     <li>name</li>
-                 *     <li>
-                 *         extension - the file extension
-                 *         inlcuding the leading dot - ".jpg", ".png", etc.
-                 *      </li>
-                 *     <li>size - the file size in bytes (null if not available)</li>
-                 * </ul>
-                 */
-                SELECT,
-
-                /**
-                 * Fires when one or more files are about to be uploaded.
-                 * Cancelling the event will prevent the upload.
-                 * @name kendo.ui.Upload#upload
-                 * @event
-                 * @param {Event} e
-                 * @param {Array} e.files
-                 * List of the files that will be uploaded. Each file has:
-                 * <ul>
-                 *     <li>name</li>
-                 *     <li>
-                 *         extension - the file extension
-                 *         inlcuding the leading dot - ".jpg", ".png", etc.
-                 *      </li>
-                 *     <li>size - the file size in bytes (null if not available)</li>
-                 * </ul>
-                 * @param {Object} data - undefined by default,
-                 * but can be set to a custom object to pass information to the save handler.
-                 */
-                UPLOAD,
-
-                /**
-                 * Fires when an upload / remove operation has been completed successfully.
-                 * @name kendo.ui.Upload#success
-                 * @event
-                 * @param {Event} e
-                 * @param {Array} e.files
-                 * List of the files that were uploaded or removed . Each file has:
-                 * <ul>
-                 *     <li>name</li>
-                 *     <li>
-                 *         extension - the file extension
-                 *         inlcuding the leading dot - ".jpg", ".png", etc.
-                 *      </li>
-                 *     <li>size - the file size in bytes (null if not available)</li>
-                 * </ul>
-                 * @param {String} e.operation - "upload" or "remove".
-                 * @param {String} e.response - the response object returned by the server.
-                 * @param {Object} e.XMLHttpRequest
-                 * This is either the original XHR used for the operation or a stub containing:
-                 * <ul>
-                 *     <li>responseText</li>
-                 *     <li>status</li>
-                 *     <li>statusText</li>
-                 * </ul>
-                 * Verify that this is an actual XHR before accessing any other fields.
-                 */
-                SUCCESS,
-
-                /**
-                 * Fires when an upload / remove operation has failed.
-                 * @name kendo.ui.Upload#error
-                 * @event
-                 * @param {Event} e
-                 * @param {Array} e.files
-                 * List of the files that were uploaded or removed . Each file has:
-                 * <ul>
-                 *     <li>name</li>
-                 *     <li>
-                 *         extension - the file extension
-                 *         inlcuding the leading dot - ".jpg", ".png", etc.
-                 *      </li>
-                 *     <li>size - the file size in bytes (null if not available)</li>
-                 * </ul>
-                 * @param {String} e.operation - "upload" or "remove".
-                 * @param {Object} e.XMLHttpRequest
-                 * This is either the original XHR used for the operation or a stub containing:
-                 * <ul>
-                 *     <li>responseText</li>
-                 *     <li>status</li>
-                 *     <li>statusText</li>
-                 * </ul>
-                 * Verify that this is an actual XHR before accessing any other fields.
-                 */
-                ERROR,
-
-                /**
-                 * Fires when all active uploads have completed either successfully or with errors.
-                 * @name kendo.ui.Upload#complete
-                 * @event
-                 * @param {Event} e
-                 */
-                COMPLETE,
-
-                /**
-                 * Fires when the upload has been cancelled while in progress.
-                 * @name kendo.ui.Upload#cancel
-                 * @event
-                 * @param {Event} e
-                 * @param {Array} e.files
-                 * List of the files that were uploaded or removed . Each file has:
-                 * <ul>
-                 *     <li>name</li>
-                 *     <li>
-                 *         extension - the file extension
-                 *         inlcuding the leading dot - ".jpg", ".png", etc.
-                 *      </li>
-                 *     <li>size - the file size in bytes (null if not available)</li>
-                 * </ul>
-                 */
-                CANCEL,
-
-                /**
-                 * Fires when an uploaded file is about to be removed.
-                 * Cancelling the event will prevent the remove.
-                 * @name kendo.ui.Upload#remove
-                 * @event
-                 * @param {Event} e
-                 * @param {Array} e.files
-                 * List of the files that were uploaded or removed . Each file has:
-                 * <ul>
-                 *     <li>name</li>
-                 *     <li>
-                 *         extension - the file extension
-                 *         inlcuding the leading dot - ".jpg", ".png", etc.
-                 *      </li>
-                 *     <li>size - the file size in bytes (null if not available)</li>
-                 * </ul>
-                 * @param {Object} e.data - undefined by default,
-                 * but can be set to a custom object to pass information to the save handler.
-                 */
-                REMOVE], that.options);
         },
+
+        events: [
+            SELECT,
+            UPLOAD,
+            SUCCESS,
+            ERROR,
+            COMPLETE,
+            CANCEL,
+            PROGRESS,
+            REMOVE
+        ],
 
         options: {
             name: "Upload",
@@ -453,41 +100,29 @@
             }
         },
 
-        /**
-         * Enables the upload.
-         * @example
-         * var upload = $("#upload").data("kendoUpload");
-         *
-         * // enables the upload
-         * upload.enable();
-         */
-        enable: function() {
-            this.toggle(true);
+        setOptions: function(options) {
+            var that = this,
+                activeInput = that.element;
+
+            Widget.fn.setOptions.call(that, options);
+
+            that.multiple = that.options.multiple;
+
+            activeInput.attr("multiple", that._supportsMultiple() ? that.multiple : false)
+            that.toggle(that.options.enabled);
         },
 
-        /**
-         * Disables the upload.
-         * @example
-         * var upload = $("#upload").data("kendoUpload");
-         *
-         * // disables the upload
-         * upload.enable();
-         */
+        enable: function(enable) {
+            enable = typeof (enable) === "undefined" ? true : enable;
+            this.toggle(enable);
+        },
+
         disable: function() {
             this.toggle(false);
         },
 
-        /**
-         * Toggles the upload enabled state.
-         * @param {Boolean} enable (Optional) The new enabled state.
-         * @example
-         * var upload = $("#upload").data("kendoUpload");
-         *
-         * // toggles the upload enabled state
-         * upload.toggle();
-         */
         toggle: function(enable) {
-            enable = typeof enable === "undefined" ? enable : !enable;
+            enable = typeof (enable) === "undefined" ? enable : !enable;
             this.wrapper.toggleClass("k-state-disabled", enable);
         },
 
@@ -523,10 +158,14 @@
         },
 
         _onInputChange: function(e) {
-            var input = $(e.target),
-                prevented = this.trigger(SELECT, { files: inputFiles(input) });
+            var upload = this,
+                input = $(e.target),
+                prevented = upload.trigger(SELECT, { files: inputFiles(input) });
 
-            if (!prevented) {
+            if (prevented) {
+                upload._addInput(input.clone().val(""));
+                input.remove();
+            } else {
                 input.trigger("t:select");
             }
         },
@@ -539,7 +178,7 @@
             stopEvent(e);
 
             if (droppedFiles.length > 0) {
-                var prevented = that.trigger(SELECT, { files: droppedFiles });
+                var prevented = that.trigger(SELECT, { files: getAllFileInfo(droppedFiles) });
                 if (!prevented) {
                     $(".k-dropzone", that.wrapper).trigger("t:select", [ droppedFiles ]);
                 }
@@ -561,9 +200,13 @@
 
             existingFileEntries = $(".k-file", fileList);
             fileEntry =
-                $("<li class='k-file'><span class='k-icon'></span><span class='k-filename' title='" + name + "'>" + name + "</span></li>")
+                $("<li class='k-file'><span class='k-filename' title='" + name + "'>" + name + "</span></li>")
                 .appendTo(fileList)
                 .data(data);
+
+            if (that._async) {
+                fileEntry.prepend("<span class='k-icon'></span>");
+            }
 
             if (!that.multiple) {
                 existingFileEntries.trigger("t:remove");
@@ -573,12 +216,18 @@
         },
 
         _removeFileEntry: function(fileEntry) {
-            var fileList = fileEntry.closest(".k-upload-files");
-            if ($(".k-file", fileList).length == 1) {
-                fileList.remove();
+            var fileList = fileEntry.closest(".k-upload-files"),
+                allFiles;
+
+            fileEntry.remove();
+            allFiles = $(".k-file", fileList);
+
+            if (allFiles.find("> .k-fail").length === allFiles.length) {
                 this._hideUploadButton();
-            } else {
-                fileEntry.remove();
+            }
+
+            if (allFiles.length == 0) {
+                fileList.remove();
             }
         },
 
@@ -659,6 +308,7 @@
                 } else if (icon.hasClass("k-cancel")) {
                     that.trigger(CANCEL, eventArgs);
                     fileEntry.trigger("t:cancel");
+                    this._checkAllComplete();
                 } else if (icon.hasClass("k-retry")) {
                     fileEntry.trigger("t:retry");
                 }
@@ -676,12 +326,17 @@
             var progressBar = $(".k-progress-status", e.target);
             if (progressBar.length == 0) {
                 progressBar =
-                    $("<span class='k-progress'><span class='k-progress-status' style='width: 0;'></span></span>")
+                    $("<span class='k-progress'><span class='k-state-selected k-progress-status' style='width: 0;'></span></span>")
                         .appendTo($(".k-filename", e.target))
                         .find(".k-progress-status");
             }
 
             progressBar.width(percentComplete + "%");
+
+            this.trigger(PROGRESS, {
+                files: getFileEntry(e).data("fileNames"),
+                percentComplete: percentComplete
+            });
         },
 
         _onUploadSuccess: function(e, response, xhr) {
@@ -718,10 +373,6 @@
             });
 
             logToConsole("Server response: " + xhr.responseText);
-
-            if (!prevented) {
-                this._alert("Error! Upload failed. Unexpected server response - see console.");
-            }
 
             this._checkAllComplete();
         },
@@ -761,7 +412,7 @@
         },
 
         _onParentFormReset: function() {
-            $(".k-file", this.wrapper).trigger("t:remove");
+            $(".k-upload-files", this.wrapper).remove();
         },
 
         _supportsFormData: function() {
@@ -828,10 +479,6 @@
             });
         },
 
-        _alert: function(message) {
-            alert(message);
-        },
-
         _wrapInput: function(input) {
             input.wrap("<div class='k-widget k-upload'><div class='k-button k-upload-button'></div></div>");
             input.closest(".k-button")
@@ -865,7 +512,10 @@
             var upload = this.upload;
             var sourceInput = $(e.target);
             upload._addInput(sourceInput.clone().val(""));
-            var file = upload._enqueueFile(getFileName(sourceInput), { relatedInput : sourceInput });
+            var file = upload._enqueueFile(getFileName(sourceInput), {
+                "relatedInput" : sourceInput, "fileNames": inputFiles(sourceInput)
+            });
+
             upload._fileAction(file, REMOVE);
         },
 
@@ -1008,6 +658,7 @@
             tryParseJSON(responseText,
                 function(jsonResult) {
                     $.extend(fakeXHR, { statusText: "OK", status: "200" });
+                    fileEntry.trigger("t:progress", [ 100 ]);
                     fileEntry.trigger("t:upload-success", [ jsonResult, fakeXHR ]);
                     module.cleanupFrame(iframe);
                     module.unregisterFrame(iframe);
@@ -1157,16 +808,16 @@
             return fileEntries;
         },
 
-        enqueueFiles: function(arrFileInfo) {
+        enqueueFiles: function(files) {
             var upload = this.upload
                 fileEntries = [];
 
-            for (var i = 0; i < arrFileInfo.length; i++) {
-                var currentFile = arrFileInfo[i],
+            for (var i = 0; i < files.length; i++) {
+                var currentFile = files[i],
                     name = currentFile.name;
 
                 var fileEntry = upload._enqueueFile(name, { "fileNames": [ currentFile ] });
-                fileEntry.data("formData", this.createFormData(arrFileInfo[i]));
+                fileEntry.data("file", currentFile);
 
                 fileEntries.push(fileEntry);
             }
@@ -1180,7 +831,7 @@
 
         performUpload: function(fileEntry) {
             var upload = this.upload,
-                formData = fileEntry.data("formData"),
+                formData = this.createFormData(fileEntry.data("file")),
                 e = { files: fileEntry.data("fileNames") };
 
             if (!upload.trigger(UPLOAD, e)) {
@@ -1253,6 +904,7 @@
             }, false);
 
             xhr.open("POST", url);
+            xhr.withCredentials = "true";
             xhr.send(data);
         },
 
@@ -1268,16 +920,23 @@
         onRequestSuccess: function(e, fileEntry) {
             var xhr = e.target,
                 module = this;
-            tryParseJSON(xhr.responseText,
-                function(jsonResult) {
-                    fileEntry.trigger("t:upload-success", [ jsonResult, xhr ]);
-                    fileEntry.trigger("t:progress", [ 100 ]);
-                    module.cleanupFileEntry(fileEntry);
-                },
-                function() {
-                    fileEntry.trigger("t:upload-error", [ xhr ]);
-                }
-            );
+
+            function raiseError() {
+                fileEntry.trigger("t:upload-error", [ xhr ]);
+            }
+
+            if (xhr.status >= 200 && xhr.status <= 299) {
+                tryParseJSON(xhr.responseText,
+                    function(jsonResult) {
+                        fileEntry.trigger("t:progress", [ 100 ]);
+                        fileEntry.trigger("t:upload-success", [ jsonResult, xhr ]);
+                        module.cleanupFileEntry(fileEntry);
+                    },
+                    raiseError
+                );
+            } else {
+                raiseError();
+            }
         },
 
         onRequestError: function(e, fileEntry) {
@@ -1290,7 +949,7 @@
                 uploadComplete = true;
 
             if (relatedInput) {
-                $.each(relatedInput.data("relatedFileEntries"), function() {
+                $.each(relatedInput.data("relatedFileEntries") || [], function() {
                     // Exclude removed file entries and self
                     if (this.parent().length > 0 && this[0] != fileEntry[0]) {
                         uploadComplete = uploadComplete && this.children(".k-icon").is(".k-success");
@@ -1301,8 +960,6 @@
                     relatedInput.remove();
                 }
             }
-
-            fileEntry.data("formData", null);
         },
 
         removeFileEntry: function(fileEntry) {
@@ -1393,20 +1050,23 @@
                     XMLHttpRequest: xhr });
 
                 logToConsole("Server response: " + xhr.responseText);
-
-                if (!prevented) {
-                    upload._alert("Error! Remove operation failed. Unexpected response - see console.");
-                }
             }
         );
     }
 
     function tryParseJSON(input, onSuccess, onError) {
+        var success = false,
+            json = "";
+
         try {
-            var json = $.parseJSON(input);
-            onSuccess(json);
+            json = $.parseJSON(input);
+            success = true;
         } catch (e) {
             onError();
+        }
+
+        if (success) {
+            onSuccess(json);
         }
     }
 
@@ -1443,23 +1103,25 @@
         return fileEntry.children(".k-icon").is(".k-loading, .k-success, .k-fail");
     }
 
-    function logToConsole(message) {
-        if (typeof(console) != "undefined" && console.log) {
-            console.log(message);
-        }
-    }
-
     function getFileEntry(e) {
         return $(e.target).closest(".k-file");
     }
 
     function getAntiForgeryTokens() {
-        var tokens = { };
+        var tokens = { },
+            csrf_token = $("meta[name=csrf-token]").attr("content"),
+            csrf_param = $("meta[name=csrf-param]").attr("content");
+
         $("input[name^='__RequestVerificationToken']").each(function() {
             tokens[this.name] = this.value;
         });
+
+        if (csrf_param !== undefined && csrf_token !== undefined) {
+          tokens[csrf_param] = csrf_token;
+        }
 
         return tokens;
     }
     kendo.ui.plugin(Upload);
 })(jQuery);
+;

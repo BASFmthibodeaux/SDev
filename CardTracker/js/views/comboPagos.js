@@ -39,7 +39,9 @@ function comboPagos() {
                     step: 1,
                     format: "i",
                     decimals: 0,
-                    placeholder: "Pagos"
+                    placeholder: "Pagos",
+                    upArrowText: "mas pagos",
+                    downArrowText: "menos pagos"
 	            });
             };
 }

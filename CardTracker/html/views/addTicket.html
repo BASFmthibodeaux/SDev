@@ -21,14 +21,14 @@
 	}
 	</style>
 
-	<!-- INCLUDE STYLES -->
+	<!-- INCLUDE STYLES --> 
 	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css">
 	<link rel="stylesheet" href="../../css/style.css">
 
     <script src="../../js/jquery.min.js"></script>
 
 	<link href="../../styles/kendo.common.css" rel="stylesheet" />
-  	<link href="../../styles/kendo.silver.css" rel="stylesheet" />
+  	<link href="../../styles/kendo.blueopal.css" rel="stylesheet" />
 
 	<!-- INCLUDE JAVASCRIPT KENDO -->
     <script src="../../js/jquery.min.js"></script>
@@ -53,6 +53,7 @@
 	<script src="../../js/model/GlobalVariables.js"></script>
 	<script src="../../js/views/comboAccounts.js"></script>
 	<script src="../../js/views/comboPagos.js"></script>
+	<script src="../../js/views/comboCurrency.js"></script>
 
 </head>
 <body>
@@ -87,6 +88,7 @@
 //    		var chart = new graphAccountEvolution();
 	    	var combo = new comboAccounts();
     		var comboPagos = new comboPagos();
+    		var comboCurrency = new comboCurrency();
 
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
@@ -95,7 +97,10 @@
 	    		combo.connectionString = ConnectionString;
 	    		combo.destinationDiv = "#comboBox"
 	    		comboPagos.destinationDiv = "#comboPagos";
-    			$("#datepicker").kendoDatePicker({
+	    		comboCurrency.destinationDiv = "#comboCurrency";
+			
+	    		
+	    		$("#datepicker").kendoDatePicker({
     				format: "dd/MM/yyyy"
     			});
 
@@ -106,12 +111,13 @@
     				var dropdownlist = $("#comboBox").data("kendoDropDownList");
 					dropdownlist.bind("change",onComboAccountsChangeValue);
 					
+					comboCurrency.createCombo();
 					
                     //* inicializar combo de pagos *//
-                    comboPagos.createCombo();
+                    //comboPagos.createCombo();
                  	// bind to the change event
-                    var numeric = $("#comboPagos").data("kendoNumericTextBox");
-                 	numeric.bind("change",onComboPagosChange);				
+                    //var numeric = $("#comboPagos").data("kendoNumericTextBox");
+                 	//numeric.bind("change",onComboPagosChange);				
                     
                 }, 400);
                     		    	
@@ -129,18 +135,41 @@
 
 				dropdownlist.text(dataItem.data.card_type);
 				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
+				$("#resultadoValidate").html ( "");
 				
 			}
 
 			function onComboPagosChange(event) {
-				
+				/*
 				var numericTextBox = $("#comboPagos").data("kendoNumericTextBox");
 
 				if (numericTextBox.value() > 1 && $("#valor").val() > 0 ) {
 					$("#resultadoCuotas").html ("<p>" + numericTextBox.value()+ " pagos de $"+(Math.round($("#valor").val() / numericTextBox.value())) + "</p>" ); 
 				}
+				*/
+				if ($("#comboPagos").val()  > 1 && $("#valor").val() > 0 ) {
+					$("#resultadoCuotas").html ("<p>" + $("#comboPagos").val() + " pagos de $"+(Math.round($("#valor").val() / $("#comboPagos").val() )) + "</p>" ); 
+				}
+				
+				
 			}
 
+			function validateData() {
+				var tarjeta = $("#comboBox").data("kendoDropDownList");
+				var tarjetaData = tarjeta.dataItem();
+				var moneda = $("#comboCurrency").data("kendoDropDownList");
+				var pagos = $("#comboPagos").data("kendoNumericTextBox");
+				var fecha = $("#datepicker").data("kendoDatePicker");
+				
+				var x = tarjeta.text();
+				
+				if (x == " ") {
+					$("#resultadoValidate").html ( "Tienes que seleccionar una tarjeta!");
+					return;
+				}
+				
+			}
+			
 	    </script>
 
 
@@ -164,24 +193,34 @@
 	  </div>
       <!-- Example row of columns -->
       <div class="row">
-        <div class="span4">
+        <div class="span5">
           <h2>Qué tarjeta?</h2>
            <p>Selecciona la tarjeta de crédito del ticket</p>
            <p><input id="comboBox" style="width:250px"/></p>
            <div id="resultadoBanco" style="color:#999999"></div>
         </div>
-        <div class="span4">
+        <div class="span5">
           <h2>Cuándo y que?</h2>
           <p>Una descripción de lo que compraste</p>
           <p><input id="datepicker" value="" style="width:150px;" /></p>
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
        </div>
-        <div class="span4">
+        <div class="span5">
           <h2>Cuánto?</h2>
           <p>Ouch.</p>
-          <p><input id="valor" placeholder="valor"  style="width:100px" onchange="onComboPagosChange();"/> en <input id="comboPagos" style="width:70px"/>     pagos.</p>
+          <p>
+          	<input id="comboCurrency" style="width:60px;margin-right: 5px"/>
+          	<input id="valor" placeholder="valor"  style="width:100px" onchange="onComboPagosChange();"/> en 
+          </p>
+          <p><input id="comboPagos" type="number" value="1" style="width:70px;margin-right: 5px" min="1" max="60" step="1" 
+          			onchange="onComboPagosChange(null);"/>  pagos.
+          </p>
 		  <div id="resultadoCuotas" style="color:#999999"></div>
-          <p><a class="btn btn-large" onclick="">Cargar</a></p>
+          <p>
+          	<a class="btn btn-large" onclick="validateData()">Guardar</a>		  
+          	<div id="resultadoValidate" style="color:#FF3333"></div>
+          </p>
+			
         </div>
       </div>
 	<br><br>

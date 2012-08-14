@@ -49,6 +49,17 @@
     <script src="../../js/kendo.chart.js"></script>
 
 
+	<!-- INCLUDE MOBISCROLL -->
+	<link href="../../css/mobiscroll/mobiscroll.jqm-2.0.1.css" rel="stylesheet" type="text/css" />
+	<link href="../../css/mobiscroll/mobiscroll.android-ics-2.0.css" rel="stylesheet" type="text/css" />
+	<link href="../../css/mobiscroll/mobiscroll.core-2.0.1.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../js/mobiscroll/mobiscroll.core-2.0.1.js" type="text/javascript"></script>
+	<script src="../../js/mobiscroll/mobiscroll.ios-2.0.js" type="text/javascript"></script>
+	<script src="../../js/mobiscroll/mobiscroll.datetime-2.0.1.js" type="text/javascript"></script>
+	<script src="../../js/mobiscroll/mobiscroll.jqm-2.0.1.js" type="text/javascript"></script>
+	<script src="../../js/mobiscroll/mobiscroll.select-2.0.1.js" type="text/javascript"></script>
+
 	<!-- INCLUDE JAVASCRIPT INTERNOS -->
 	<script src="../../js/model/GlobalVariables.js"></script>
 	<script src="../../js/views/comboAccounts.js"></script>
@@ -99,11 +110,20 @@
 	    		comboPagos.destinationDiv = "#comboPagos";
 	    		comboCurrency.destinationDiv = "#comboCurrency";
 			
-	    		
+	    		/*
 	    		$("#datepicker").kendoDatePicker({
     				format: "dd/MM/yyyy"
     			});
-
+	    		*/
+	    		
+	    		$('#datepicker').scroller({
+	    	        preset: 'date',
+	    	        theme: 'android-ics',
+//	    	        theme: 'android-ics',
+	    	        display: 'inline',
+	    	        mode: 'scroller',
+	    	        dateOrder: 'D ddmmyyyy'
+	    	    });    
 	    			    		
                 setTimeout(function() {
                     //* inicializar combo de cuentas *//
@@ -202,7 +222,8 @@
         <div class="span5">
           <h2>Cuándo y que?</h2>
           <p>Una descripción de lo que compraste</p>
-          <p><input id="datepicker" value="" style="width:150px;" /></p>
+          <input id="datepicker" name="datepicker" style="display:none;width:150px;" />
+<!--           <p><input id="datepicker" value="" style="width:150px;" /></p> -->
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
        </div>
         <div class="span5">

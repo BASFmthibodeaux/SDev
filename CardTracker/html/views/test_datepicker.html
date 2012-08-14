@@ -1,0 +1,125 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title></title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width">
+
+	<style>
+	body {
+	  padding-top: 60px;
+	  padding-bottom: 40px;
+	}
+	</style>
+
+	<script src="../../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+		<link href="../../styles/kendo.common.css" rel="stylesheet" />
+    	<link href="../../styles/kendo.default.css" rel="stylesheet" />
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/kendo.core.js"></script>
+        <script src="../../js/kendo.list.js"></script>
+        <script src="../../js/kendo.data.js"></script>
+        <script src="../../js/kendo.model.js"></script>
+        <script src="../../js/kendo.data.xml.js"></script>
+        <script src="../../js/kendo.pager.js"></script>
+        <script src="../../js/kendo.sortable.js"></script>
+        <script src="../../js/kendo.draganddrop.js"></script>
+        <script src="../../js/kendo.groupable.js"></script>
+        <script src="../../js/kendo.grid.js"></script>
+        <script src="../../js/kendo.dropdownlist.js"></script>
+        <script src="../../js/kendo.combobox.js"></script>
+        <script src="../../js/kendo.popup.js"></script>
+        <script src="../../js/kendo.chart.js"></script>
+
+		<script src="../../js/model/GlobalVariables.js"></script>
+		<script src="../../js/views/graphAccountEvolution.js"></script>
+		<script src="../../js/views/comboAccounts.js"></script>
+
+
+</head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+
+
+
+
+
+
+	    <script>
+
+    		var chart = new graphAccountEvolution();
+    		var combo = new comboAccounts();
+			
+			
+			function onComboAccountsChangeValue(event) {
+				
+				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+
+				chart.account = dropdownlist.value();
+//				chart.account = event.item.value;
+				chart.createChart();
+				
+			}
+
+
+	    	//Cuando la pagina se haya creado
+	    	$(document).ready (function () { 
+	    		
+	    		
+	    		chart.connectionString = ConnectionString;
+	    		chart.destinationDiv = "#graph";
+	    		
+	    		combo.connectionString = ConnectionString;
+	    		combo.destinationDiv = "#comboBox"
+	    			    		
+                setTimeout(function() {
+                    // Initialize the chart with a delay to make sure
+                    // the initial animation is visible
+                    chart.createChart();
+                    combo.createCombo();
+					
+                    $(document).bind("kendo:skinChange", function(e) {
+                        chart.createChart();
+                        combo.createCombo();
+                    });
+                }, 400);
+                    		    	
+	    	});
+	    	
+	   
+	    </script>
+
+
+
+		<h1>MoneyTrack</h1>
+		<input id="comboBox" style="width:300px"/> 
+		<div id="graphDiv">
+			<div id="graph"/>
+							
+		</div>
+
+	
+		
+
+      <hr>
+
+      <footer>
+        <p>&copy; SDev 2012</p>
+      </footer>
+
+
+
+
+    </div> <!-- /container -->
+
+</body>
+</html>

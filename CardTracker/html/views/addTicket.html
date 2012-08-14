@@ -100,7 +100,11 @@
 	    	var combo = new comboAccounts();
     		var comboPagos = new comboPagos();
     		var comboCurrency = new comboCurrency();
-
+			var sendingData = false;
+			
+			var hash = "nada";
+			var username = "LOUCIMJ";
+    		
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
 
@@ -119,10 +123,16 @@
 	    		$('#datepicker').scroller({
 	    	        preset: 'date',
 	    	        theme: 'android-ics',
-//	    	        theme: 'android-ics',
+	    	        headerText: 'false',
+	    	        height: 40,
+	    	        showLabel: false,
+	    	        dateFormat: 'yy/mm/dd',
+	    	        dayNamesShort: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'],
+	    	        dayNamesShort: ['Lu','Ma','Mie','Jue','Vie','Sab','Dom'],
+	    	        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
 	    	        display: 'inline',
 	    	        mode: 'scroller',
-	    	        dateOrder: 'D ddmmyyyy'
+	    	        dateOrder: 'D ddMyyyy'
 	    	    });    
 	    			    		
                 setTimeout(function() {
@@ -168,9 +178,15 @@
 				}
 				*/
 				if ($("#comboPagos").val()  > 1 && $("#valor").val() > 0 ) {
-					$("#resultadoCuotas").html ("<p>" + $("#comboPagos").val() + " pagos de $"+(Math.round($("#valor").val() / $("#comboPagos").val() )) + "</p>" ); 
+					var cuota = Math.round($("#valor").val() / $("#comboPagos").val() );
+					
+					if (cuota == 0) {
+						$("#resultadoCuotas").html ("<p>" + $("#comboPagos").val() + " pagos de casi nada, no llega a $1!!</p>" ); 
+					} else {
+						$("#resultadoCuotas").html ("<p>" + $("#comboPagos").val() + " pagos de $"+(Math.round($("#valor").val() / $("#comboPagos").val() )) + "</p>" ); 
+					}
 				}
-				
+				$("#resultadoValidate").html ( "");
 				
 			}
 
@@ -178,16 +194,101 @@
 				var tarjeta = $("#comboBox").data("kendoDropDownList");
 				var tarjetaData = tarjeta.dataItem();
 				var moneda = $("#comboCurrency").data("kendoDropDownList");
-				var pagos = $("#comboPagos").data("kendoNumericTextBox");
-				var fecha = $("#datepicker").data("kendoDatePicker");
+				var pagos = $("#comboPagos").val();
+				var valor = $("#valor").val();
+				var fecha = $("#datepicker").scroller('getDate');
+				var stringFecha = jQuery.scroller.formatDate('yyyy-mm-dd',fecha);
+				
+				
+//				alert (stringFecha);
 				
 				var x = tarjeta.text();
-				
 				if (x == " ") {
 					$("#resultadoValidate").html ( "Tienes que seleccionar una tarjeta!");
 					return;
 				}
+				//alert (tarjetaData.data.acc_id);
+
+				//alert (valor);
+				if (valor == 0) {
+					$("#resultadoValidate").html ( "No se compra nada gratis con tarjeta!! completa el valor.");
+					return;
+				}
+				if (valor < 0) {
+					$("#resultadoValidate").html ( "Te devolvieron plata en la tarjeta!?? completa el valor.");
+					return;
+				}
 				
+				
+				if (pagos == 0) {
+					$("#resultadoValidate").html ( "No se inventaron los pagos en cero!!");
+					return;
+				}
+				if (pagos < 0) {
+					$("#resultadoValidate").html ( "Pagos negativos??! Que maldad! querer romper el sistema así!");
+					return;
+				}
+				$("#resultadoValidate").html ( "");
+				//$("#circle").style ("display:true");
+				
+				sendData();
+
+			}
+			
+			function sendData() {
+				var fecha = $("#datepicker").scroller('getDate');
+				var stringFecha = jQuery.scroller.formatDate('yyyy-mm-dd',fecha);
+				var tarjeta = $("#comboBox").data("kendoDropDownList");
+				var tarjetaData = tarjeta.dataItem();
+				
+				sendingData = true;
+				
+				//deshabilitar los divs
+				var circle = document.getElementById("circle");
+				circle.style.display = "block";
+				var temp = document.getElementById("divBanco");
+				temp.style.opacity = "0.3";
+				var temp = document.getElementById("divFecha");
+				temp.style.opacity = "0.3";
+				$("#datepicker").scroller.readOnly= true;
+				var temp = document.getElementById("divValor");
+				temp.style.opacity = "0.3";
+				
+				var dataSource = new kendo.data.DataSource({
+				    transport: {
+				        read: {
+	    					url: ConnectionString+"/business/load_purchases.php",
+	    					data: {
+	    						cHash: this.hash,
+	    						cAction: "ADD",
+	    						value_type: "",
+	    						date: stringFecha,
+	    						purchased_by: username,
+	    						credit_card: tarjetaData.data.cc_id,
+	    						description: $("#description").text,
+	    						value: $("#valor").val(),
+	    						payments: $("#comboPagos").val()						
+	    					},
+							schema: {
+								type: "xml",
+								data: "/action/response",
+								model: {
+									fields: {
+										code: "code/text()",
+										error: "error/text()"
+									}
+								}
+							}
+
+				        }
+				    },
+				    // describe the result format
+				    schema: {
+				        // the data which the data source will be bound to is in the "results" field
+				        data: "results"
+				    }
+				});	
+				alert ("listo!");
 			}
 			
 	    </script>
@@ -213,21 +314,21 @@
 	  </div>
       <!-- Example row of columns -->
       <div class="row">
-        <div class="span5">
+
+        <div id="divBanco" class="span5">
           <h2>Qué tarjeta?</h2>
            <p>Selecciona la tarjeta de crédito del ticket</p>
            <p><input id="comboBox" style="width:250px"/></p>
            <div id="resultadoBanco" style="color:#999999"></div>
         </div>
-        <div class="span5">
+        <div id="divFecha" class="span5">
           <h2>Cuándo y que?</h2>
           <p>Una descripción de lo que compraste</p>
           <input id="datepicker" name="datepicker" style="display:none;width:150px;" />
-<!--           <p><input id="datepicker" value="" style="width:150px;" /></p> -->
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
        </div>
-        <div class="span5">
-          <h2>Cuánto?</h2>
+        <div id="divValor" class="span5">
+          <h2>Cuánto?</h2>(cargar desde <a>ticket</a> o <a>resumen</a>)
           <p>Ouch.</p>
           <p>
           	<input id="comboCurrency" style="width:60px;margin-right: 5px"/>
@@ -239,10 +340,18 @@
 		  <div id="resultadoCuotas" style="color:#999999"></div>
           <p>
           	<a class="btn btn-large" onclick="validateData()">Guardar</a>		  
+
           	<div id="resultadoValidate" style="color:#FF3333"></div>
           </p>
 			
         </div>
+	      <div id='circle' class='span5' style='display:none'>
+			<div id='circle_1' class='circle'></div>
+			<div id='circle_2' class='circle'></div>
+			<div id='circle_3' class='circle'></div>
+			<div class='clearfix'></div>
+			<h6>Cargando el ticket en el server</h6>
+		</div>
       </div>
 	<br><br>
 	 <div class="row">
@@ -264,3 +373,4 @@
 
 </body>
 </html>
+	

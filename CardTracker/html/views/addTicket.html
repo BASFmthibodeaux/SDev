@@ -101,6 +101,7 @@
     		var comboPagos = new comboPagos();
     		var comboCurrency = new comboCurrency();
 			var sendingData = false;
+			var loadingMode = "DEFAULT";
 			
 			var hash = "nada";
 			var username = "LOUCIMJ";
@@ -114,11 +115,6 @@
 	    		comboPagos.destinationDiv = "#comboPagos";
 	    		comboCurrency.destinationDiv = "#comboCurrency";
 			
-	    		/*
-	    		$("#datepicker").kendoDatePicker({
-    				format: "dd/MM/yyyy"
-    			});
-	    		*/
 	    		
 	    		$('#datepicker').scroller({
 	    	        preset: 'date',
@@ -142,12 +138,7 @@
 					dropdownlist.bind("change",onComboAccountsChangeValue);
 					
 					comboCurrency.createCombo();
-					
-                    //* inicializar combo de pagos *//
-                    //comboPagos.createCombo();
-                 	// bind to the change event
-                    //var numeric = $("#comboPagos").data("kendoNumericTextBox");
-                 	//numeric.bind("change",onComboPagosChange);				
+							
                     
                 }, 400);
                     		    	
@@ -170,13 +161,7 @@
 			}
 
 			function onComboPagosChange(event) {
-				/*
-				var numericTextBox = $("#comboPagos").data("kendoNumericTextBox");
 
-				if (numericTextBox.value() > 1 && $("#valor").val() > 0 ) {
-					$("#resultadoCuotas").html ("<p>" + numericTextBox.value()+ " pagos de $"+(Math.round($("#valor").val() / numericTextBox.value())) + "</p>" ); 
-				}
-				*/
 				if ($("#comboPagos").val()  > 1 && $("#valor").val() > 0 ) {
 					var cuota = Math.round($("#valor").val() / $("#comboPagos").val() );
 					
@@ -185,11 +170,23 @@
 					} else {
 						$("#resultadoCuotas").html ("<p>" + $("#comboPagos").val() + " pagos de $"+(Math.round($("#valor").val() / $("#comboPagos").val() )) + "</p>" ); 
 					}
+				} else {
+					$("#resultadoCuotas").html ("");
 				}
 				$("#resultadoValidate").html ( "");
 				
 			}
+			
+			function onComboPagosChange2(event) {
+				var y = $("#comboPagos").val();
 
+				if (this.loadingMode == "MONTHLY_PAYMENT") {
+					$("#resultadoCuotas").html ( "el valor total fue $" + Math.round(y*$("#valor").val()));
+					$("#resultadoValidate").html ( "");
+				}
+				
+			}
+			
 			function validateData() {
 				var tarjeta = $("#comboBox").data("kendoDropDownList");
 				var tarjetaData = tarjeta.dataItem();
@@ -235,7 +232,7 @@
 
 			}
 			
-			function sendData() {
+			function sendData(force) {
 				var fecha = $("#datepicker").scroller('getDate');
 				var stringFecha = jQuery.scroller.formatDate('yyyy-mm-dd',fecha);
 				var tarjeta = $("#comboBox").data("kendoDropDownList");
@@ -254,6 +251,20 @@
 				var temp = document.getElementById("divValor");
 				temp.style.opacity = "0.3";
 				
+				var pagos = $("#comboPagos").val();
+				var total_pagos = 0;
+
+				/*
+				if (this.loadingMode == "MONTHLY_PAYMENT") {
+					pagos = parseInt($("#comboPagosCuotas2").val()) - parseInt($("#comboPagosCuotas1").val()) + 1;
+					total_pagos = $("#comboPagosCuotas2").val();
+				}
+				*/
+				var bypass_check = "0";
+				if (force != null) {
+					var bypass_check = "1";
+				}
+				
 				var dataSource = new kendo.data.DataSource({
 				    transport: {
 				        read: {
@@ -261,36 +272,85 @@
 	    					data: {
 	    						cHash: this.hash,
 	    						cAction: "ADD",
-	    						value_type: "",
+	    						value_type: this.loadingMode,
 	    						date: stringFecha,
-	    						purchased_by: username,
-	    						credit_card: tarjetaData.data.cc_id,
-	    						description: $("#description").text,
+	    						purchased_by: this.username,
+	    						credit_card: tarjetaData.data.acc_id,
+	    						description: $("#description").val(),
 	    						value: $("#valor").val(),
-	    						payments: $("#comboPagos").val()						
-	    					},
-							schema: {
-								type: "xml",
-								data: "/action/response",
-								model: {
-									fields: {
-										code: "code/text()",
-										error: "error/text()"
-									}
-								}
-							}
-
+	    						payments: pagos,
+	    						bypass_check: bypass_check
+	    					}
 				        }
 				    },
-				    // describe the result format
-				    schema: {
-				        // the data which the data source will be bound to is in the "results" field
-				        data: "results"
+					schema: {
+						type: "xml",
+						data: "/action",
+						model: {
+							fields: {
+								code: "code/text()",
+								error: "error/text()",
+								response: "response/text()"
+							}
+						}
+					},
+				    change: function(e) {
+				        // handle event
+						var circle = document.getElementById("circle");
+						circle.style.display = "none";
+						var temp = document.getElementById("divBanco");
+						temp.style.opacity = "1";
+						temp = document.getElementById("divFecha");
+						temp.style.opacity = "1";
+						temp = document.getElementById("divValor");
+						temp.style.opacity = "1";
+
+				        var data = this.data();
+						if (data[0].data.code == "3") {
+				        	$("#resultadoValidate").html ( data[0].data.error+" <h6><a onclick='sendData(1);'>cargar igualmente</a></h6>");
+				        } else {
+							$("#valor").val("");
+							$("#comboPagos").val("1");
+							$("#comboPagosCuotas1").val("1");
+							$("#comboPagosCuotas2").val("1");
+							
+							$("#description").val("");
+							$("#resultadoCuotas").html ("");
+							$("#resultadoValidate").html("");
+				        	$("#resultadoValidate").html ( data[0].data.response);
+				        }
+						
 				    }
 				});	
-				alert ("listo!");
+				
+				dataSource.read();
+								
 			}
 			
+			function toggleTicket(){
+/*
+				var x = document.getElementById("divPagosTicket");
+				x.style.display = "block";
+				x = document.getElementById("divPagosResumen");
+				x.style.display = "none";
+				*/
+				$("#valor").attr("placeholder", "valor");
+				this.loadingMode = "DEFAULT";
+				onComboPagosChange();
+				
+			}
+			
+			function toggleResumen(){
+				/*
+				var x = document.getElementById("divPagosResumen");
+				x.style.display = "block";
+				x = document.getElementById("divPagosTicket");
+				x.style.display = "none";
+				*/
+				$("#valor").attr("placeholder", "valor cuota");
+				this.loadingMode = "MONTHLY_PAYMENT";
+				onComboPagosChange2(null);
+			}
 	    </script>
 
 
@@ -328,34 +388,39 @@
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
        </div>
         <div id="divValor" class="span5">
-          <h2>Cuánto?</h2>(cargar desde <a>ticket</a> o <a>resumen</a>)
+          <h2>Cuánto?</h2>(cargar desde <a onclick="toggleTicket();">ticket</a> o <a onclick="toggleResumen();">resumen</a>)
           <p>Ouch.</p>
           <p>
           	<input id="comboCurrency" style="width:60px;margin-right: 5px"/>
-          	<input id="valor" placeholder="valor"  style="width:100px" onchange="onComboPagosChange();"/> en 
+          	<input id="valor" placeholder="valor"  style="width:100px" onchange="onComboPagosChange();onComboPagosChange2(null);"/>
           </p>
-          <p><input id="comboPagos" type="number" value="1" style="width:70px;margin-right: 5px" min="1" max="60" step="1" 
-          			onchange="onComboPagosChange(null);"/>  pagos.
-          </p>
+          <div id="divPagosTicket">
+	          <p><input id="comboPagos" type="number" value="1" style="width:70px;margin-right: 5px" min="1" max="60" step="1" 
+	          			onchange="onComboPagosChange(null);onComboPagosChange2(null);"/>  pagos.
+	          </p>
+          </div>
 		  <div id="resultadoCuotas" style="color:#999999"></div>
           <p>
           	<a class="btn btn-large" onclick="validateData()">Guardar</a>		  
 
           	<div id="resultadoValidate" style="color:#FF3333"></div>
           </p>
-			
         </div>
-	      <div id='circle' class='span5' style='display:none'>
+      </div>
+	 <div class="row">
+      <div id='circle' class='span5' style='display:none'>
+      	<div width="100%" style='margin: 0px auto;margin-bottom: 5px'>
 			<div id='circle_1' class='circle'></div>
 			<div id='circle_2' class='circle'></div>
 			<div id='circle_3' class='circle'></div>
 			<div class='clearfix'></div>
-			<h6>Cargando el ticket en el server</h6>
-		</div>
-      </div>
+      	</div>
+		<h6>Cargando el ticket en el server</h6>
+	 	</div> 
+	 </div>
 	<br><br>
 	 <div class="row">
-	 	<div class="span4">
+	 	<div class="span5">
 	 		<h6>Últimos movimientos</h6>
 	 		<p>grilla</p>
 	 	</div> 

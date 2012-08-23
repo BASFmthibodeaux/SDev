@@ -17,6 +17,19 @@
  * -----------------------------------------------------
  *  
 */
+
+/* PARAMETROS
+
+cHash			hash de seguridad
+
+-- campos:
+credit_card
+limit			cantidad de registros
+purchased_by	usuario
+order_by
+
+
+*/
 require_once '../global/global_variables.php';
 require_once $functions_path . '/connect.php';
 
@@ -43,8 +56,16 @@ require_once $functions_path . '/connect.php';
 		if ($rvar_credit_card !="") {
 			$where = $where . " and pur_cc_id= ".$rvar_credit_card;
 		}
+		if ($rvar_username != "") {
+			$where = $where . " and pur_purchased_by= '".$rvar_purchased_by."'";
+		}
 		$and_operator = "";
-		$order_by = " order by pur_date desc";
+		if ($rvar_order_by == "") {
+			$order_by = " order by pur_date desc";
+		} 
+		if ($rvar_order_by == "TIMESTAMP") {
+			$order_by = " order by pur_timestamp desc";
+		} 
 		if ($rvar_limit != ""){
 			$order_by.=" limit ".$rvar_limit;
 		}
@@ -70,8 +91,9 @@ require_once $functions_path . '/connect.php';
 			print('</purchase>'.$NL);
 			$item_index ++;
 	    }
-		print('<query>'.$query.'</query>'.$NL);
-		print('<where_clause>'.$where.'</where_clause>'.$NL);
+// 		print('<query>'.$query.'</query>'.$NL);
+// 		print('<query>'.$rvar_order_by.'</query>'.$NL);
+// 		print('<where_clause>'.$where.'</where_clause>'.$NL);
    	} else {
    		$texto_error = "";
    		if ($rvar_cHash == "") {

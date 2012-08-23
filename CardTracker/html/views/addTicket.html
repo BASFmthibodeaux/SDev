@@ -42,10 +42,13 @@
     <script src="../../js/kendo.sortable.js"></script>
     <script src="../../js/kendo.draganddrop.js"></script>
     <script src="../../js/kendo.groupable.js"></script>
-    <script src="../../js/kendo.grid.js"></script>
     <script src="../../js/kendo.dropdownlist.js"></script>
     <script src="../../js/kendo.combobox.js"></script>
     <script src="../../js/kendo.popup.js"></script>
+    <script src="../../js/kendo.web.js"></script>
+<!--     <script src="../../js/kendo.groupable.js"></script> -->
+<!--     <script src="../../js/kendo.menu.js"></script> -->
+    <script src="../../js/kendo.grid.js"></script>
     <script src="../../js/kendo.chart.js"></script>
 
 
@@ -65,6 +68,7 @@
 	<script src="../../js/views/comboAccounts.js"></script>
 	<script src="../../js/views/comboPagos.js"></script>
 	<script src="../../js/views/comboCurrency.js"></script>
+	<script src="../../js/views/gridPurchases.js"></script>
 
 </head>
 <body>
@@ -100,11 +104,14 @@
 	    	var combo = new comboAccounts();
     		var comboPagos = new comboPagos();
     		var comboCurrency = new comboCurrency();
+    		var gridPurchases = new gridPurchases();
+    		
 			var sendingData = false;
 			var loadingMode = "DEFAULT";
 			
 			var hash = "nada";
 			var username = "LOUCIMJ";
+			var limit = "5";
     		
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
@@ -114,7 +121,9 @@
 	    		combo.destinationDiv = "#comboBox"
 	    		comboPagos.destinationDiv = "#comboPagos";
 	    		comboCurrency.destinationDiv = "#comboCurrency";
-			
+				
+	    		gridPurchases.destinationDiv = "#grid";
+				grid.connectionString = ConnectionString;
 	    		
 	    		$('#datepicker').scroller({
 	    	        preset: 'date',
@@ -123,8 +132,8 @@
 	    	        height: 40,
 	    	        showLabel: false,
 	    	        dateFormat: 'yy/mm/dd',
-	    	        dayNamesShort: ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'],
-	    	        dayNamesShort: ['Lu','Ma','Mie','Jue','Vie','Sab','Dom'],
+	    	        dayNamesShort: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+	    	        dayNamesShort: ['Dom','Lu','Ma','Mie','Jue','Vie','Sab'],
 	    	        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
 	    	        display: 'inline',
 	    	        mode: 'scroller',
@@ -138,7 +147,12 @@
 					dropdownlist.bind("change",onComboAccountsChangeValue);
 					
 					comboCurrency.createCombo();
-							
+					
+					gridPurchases.hash = "nada";
+					gridPurchases.purchased_by = this.username;
+					gridPurchases.limit = this.limit;
+					gridPurchases.orderBy = "TIMESTAMP";
+					gridPurchases.createGrid();
                     
                 }, 400);
                     		    	
@@ -154,8 +168,8 @@
 				var dropdownlist = $("#comboBox").data("kendoDropDownList");
 				var dataItem = dropdownlist.dataItem();
 
-				dropdownlist.text(dataItem.data.card_type);
-				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
+				dropdownlist.text(dataItem.card_type);
+				$("#resultadoBanco").html ("<p>" + dataItem.bank + "</p>" ); 
 				$("#resultadoValidate").html ( "");
 				
 			}
@@ -275,7 +289,7 @@
 	    						value_type: this.loadingMode,
 	    						date: stringFecha,
 	    						purchased_by: this.username,
-	    						credit_card: tarjetaData.data.acc_id,
+	    						credit_card: tarjetaData.acc_id,
 	    						description: $("#description").val(),
 	    						value: $("#valor").val(),
 	    						payments: pagos,
@@ -318,6 +332,8 @@
 							$("#resultadoCuotas").html ("");
 							$("#resultadoValidate").html("");
 				        	$("#resultadoValidate").html ( data[0].data.response);
+				        	
+				        	gridPurchases.createGrid();
 				        }
 						
 				    }
@@ -406,6 +422,7 @@
           	<div id="resultadoValidate" style="color:#FF3333"></div>
           </p>
         </div>
+
       </div>
 	 <div class="row">
       <div id='circle' class='span5' style='display:none'>
@@ -418,11 +435,11 @@
 		<h6>Cargando el ticket en el server</h6>
 	 	</div> 
 	 </div>
-	<br><br>
-	 <div class="row">
+  	 <br><br>
+	 <div id='divMovimientos' style="opacity='0.7'" class="row">
 	 	<div class="span5">
-	 		<h6>Últimos movimientos</h6>
-	 		<p>grilla</p>
+	 		<h6>Últimos 5 movimientos cargados</h6>
+	 		<div id="grid"></div>
 	 	</div> 
 	 </div>
       <hr>

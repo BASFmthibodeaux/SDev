@@ -44,15 +44,17 @@ function graphAccountEvolution() {
 				
                 $(this.destinationDiv).kendoChart({
                 	dataSource: ds,
-                    theme: $(document).data("kendoSkin") || "default",
+                    theme: $(document).data("kendoSkin") || "blueOpal",
                     title: {
-                        text: "Pagos a realizar"
+                        text: "Pagos a realizar",
+                        visible: false
                     },
                     legend: {
                         visible: false
                     },
                     seriesDefaults: {
-                        type: "column"
+                        type: "column",
+                        stack: true
                     },
                     categoryAxis: { 
                     	field: "month" 

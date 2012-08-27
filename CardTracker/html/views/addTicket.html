@@ -320,8 +320,10 @@
 						temp.style.opacity = "1";
 
 				        var data = this.data();
-						if (data[0].data.code == "3") {
-				        	$("#resultadoValidate").html ( data[0].data.error+" <h6><a onclick='sendData(1);'>cargar igualmente</a></h6>");
+				        
+				        //alert (data[0].data.code);
+						if (data[0].code == "3") {
+				        	$("#resultadoValidate").html ( data[0].error+" <h6><a onclick='sendData(1);'>cargar igualmente</a></h6>");
 				        } else {
 							$("#valor").val("");
 							$("#comboPagos").val("1");
@@ -331,7 +333,7 @@
 							$("#description").val("");
 							$("#resultadoCuotas").html ("");
 							$("#resultadoValidate").html("");
-				        	$("#resultadoValidate").html ( data[0].data.response);
+				        	$("#resultadoValidate").html ( data[0].response);
 				        	
 				        	gridPurchases.createGrid();
 				        }

@@ -81,7 +81,7 @@ require_once $functions_path . '/connect.php';
 			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 				print('<period>'.$NL);
 	
-				print('<month>'.date("M Y",strtotime($row["fp_due_period"]."-01 00:00:00")).'</month>'.$NL);
+				print('<month>'.date("M y",strtotime($row["fp_due_period"]."-01 00:00:00")).'</month>'.$NL);
 				print('<one_payment>'.round($row["one_payment"]).'</one_payment>'.$NL);
 				print('<more_payments>'.round($row["more_payments"]).'</more_payments>'.$NL);
 

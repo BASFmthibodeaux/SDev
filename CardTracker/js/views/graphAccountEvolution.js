@@ -50,23 +50,40 @@ function graphAccountEvolution() {
                         visible: false
                     },
                     legend: {
-                        visible: false
-                    },
-                    seriesDefaults: {
-                        type: "column",
-                        stack: true
+                        visible: true,
+                        position: "bottom"
                     },
                     categoryAxis: { 
-                    	field: "month" 
+                    	field: "month", 
+                    	legend: "Mes"
+                    },                        
+                    tooltip: {
+                        visible: true,
+                        template: "#= series.value #, #= series.name #"
                     },
+                    valueAxis: {
+                        labels: {
+                            template: "#= kendo.format('{0:N0}', value) # $"
+                        }
+                    },
+
                     series: [{
+                    	type:"column",
                     	field: "one_payment",
                         name: "Un Pago",
+                        labels: {
+                        	visible: true,
+                        	position: "center"
+                        }
                     }, {
+                    	type:"line",
                     	field: "more_payments",
                         name: "En cuotas",
+                        labels: {
+                        	visible: true
+                        }
                     }],
-                    seriesColors: ["#cd1533", "#d43851", "#dc5c71", "#e47f8f", "#eba1ad",
+                    seriesColors: ["#4db9e3","#cd1533" , "#dc5c71", "#e47f8f", "#eba1ad",
                                    "#009bd7", "#26aadd", "#4db9e3", "#73c8e9", "#99d7ef"]
                     
                 });

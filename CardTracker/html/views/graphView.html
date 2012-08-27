@@ -33,6 +33,16 @@
 	<!-- INCLUDE JAVASCRIPT KENDO -->
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/kendo.all.js"></script>
+    <script src="../../js/kendo.sortable.js"></script>
+    <script src="../../js/kendo.draganddrop.js"></script>
+    <script src="../../js/kendo.groupable.js"></script>
+    <script src="../../js/kendo.dropdownlist.js"></script>
+    <script src="../../js/kendo.combobox.js"></script>
+    <script src="../../js/kendo.web.js"></script>
+<!--     <script src="../../js/kendo.groupable.js"></script> -->
+<!--     <script src="../../js/kendo.menu.js"></script> -->
+    <script src="../../js/kendo.grid.js"></script>
+    <script src="../../js/kendo.chart.js"></script>
 
 
 
@@ -40,6 +50,7 @@
 	<script src="../../js/model/GlobalVariables.js"></script>
 	<script src="../../js/views/graphAccountEvolution.js"></script>
 	<script src="../../js/views/comboAccounts.js"></script>
+	<script src="../../js/views/comboPeriodos.js"></script>
 
 </head>
 <body>
@@ -73,6 +84,7 @@
 
 //    		var chart = new graphAccountEvolution();
 	    	var combo = new comboAccounts();
+	    	var comboPeriodos = new comboPeriodos();
     		var chart = new graphAccountEvolution();
 
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
@@ -85,13 +97,21 @@
 	    		combo.connectionString = ConnectionString;
 	    		combo.destinationDiv = "#comboBox"
 
+	    		comboPeriodos.connectionString = ConnectionString;
+	    		comboPeriodos.destinationDiv = "#comboPeriodos"
+
 	    			    		
                 setTimeout(function() {
                     //* inicializar combo de cuentas *//
                     chart.createChart();
                     
                     combo.createCombo();
-    				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+                    comboPeriodos.createCombo();
+
+                    var dropdownlist = $("#comboBox").data("kendoDropDownList");
+					dropdownlist.bind("change",onComboAccountsChangeValue);
+
+					dropdownlist = $("#comboPeriodos").data("kendoDropDownList");
 					dropdownlist.bind("change",onComboAccountsChangeValue);
 					
 					
@@ -110,7 +130,13 @@
 				var dropdownlist = $("#comboBox").data("kendoDropDownList");
 				var dataItem = dropdownlist.dataItem();
 
-				dropdownlist.text(dataItem.data.card_type);
+				var dropdownlist2 = $("#comboPeriodos").data("kendoDropDownList");
+				var dataItem2 = dropdownlist2.dataItem();
+
+				dropdownlist.text(dataItem.card_type);
+				
+				chart.periodos = dataItem2.value;
+                chart.createChart();
 //				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
 				
 			}
@@ -136,14 +162,14 @@
         <div class="span7">
           <h2>Vista general, sumando todo</h2>
           <p>Esta es una vista de todas las tarjetas juntas, separando en los tickets hechos en un pago y en cuotas.  </p>
+           <p><input id="comboPeriodos" style="width:250px"/></p>
 		  <div id="graph"></div>
 		  <a class="btn btn-large">ver detalle por cada tarjeta</a>
         </div>
-        <div class="span4" style="display: none">
-          <h2>Cuándo y que?</h2>
-          <p>Una descripción de lo que compraste</p>
-          <p><input id="datepicker" value="" style="width:150px;" /></p>
-          <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
+        <div class="span4" style="">
+          <h2>Qué tarjeta?</h2>
+           <p>Selecciona la tarjeta de crédito para ver su evolución</p>
+           <p><input id="comboBox" style="width:250px"/></p>
        </div>
 <!--         <div class="span4"> -->
 <!--           <h2>Cuánto?</h2> -->

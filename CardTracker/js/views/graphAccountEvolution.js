@@ -3,6 +3,7 @@ function graphAccountEvolution() {
 	this.connectionString = "";
 	this.account = "";
 	this.destinationDiv = "";
+	this.periodos = "";
 	
 	this.createChart = 
 			function () {
@@ -23,7 +24,8 @@ function graphAccountEvolution() {
 		    					url: ConnectionString+"/views/graph.php",
 		    					data: {
 		    						cHash: "nada1",
-		    						account: this.account
+		    						account: this.account,
+		    						period_from: this.periodos
 		    					}
 		    				},
 		    			},

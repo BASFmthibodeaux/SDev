@@ -69,7 +69,20 @@ require_once $functions_path . '/connect.php';
 			if ($rvar_period_from == "TODAY" || $rvar_period_from =="") {
 				$from_date = date("Y-m-d",mktime(0, 0, 0, date("m")-3, "01",   date("Y")));
 				$to_date = date("Y-m-d", mktime(0, 0, 0, date("m")+9,"01",   date("Y")));
+			} 
+			if ($rvar_period_from == "-6") {
+				$from_date = date("Y-m-d",mktime(0, 0, 0, date("m")-6, "01",   date("Y")));
+				$to_date = date("Y-m-d", mktime(0, 0, 0, date("m")+6,"01",   date("Y")));
 			}
+			if ($rvar_period_from == "-9") {
+				$from_date = date("Y-m-d",mktime(0, 0, 0, date("m")-9, "01",   date("Y")));
+				$to_date = date("Y-m-d", mktime(0, 0, 0, date("m")+3,"01",   date("Y")));
+			}
+			if ($rvar_period_from == "-12") {
+				$from_date = date("Y-m-d",mktime(0, 0, 0, date("m")-12, "01",   date("Y")));
+				$to_date = date("Y-m-d", mktime(0, 0, 0, date("m"),"01",   date("Y")));
+			}
+				
 			$where .= " and fp_due_date >= '".$from_date."' and fp_due_date <'".$to_date."' ";
 			
 			$order_by = " group by fp_due_period order by fp_due_period";

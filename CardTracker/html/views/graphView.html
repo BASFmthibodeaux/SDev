@@ -84,8 +84,12 @@
 
 //    		var chart = new graphAccountEvolution();
 	    	var combo = new comboAccounts();
+	    	var comboPeriodos2 = new comboPeriodos();
 	    	var comboPeriodos = new comboPeriodos();
-    		var chart = new graphAccountEvolution();
+	    	
+    		
+	    	var chart = new graphAccountEvolution();
+    		var chart2 = new graphAccountEvolution();
 
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
@@ -94,12 +98,17 @@
 	    		chart.connectionString = ConnectionString;
 	    		chart.destinationDiv = "#graph";
 
+	    		chart2.connectionString = ConnectionString;
+	    		chart2.destinationDiv = "#graph2";
+
 	    		combo.connectionString = ConnectionString;
 	    		combo.destinationDiv = "#comboBox"
 
 	    		comboPeriodos.connectionString = ConnectionString;
 	    		comboPeriodos.destinationDiv = "#comboPeriodos"
 
+	    		comboPeriodos2.connectionString = ConnectionString;
+	    		comboPeriodos2.destinationDiv = "#comboPeriodos2"
 	    			    		
                 setTimeout(function() {
                     //* inicializar combo de cuentas *//
@@ -107,13 +116,16 @@
                     
                     combo.createCombo();
                     comboPeriodos.createCombo();
+                    comboPeriodos2.createCombo();
 
                     var dropdownlist = $("#comboBox").data("kendoDropDownList");
-					dropdownlist.bind("change",onComboAccountsChangeValue);
+					dropdownlist.bind("change",onComboAccountsChangeValue2);
 
 					dropdownlist = $("#comboPeriodos").data("kendoDropDownList");
 					dropdownlist.bind("change",onComboAccountsChangeValue);
 					
+					var dropdownlist2 = $("#comboPeriodos2").data("kendoDropDownList");
+					dropdownlist2.bind("change",onComboAccountsChangeValue2);
 					
                     
                 }, 400);
@@ -141,7 +153,41 @@
 				
 			}
 
+			function onComboAccountsChangeValue2(event) {
+				
+				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
 
+				var dropdownlist2 = $("#comboPeriodos2").data("kendoDropDownList");
+				var dataItem2 = dropdownlist2.dataItem();
+
+				dropdownlist.text(dataItem.card_type);
+				
+				chart2.account = dataItem.acc_id;
+				chart2.periodos = dataItem2.value;
+                chart2.createChart();
+//				$("#resultadoBanco").html ("<p>" + dataItem.data.bank + "</p>" ); 
+				
+			}
+			
+			function toggleDetail(){
+				var div = document.getElementById("detailDiv");
+				div.style.display = "block";
+			    
+				div = document.getElementById("generalDiv");
+				div.style.display = "none";
+				
+				onComboAccountsChangeValue2();
+				
+			}
+			
+			function toggleGeneral(){
+				var div = document.getElementById("detailDiv");
+				div.style.display = "none";
+			    
+				div = document.getElementById("generalDiv");
+				div.style.display = "block";
+			}
 	    </script>
 
 
@@ -159,17 +205,20 @@
 
       <!-- Example row of columns -->
       <div class="row">
-        <div class="span7">
+        <div class="span7" id="generalDiv">
           <h2>Vista general, sumando todo</h2>
           <p>Esta es una vista de todas las tarjetas juntas, separando en los tickets hechos en un pago y en cuotas.  </p>
            <p><input id="comboPeriodos" style="width:250px"/></p>
 		  <div id="graph"></div>
-		  <a class="btn btn-large">ver detalle por cada tarjeta</a>
+		  <a class="btn btn-large" onclick="toggleDetail()">ver detalle por cada tarjeta</a>
         </div>
-        <div class="span4" style="">
+        <div class="span7" id="detailDiv" style="display: none">
           <h2>Qué tarjeta?</h2>
            <p>Selecciona la tarjeta de crédito para ver su evolución</p>
            <p><input id="comboBox" style="width:250px"/></p>
+           <p><input id="comboPeriodos2" style="width:250px"/></p>
+		   <div id="graph2"></div>
+		  <a class="btn btn-large" onclick="toggleGeneral()">ver todo sumarizado</a>
        </div>
 <!--         <div class="span4"> -->
 <!--           <h2>Cuánto?</h2> -->

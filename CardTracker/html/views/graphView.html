@@ -205,21 +205,13 @@
 
       <!-- Example row of columns -->
       <div class="row">
-        <div class="span7" id="generalDiv">
+        <div class="span10" id="generalDiv">
           <h2>Vista general, sumando todo</h2>
           <p>Esta es una vista de todas las tarjetas juntas, separando en los tickets hechos en un pago y en cuotas.  </p>
            <p><input id="comboPeriodos" style="width:250px"/></p>
 		  <div id="graph"></div>
 		  <a class="btn btn-large" onclick="toggleDetail()">ver detalle por cada tarjeta</a>
         </div>
-        <div class="span7" id="detailDiv" style="display: none">
-          <h2>Qué tarjeta?</h2>
-           <p>Selecciona la tarjeta de crédito para ver su evolución</p>
-           <p><input id="comboBox" style="width:250px"/></p>
-           <p><input id="comboPeriodos2" style="width:250px"/></p>
-		   <div id="graph2"></div>
-		  <a class="btn btn-large" onclick="toggleGeneral()">ver todo sumarizado</a>
-       </div>
 <!--         <div class="span4"> -->
 <!--           <h2>Cuánto?</h2> -->
 <!--           <p>Ouch.</p> -->
@@ -235,7 +227,17 @@
 <!-- 	 		<p>grilla</p> -->
 <!-- 	 	</div>  -->
  	 </div> 
+      <div class="row">
+        <div class="span10" id="detailDiv" style="display: none">
+          <h2>Qué tarjeta?</h2>
+           <p>Selecciona la tarjeta de crédito para ver su evolución</p>
+           <p><input id="comboBox" style="width:250px"/></p>
+           <p><input id="comboPeriodos2" style="width:250px"/></p>
+		   <div id="graph2"></div>
+		  <a class="btn btn-large" onclick="toggleGeneral()">ver todo sumarizado</a>
+       </div>
       <hr>
+ 	 </div> 
 
       <footer>
         <p>&copy; SDev 2012</p>

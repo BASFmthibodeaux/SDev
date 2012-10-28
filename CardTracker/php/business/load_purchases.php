@@ -64,9 +64,9 @@ require_once $functions_path . '/database_functions.php';
 			case "ADD":
 				$duplicateVerified = true; 
 				if ($rvar_bypass_check != "1") {
-					if ($rvar_value_type == "MONTHLY_PAYMENT") {
-						$rvar_value = $rvar_value * $rvar_payments;
-					}
+// 					if ($rvar_value_type == "MONTHLY_PAYMENT") {
+// 						$rvar_value = $rvar_value * $rvar_payments;
+// 					}
 					$query = "select * from purchases where pur_cc_id = ".$rvar_credit_card." and  pur_date = '".$rvar_date."' and round(pur_value) ".
 									"between ".(round($rvar_value)-1)." and ".(round($rvar_value)+1)." and pur_payments = ".$rvar_payments;	
 //					print($query);
@@ -149,7 +149,7 @@ require_once $functions_path . '/database_functions.php';
 									.", ".$rvar_nId
 									.")";
 	
-	//					print ($query2);
+//						print ("<query>".$query2."</query>".$NL);
 						mysql_query ($query2) or die("EXECUTE_SQL:Query failed '".$query2."'" . "<br>" .mysql_error());;								
 	
 						$due_date = add_month ($due_date);
@@ -173,7 +173,7 @@ require_once $functions_path . '/database_functions.php';
 									.", ".$rvar_nId
 									.")";
 	
-	//					print ($query2);
+//						print ("<query>".$query2."</query>".$NL);
 						mysql_query ($query2) or die("EXECUTE_SQL:Query failed '".$query2."'" . "<br>" .mysql_error());;								
 					}
 					

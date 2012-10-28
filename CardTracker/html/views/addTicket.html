@@ -265,14 +265,13 @@
 				temp.style.opacity = "0.3";
 				
 				var pagos = $("#comboPagos").val();
-				var total_pagos = 0;
+				var valor_total = $("#valor").val();
 
-				/*
+			
 				if (this.loadingMode == "MONTHLY_PAYMENT") {
-					pagos = parseInt($("#comboPagosCuotas2").val()) - parseInt($("#comboPagosCuotas1").val()) + 1;
-					total_pagos = $("#comboPagosCuotas2").val();
+					//total_pagos = pagos*$("#valor").val();
 				}
-				*/
+
 				var bypass_check = "0";
 				if (force != null) {
 					var bypass_check = "1";
@@ -291,6 +290,7 @@
 	    						credit_card: tarjetaData.acc_id,
 	    						description: $("#description").val(),
 	    						value: $("#valor").val(),
+//	    						value: valor_total,
 	    						payments: pagos,
 	    						bypass_check: bypass_check
 	    					}
@@ -324,16 +324,12 @@
 						if (data[0].code == "3") {
 				        	$("#resultadoValidate").html ( data[0].error+" <h6><a onclick='sendData(1);'>cargar igualmente</a></h6>");
 				        } else {
-							$("#valor").val("");
-							$("#comboPagos").val("1");
-							$("#comboPagosCuotas1").val("1");
-							$("#comboPagosCuotas2").val("1");
-							
-							$("#description").val("");
-							$("#resultadoCuotas").html ("");
-							$("#resultadoValidate").html("");
 				        	$("#resultadoValidate").html ( data[0].response);
-				        	
+// 							if (this.loadingMode == "MONTHLY_PAYMENT") {
+// 					        	toggleResumen();
+// 							} else {
+// 								toggleTicket();
+// 							}
 				        	gridPurchases.createGrid();
 				        }
 						

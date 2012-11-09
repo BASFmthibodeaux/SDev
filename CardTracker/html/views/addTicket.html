@@ -69,6 +69,7 @@
 	<script src="../../js/views/comboPagos.js"></script>
 	<script src="../../js/views/comboCurrency.js"></script>
 	<script src="../../js/views/gridPurchases.js"></script>
+	<script src="../../js/util/BrowserDetection.js"></script>
 
 </head>
 <body>
@@ -123,21 +124,25 @@
 				
 	    		gridPurchases.destinationDiv = "#grid";
 				grid.connectionString = ConnectionString;
-	    		
-	    		$('#datepicker').scroller({
-	    	        preset: 'date',
-	    	        theme: 'android-ics',
-	    	        headerText: 'false',
-	    	        height: 40,
-	    	        showLabel: false,
-	    	        dateFormat: 'yy/mm/dd',
-	    	        dayNamesShort: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
-	    	        dayNamesShort: ['Dom','Lu','Ma','Mie','Jue','Vie','Sab'],
-	    	        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-	    	        display: 'inline',
-	    	        mode: 'scroller',
-	    	        dateOrder: 'D ddMyyyy'
-	    	    });    
+
+//				alert (BrowserDetect.OS);
+				if (BrowserDetect.OS == "iPhone/iPod" || BrowserDetect.OS == "iPad") {
+					//Usar el datepicker solamente en dispositivos moviles
+		    		$('#datepicker').scroller({
+		    	        preset: 'date',
+		    	        theme: 'android-ics',
+		    	        headerText: 'false',
+		    	        height: 40,
+		    	        showLabel: false,
+		    	        dateFormat: 'yy/mm/dd',
+		    	        dayNamesShort: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+		    	        dayNamesShort: ['Dom','Lu','Ma','Mie','Jue','Vie','Sab'],
+		    	        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+		    	        display: 'inline',
+		    	        mode: 'scroller',
+		    	        dateOrder: 'D ddMyyyy'
+		    	    });    
+				} 
 	    			    		
                 setTimeout(function() {
                     //* inicializar combo de cuentas *//
@@ -388,18 +393,20 @@
       <!-- Example row of columns -->
       <div class="row">
 
-        <div id="divBanco" class="span5">
+        <div id="divBanco" class="span4">
           <h2>Qué tarjeta?</h2>
            <p>Selecciona la tarjeta de crédito del ticket</p>
            <p><input id="comboBox" style="width:250px"/></p>
            <div id="resultadoBanco" style="color:#999999"></div>
         </div>
+      </div>
+      <div class="row">
         <div id="divFecha" class="span5">
           <h2>Cuándo y que?</h2>
           <p>Una descripción de lo que compraste</p>
           <input id="datepicker" name="datepicker" style="display:none;width:150px;" />
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
-       </div>
+        </div>
         <div id="divValor" class="span5">
           <h2>Cuánto?</h2>(cargar desde <a onclick="toggleTicket();">ticket</a> o <a onclick="toggleResumen();">resumen</a>)
           <p>Ouch.</p>
@@ -434,7 +441,7 @@
 	 </div>
   	 <br><br>
 	 <div id='divMovimientos' style="opacity='0.7'" class="row">
-	 	<div class="span5">
+	 	<div class="span7">
 	 		<h6>Últimos 5 movimientos cargados</h6>
 	 		<div id="grid"></div>
 	 	</div> 

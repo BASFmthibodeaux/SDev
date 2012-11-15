@@ -12,7 +12,7 @@
  * 
  * Log de modificaciones
  * 
- * 11/12/11 JL V000
+ * 14Nov12 V000
  * 	 -Creacion del archivo
  * -----------------------------------------------------
  *  
@@ -27,43 +27,31 @@ require_once $functions_path . '/connect.php';
 
     import_request_variables("gP","rvar_");
 
-/* PARAMETROS
-
-	cHash			hash de seguridad
-	
-*/
 
 	$NL = chr(13);
 	$link=connect_database($main_database);
 	
 	print '<?xml version="1.0" encoding="iso-8859-1"?>'. $NL;
-	print ('<accounts>'.$NL);
+	print ('<people>'.$NL);
 	
 	if ($rvar_cHash !="") {
 		
 		//TODO: revisar HASH primero!
 		
-		$query="select * from banks,accounts,credit_cards ";
-		$where = "where bank_id = acc_bank_id and cc_acc_id = acc_id and cc_holder = '$rvar_holder'";
-		$and_operator = "";
-		$order_by = " order by bank_description,acc_card_type";
-		$query .= $where;
-		$result = mysql_query($query) or die("list_accounts.php: Query failed (" . $query .") ". mysql_error());
+		$query="select distinct usu_username,usu_name from `users_groups`, users where usu_username=grp_username and grp_id in (select distinct grp_id from users_groups where grp_username='$rvar_username')"; 
+
+		$result = mysql_query($query) or die("list_users.php: Query failed (" . $query .") ". mysql_error());
 		$item_index = 0;
 
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-			print('<account>'.$NL);
+			print('<person>'.$NL);
 
-			print('<acc_id>'.$row["acc_id"].'</acc_id>'.$NL);
-			print('<bank>'.$row["bank_description"].'</bank>'.$NL);
-			print('<card_type>'.$row["acc_card_type"].'</card_type>'.$NL);
-			print('<holder>'.$row["cc_holder"].'</holder>'.$NL);
-			print('<number>'.$row["cc_number"].'</number>'.$NL);
-				
-			print('</account>'.$NL);
+			print('<username>'.$row["usu_username"].'</username>'.$NL);
+			print('<name>'.$row["usu_name"].'</name>'.$NL);
+
+			print('</person>'.$NL);
 			$item_index ++;
 	    }
-		print('<where_clause>'.$where.'</where_clause>'.$NL);
    	} else {
    		$texto_error = "";
    		if ($rvar_cHash == "") {
@@ -72,5 +60,5 @@ require_once $functions_path . '/connect.php';
 		print ('<error>'.$texto_error.'</error>'.$NL);;
 	}	
 
-	print ('</accounts>'. $NL);
+	print ('</people>'. $NL);
 ?>

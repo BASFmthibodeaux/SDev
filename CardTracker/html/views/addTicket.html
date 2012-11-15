@@ -68,8 +68,10 @@
 	<script src="../../js/views/comboAccounts.js"></script>
 	<script src="../../js/views/comboPagos.js"></script>
 	<script src="../../js/views/comboCurrency.js"></script>
+	<script src="../../js/views/comboUsers.js"></script>
 	<script src="../../js/views/gridPurchases.js"></script>
 	<script src="../../js/util/BrowserDetection.js"></script>
+	<script src="../../js/util/Functions.js"></script>
 
 </head>
 <body>
@@ -103,6 +105,7 @@
 //    		var chart = new graphAccountEvolution();
 	    	var combo = new comboAccounts();
     		var comboPagos = new comboPagos();
+    		var comboUsers = new comboUsers();
     		var comboCurrency = new comboCurrency();
     		var gridPurchases = new gridPurchases();
     		
@@ -112,20 +115,27 @@
 			var hash = "nada";
 			var username = "LOUCIMJ";
 			var limit = "5";
+			var dateTouchMode = true;
+
+			
     		
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
 
+				comboUsers.username= username;
+	    		combo.holder = username;
 	    		//ConnectionString esta definido en GlobalVariables.js
 	    		combo.connectionString = ConnectionString;
 	    		combo.destinationDiv = "#comboBox"
 	    		comboPagos.destinationDiv = "#comboPagos";
 	    		comboCurrency.destinationDiv = "#comboCurrency";
-				
-	    		gridPurchases.destinationDiv = "#grid";
-				grid.connectionString = ConnectionString;
+	    		comboUsers.connectionString = ConnectionString;
+	    		comboUsers.destinationDiv = "#comboUsers"
 
-//				alert (BrowserDetect.OS);
+        		gridPurchases.destinationDiv = "#grid";
+				gridPurchases.connectionString = ConnectionString;
+				
+				//alert (username);
 				if (BrowserDetect.OS == "iPhone/iPod" || BrowserDetect.OS == "iPad") {
 					//Usar el datepicker solamente en dispositivos moviles
 		    		$('#datepicker').scroller({
@@ -142,12 +152,23 @@
 		    	        mode: 'scroller',
 		    	        dateOrder: 'D ddMyyyy'
 		    	    });    
-				} 
+				} else{
+					var circle = document.getElementById("datepicker2");
+					circle.style.display = "block";
+					dateTouchMode = false;
+					
+				}
 	    			    		
                 setTimeout(function() {
-                    //* inicializar combo de cuentas *//
+
+					comboUsers.createCombo();
+    				var dropdownlist = $("#comboUsers").data("kendoDropDownList");
+					dropdownlist.bind("change",onComboUsersChangeValue);
+
+                	
+                	//* inicializar combo de cuentas *//
                     combo.createCombo();
-    				var dropdownlist = $("#comboBox").data("kendoDropDownList");
+    				dropdownlist = $("#comboBox").data("kendoDropDownList");
 					dropdownlist.bind("change",onComboAccountsChangeValue);
 					
 					comboCurrency.createCombo();
@@ -166,6 +187,15 @@
     		
     		/** FUNCIONES ---------------------------------------------   **/
 
+			function onComboUsersChangeValue(event) {
+				
+				var dropdownlist = $("#comboUsers").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
+
+				//dropdownlist.text(dataItem.username);
+				combo.holder = dataItem.username;
+				combo.createCombo();
+			}
 			
 			function onComboAccountsChangeValue(event) {
 				
@@ -211,7 +241,12 @@
 				var moneda = $("#comboCurrency").data("kendoDropDownList");
 				var pagos = $("#comboPagos").val();
 				var valor = $("#valor").val();
-				var fecha = $("#datepicker").scroller('getDate');
+				
+				
+				var day = $("#day").val();
+				var month = $("#month").val();
+				var year = $("#year").val();
+
 				var stringFecha = jQuery.scroller.formatDate('yyyy-mm-dd',fecha);
 				
 				
@@ -225,6 +260,24 @@
 				//alert (tarjetaData.data.acc_id);
 
 				//alert (valor);
+				
+				if (dateTouchMode == false) {
+					if (day == 0) {
+						$("#resultadoValidate").html ( "Tienes que completar el dia.");
+						return;
+					}
+					if (month == 0) {
+						$("#resultadoValidate").html ( "Tienes que completar el mes!");
+						return;
+					}
+					if (year == 0) {
+						$("#resultadoValidate").html ( "Tienes que completar el año.");
+						return;
+					}
+				} else {
+					var fecha = $("#datepicker").scroller('getDate');					
+				}
+				
 				if (valor == 0) {
 					$("#resultadoValidate").html ( "No se compra nada gratis con tarjeta!! completa el valor.");
 					return;
@@ -251,8 +304,17 @@
 			}
 			
 			function sendData(force) {
-				var fecha = $("#datepicker").scroller('getDate');
-				var stringFecha = jQuery.scroller.formatDate('yyyy-mm-dd',fecha);
+				
+				if (this.dateTouchMode) {
+					var fecha = $("#datepicker").scroller('getDate');
+					var stringFecha = jQuery.scroller.formatDate('yyyy-mm-dd',fecha);
+				}else {
+					var day = $("#day").val();
+					var month = $("#month").val();
+					var year = $("#year").val();
+					var stringFecha = year+"-"+pad(month,2,"0",STR_PAD_LEFT)+"-"+pad(day,2,"0",STR_PAD_LEFT);
+				}
+				
 				var tarjeta = $("#comboBox").data("kendoDropDownList");
 				var tarjetaData = tarjeta.dataItem();
 				
@@ -396,6 +458,7 @@
         <div id="divBanco" class="span4">
           <h2>Qué tarjeta?</h2>
            <p>Selecciona la tarjeta de crédito del ticket</p>
+           <p><input id="comboUsers" style="width:250px"/></p>
            <p><input id="comboBox" style="width:250px"/></p>
            <div id="resultadoBanco" style="color:#999999"></div>
         </div>
@@ -405,6 +468,12 @@
           <h2>Cuándo y que?</h2>
           <p>Una descripción de lo que compraste</p>
           <input id="datepicker" name="datepicker" style="display:none;width:150px;" />
+          <div id="datepicker2" style="display:none">
+          	<input id="day" name="day" type="number" value="" placeholder="dia" style="width:40px;margin-right: 5px" min="1" max="31" step="1"/>/ 
+          	<input id="month" name="month" type="number" value="" placeholder="mes" style="width:40px;margin-right: 5px" min="1" max="12" step="1"/>/ 
+          	<input id="year" name="year" type="number" value="2012" style="width:50px;margin-right: 5px" min="2010" max="2050" step="1"/> 
+          </div>
+          
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
         </div>
         <div id="divValor" class="span5">

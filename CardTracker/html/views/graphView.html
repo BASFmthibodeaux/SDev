@@ -51,6 +51,8 @@
 	<script src="../../js/views/graphAccountEvolution.js"></script>
 	<script src="../../js/views/comboAccounts.js"></script>
 	<script src="../../js/views/comboPeriodos.js"></script>
+	<script src="../../js/views/comboUsers.js"></script>
+	<script src="../../js/util/BrowserDetection.js"></script>
 
 </head>
 <body>
@@ -86,10 +88,14 @@
 	    	var combo = new comboAccounts();
 	    	var comboPeriodos2 = new comboPeriodos();
 	    	var comboPeriodos = new comboPeriodos();
+    		var comboUsers = new comboUsers();
 	    	
     		
 	    	var chart = new graphAccountEvolution();
     		var chart2 = new graphAccountEvolution();
+
+    		var hash = "nada";
+			var username = "LOUCIMJ";
 
     		/** Cuando la pagina se haya creado ---------------------------------------------   **/
 	    	$(document).ready (function () { 
@@ -110,8 +116,14 @@
 	    		comboPeriodos2.connectionString = ConnectionString;
 	    		comboPeriodos2.destinationDiv = "#comboPeriodos2"
 	    			    		
+	    		comboUsers.connectionString = ConnectionString;
+	    		comboUsers.destinationDiv = "#comboUsers"
+				comboUsers.username= username;
+
                 setTimeout(function() {
                     //* inicializar combo de cuentas *//
+
+					comboUsers.createCombo();
                     chart.createChart();
                     
                     combo.createCombo();
@@ -136,7 +148,18 @@
     		
     		/** FUNCIONES ---------------------------------------------   **/
 
+
+			function onComboUsersChangeValue(event) {
+				
+				var dropdownlist = $("#comboUsers").data("kendoDropDownList");
+				var dataItem = dropdownlist.dataItem();
+
+				//dropdownlist.text(dataItem.username);
+				combo.holder = dataItem.username;
+				combo.createCombo();
+			}
 			
+    		
 			function onComboAccountsChangeValue(event) {
 				
 				var dropdownlist = $("#comboBox").data("kendoDropDownList");
@@ -231,6 +254,7 @@
         <div class="span10" id="detailDiv" style="display: none">
           <h2>Qué tarjeta?</h2>
            <p>Selecciona la tarjeta de crédito para ver su evolución</p>
+           <p><input id="comboUsers" style="width:250px"/></p>
            <p><input id="comboBox" style="width:250px"/></p>
            <p><input id="comboPeriodos2" style="width:250px"/></p>
 		   <div id="graph2"></div>

@@ -65,10 +65,10 @@
 
 	<!-- INCLUDE JAVASCRIPT INTERNOS -->
 	<script src="../../js/model/GlobalVariables.js"></script>
+	<script src="../../js/views/comboPeriodos2.js"></script>
 	<script src="../../js/views/comboAccounts.js"></script>
 	<script src="../../js/views/comboPagos.js"></script>
 	<script src="../../js/views/comboCurrency.js"></script>
-	<script src="../../js/views/comboPeriodos2.js"></script>
 	<script src="../../js/views/comboUsers.js"></script>
 	<script src="../../js/views/gridPurchases.js"></script>
 	<script src="../../js/util/BrowserDetection.js"></script>
@@ -76,16 +76,18 @@
 
 	<script src="addTicketHelper.js"></script>
 
+
 </head>
 <body>
 <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
 
-
 	<script>
 		$(document).ready (function () {
-			initAddTicketHTML();
+			initReportTicketsHTML();
 		});
 	</script>
+
+
 
 
     <div class="navbar navbar-fixed-top">
@@ -124,8 +126,8 @@
 		 
 	  <div class="row">
 	  	<div class="span4">
-	  		<h6>Agregar tickets</h6>
-	  		<p>Segui estos simples pasos y vas a sacarte de encima la parte más fea del trabajo rápidamente!</p>
+	  		<h6>Listar tickets</h6>
+	  		<p>Selecciona el mes y la tarjeta para ver el listado de los tickets que deberían haber entrado!</p>
 	  	</div>
 	  </div>
       <!-- Example row of columns -->
@@ -133,14 +135,26 @@
 
         <div id="divBanco" class="span4">
           <h2>Qué tarjeta?</h2>
-           <p>Selecciona la tarjeta de crédito del ticket</p>
+           <p>Selecciona la tarjeta de crédito</p>
            <p><input id="comboUsers" style="width:250px"/></p>
            <p><input id="comboBox" style="width:250px"/></p>
            <div id="resultadoBanco" style="color:#999999"></div>
+           <p><input id="comboPeriodos" style="width:250px;display: none"/></p>
         </div>
       </div>
-      <div class="row">
-        <div id="divFecha" class="span5">
+
+	 <div id='divMovimientos' style="opacity='0.7';display:none;" class="row">
+	 	<div class="span7">
+	 		<h6>Movimientos registrados:</h6>
+	 		<div id="grid"></div>
+	 		<br>
+			<a class="btn btn-large" onclick="showAddTicket()">Olvidé agregar un ticket</a>		  
+	 	</div> 
+	 </div>
+
+      <div id="divAddTicket" style="display:none" class="row">
+ 		<br>
+        <div id="divFecha" class="span4">
           <h2>Cuándo y que?</h2>
           <p>Una descripción de lo que compraste</p>
           <input id="datepicker" name="datepicker" style="display:none;width:150px;" />
@@ -152,7 +166,7 @@
           
           <p><input id="description" placeholder="(que compraste?)" style="width:250px;color:#333333" maxlength="40"/></p>
         </div>
-        <div id="divValor" class="span5">
+        <div id="divValor" class="span4">
           <h2>Cuánto?</h2>(cargar desde <a onclick="toggleTicket();">ticket</a> o <a onclick="toggleResumen();">resumen</a>)
           <p>Ouch.</p>
           <p>
@@ -185,12 +199,6 @@
 	 	</div> 
 	 </div>
   	 <br><br>
-	 <div id='divMovimientos' style="opacity='0.7'" class="row">
-	 	<div class="span7">
-	 		<h6>Últimos 5 movimientos cargados</h6>
-	 		<div id="grid"></div>
-	 	</div> 
-	 </div>
       <hr>
 
       <footer>

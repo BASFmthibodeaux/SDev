@@ -27,6 +27,7 @@ credit_card
 limit			cantidad de registros
 purchased_by	usuario
 order_by
+due_period		fecha de pago
 
 
 */
@@ -55,6 +56,14 @@ require_once $functions_path . '/connect.php';
 		$where = " where pur_cc_id = cc_id and acc_id = cc_acc_id "  ;
 		if ($rvar_credit_card !="") {
 			$where = $where . " and pur_cc_id= ".$rvar_credit_card;
+		}
+		if ($rvar_due_period !="") {
+			$query .= ", future_payments ";
+			$where .= " and fp_pur_id = pur_id ";
+			$where .= " and fp_due_period = '".$rvar_due_period."'";
+		}
+		if ($rvar_period !="") {
+			$where .= " and  substr(pur_date,1,7) = '".$rvar_period."'";
 		}
 		if ($rvar_username != "") {
 			$where = $where . " and pur_purchased_by= '".$rvar_purchased_by."'";
@@ -86,6 +95,9 @@ require_once $functions_path . '/connect.php';
 			print('<description>'.$row["pur_description"].'</description>'.$NL);
 			print('<value>'.$row["pur_value"].'</value>'.$NL);
 			print('<payments>'.$row["pur_payments"].'</payments>'.$NL);
+			if ($row["pur_payments"] != "" &&  $row["pur_payments"] != 0) {
+				print('<payment_value>'.round($row["pur_value"]/$row["pur_payments"],2).'</payment_value>'.$NL);
+			}
 			print('<timestamp>'.$row["pur_timestamp"].'</timestamp>'.$NL);
 
 			print('</purchase>'.$NL);

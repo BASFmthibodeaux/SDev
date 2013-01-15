@@ -19,6 +19,9 @@ function gridPurchases() {
 	this.limit="";
 	this.orderBy = "TIMESTAMP";
 	this.hash = "Nada";
+	this.gridType = "";
+	this.duePeriod = "";
+	this.period = "";
 	
 	// ---------------------------------------------------------------------------
 	this.createGrid = 
@@ -32,6 +35,8 @@ function gridPurchases() {
 		    						credit_card: this.credit_card,
 		    						order_by: this.orderBy,
 		    						purchased_by: this.purchased_by,
+		    						due_period: this.due_period,
+		    						period: this.period, 
 		    						limit: this.limit
 		    					}
 		    				},
@@ -50,6 +55,7 @@ function gridPurchases() {
 	    							card_type: "card_type/text()",
 	    							value: "value/text()",
 	    							payments: "payments/text()",
+	    							payment_value: "payment_value/text()",
 	    							timestamp: "timestamp/text()"
 	    						}
 	    					}
@@ -67,30 +73,71 @@ function gridPurchases() {
 		    		alert ("WARNING: gridPurchases.js -can't find "+this.destinationDiv+" div tag in HTML file.");
 		    	}
 
-		    	
-                $(this.destinationDiv).kendoGrid({ 
-                	dataSource: ds,
-        		    columns: [
-        		               {
-        		            	   title: "Fecha",
-        		                   field: "date",
-        		                   width: 90
-        		               },
-        		               {
-        		            	   title: "Descripcion",
-        		                   field: "description", 		                	   
-        		                   template: "<div id='title'>${ card_type } ${ credit_card } ${ description }</div>"
-        		              },
-        		              {
-        		            	  title: "Valor",
-       		                   	  field: "value",
-       		                   	  template: "<div  style='text-align:right'>${ value }</div>",
-       		                   	  width: 80
-       		                   		
-        		              }
+		    	if (this.gridType == "DEFAULT") {
+	                $(this.destinationDiv).kendoGrid({ 
+	                	dataSource: ds,
+	        		    columns: [
+	        		               {
+	        		            	   title: "Fecha",
+	        		                   field: "date",
+	        		                   width: 90
+	        		               },
+	        		               {
+	        		            	   title: "Descripcion",
+	        		                   field: "description", 		                	   
+	        		                   template: "<div id='title'>${ card_type } ${ credit_card } ${ description }</div>"
+	        		              },
+	        		              {
+	        		            	  title: "Valor",
+	       		                   	  field: "value",
+	       		                   	  template: "<div  style='text-align:right'>${ value }</div>",
+	       		                   	  width: 80
+	       		                   		
+	        		              }
 
-        		           ]
-	            });
+	        		           ]
+		            });
+		    	} else {
+	                $(this.destinationDiv).kendoGrid({ 
+	                	dataSource: ds,
+	        		    columns: [
+	        		               {
+	        		            	   title: "Fecha",
+	        		                   field: "date",
+	        		                   width: 90
+	        		               },
+	        		               {
+	        		            	   title: "Descripcion",
+	        		                   field: "description", 		                	   
+	        		                   template: "<div id='title'>${ card_type } ${ credit_card } ${ description }</div>"
+	        		              },
+	        		              {
+	        		            	  title: "Pagos",
+	       		                   	  field: "payments",
+	       		                   	  template: "<div  style='text-align:right'>${ payments }</div>",
+	       		                   	  width: 80
+	       		                   		
+	        		              },
+	        		              {
+	        		            	  title: "Cuota",
+	       		                   	  field: "payments",
+	       		                   	  template: "<div  style='text-align:right'>${ payment_value }</div>",
+	       		                   	  width: 80
+	       		                   		
+	        		              },
+	        		              {
+	        		            	  title: "Valor",
+	       		                   	  field: "value",
+	       		                   	  template: "<div  style='text-align:right'>${ value }</div>",
+	       		                   	  width: 80
+	       		                   		
+	        		              }
+
+	        		           ]
+		            });
+		    		
+		    	}
+		    	
                 
             };
 }

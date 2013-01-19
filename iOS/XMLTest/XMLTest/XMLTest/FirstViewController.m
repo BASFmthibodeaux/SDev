@@ -26,4 +26,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)loadUnknownXML {
+    NSString *const URL = @"https://some/HTTPS/url";
+    NSURL* url = [NSURL URLWithString:URL];
+    NSXMLParser* parser = [[NSXMLParser alloc] initWithContentsOfURL:url];
+    [parser setDelegate:self];
+    [parser parse];
+}
 @end

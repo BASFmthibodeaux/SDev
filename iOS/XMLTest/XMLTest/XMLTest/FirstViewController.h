@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController
+@interface FirstViewController : UIViewController {
+    NSMutableArray *tableContent;
 
-- (void) loadUnknownXML;
+}
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end

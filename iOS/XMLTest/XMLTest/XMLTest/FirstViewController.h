@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController
+@interface FirstViewController : UIViewController {
+    NSMutableArray *tableContent;
+
+}
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end

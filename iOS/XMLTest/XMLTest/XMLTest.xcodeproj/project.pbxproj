@@ -24,6 +24,10 @@
 		410393DB16A83EF400D8D0CC /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 410393DA16A83EF400D8D0CC /* SecondViewController.m */; };
 		410393DD16A83EF400D8D0CC /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = 410393DC16A83EF400D8D0CC /* second.png */; };
 		410393DF16A83EF400D8D0CC /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 410393DE16A83EF400D8D0CC /* second@2x.png */; };
+		412AA6C816AED01600173714 /* AMEX.png in Resources */ = {isa = PBXBuildFile; fileRef = 412AA6C716AED01600173714 /* AMEX.png */; };
+		412AA6CB16AF014E00173714 /* MASTER_old.png in Resources */ = {isa = PBXBuildFile; fileRef = 412AA6CA16AF014D00173714 /* MASTER_old.png */; };
+		412AA6CD16AF015500173714 /* VISA.png in Resources */ = {isa = PBXBuildFile; fileRef = 412AA6CC16AF015500173714 /* VISA.png */; };
+		412AA6CF16AF0C4D00173714 /* MASTER.png in Resources */ = {isa = PBXBuildFile; fileRef = 412AA6CE16AF0C4D00173714 /* MASTER.png */; };
 		4179820C16AB047F00349ABA /* GetXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 4179820B16AB047F00349ABA /* GetXML.m */; };
 		4179825616AB266000349ABA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4179825516AB266000349ABA /* libxml2.dylib */; };
 		4179825716AB2ECA00349ABA /* CXMLDocument_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4179823216AB24DE00349ABA /* CXMLDocument_CreationExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -64,6 +68,10 @@
 		410393DA16A83EF400D8D0CC /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		410393DC16A83EF400D8D0CC /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
 		410393DE16A83EF400D8D0CC /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
+		412AA6C716AED01600173714 /* AMEX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AMEX.png; sourceTree = "<group>"; };
+		412AA6CA16AF014D00173714 /* MASTER_old.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MASTER_old.png; sourceTree = "<group>"; };
+		412AA6CC16AF015500173714 /* VISA.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VISA.png; sourceTree = "<group>"; };
+		412AA6CE16AF0C4D00173714 /* MASTER.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MASTER.png; sourceTree = "<group>"; };
 		4179820A16AB047F00349ABA /* GetXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetXML.h; sourceTree = "<group>"; };
 		4179820B16AB047F00349ABA /* GetXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetXML.m; sourceTree = "<group>"; };
 		4179823116AB24DE00349ABA /* CXMLDocument_CreationExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CXMLDocument_CreationExtensions.h; sourceTree = "<group>"; };
@@ -146,6 +154,10 @@
 				410393C416A83EF400D8D0CC /* AppDelegate.m */,
 				410393CC16A83EF400D8D0CC /* MainStoryboard_iPhone.storyboard */,
 				410393CF16A83EF400D8D0CC /* MainStoryboard_iPad.storyboard */,
+				412AA6CA16AF014D00173714 /* MASTER_old.png */,
+				412AA6CE16AF0C4D00173714 /* MASTER.png */,
+				412AA6CC16AF015500173714 /* VISA.png */,
+				412AA6C716AED01600173714 /* AMEX.png */,
 				410393D216A83EF400D8D0CC /* FirstViewController.h */,
 				410393D316A83EF400D8D0CC /* FirstViewController.m */,
 				410393D516A83EF400D8D0CC /* first.png */,
@@ -275,6 +287,10 @@
 				410393D816A83EF400D8D0CC /* first@2x.png in Resources */,
 				410393DD16A83EF400D8D0CC /* second.png in Resources */,
 				410393DF16A83EF400D8D0CC /* second@2x.png in Resources */,
+				412AA6C816AED01600173714 /* AMEX.png in Resources */,
+				412AA6CB16AF014E00173714 /* MASTER_old.png in Resources */,
+				412AA6CD16AF015500173714 /* VISA.png in Resources */,
+				412AA6CF16AF0C4D00173714 /* MASTER.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +374,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
+				"HEADER_SEARCH_PATHS[arch=*]" = "/Developer/SDKs/MacOSX10.7.sdk/usr/include/libxml2/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = /usr/include/libxml2;
 				ONLY_ACTIVE_ARCH = YES;

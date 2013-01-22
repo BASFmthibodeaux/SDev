@@ -7,6 +7,7 @@
 //
 
 #import "FirstViewController.h"
+#import "SecondViewController.h"
 #import "GetXML.h"
 
 @interface FirstViewController ()
@@ -75,26 +76,37 @@
     NSMutableDictionary *dic = [tableContent objectAtIndex:indexPath.row];
     NSString *title = [[NSString alloc] init];
     NSString *subtitle = [[NSString alloc] init];
+    NSString *image = [[NSString alloc] init];
     
-    title = [title stringByAppendingString: [dic objectForKey:@"card_type"]];
-    title = [title stringByAppendingString:@" XXXX-"];
+//    title = [title stringByAppendingString: [dic objectForKey:@"card_type"]];
+    title = [title stringByAppendingString:@"XXXX-"];
     title = [title stringByAppendingString:[dic objectForKey:@"cc_number"]];
 
-    subtitle = [subtitle stringByAppendingString:[dic objectForKey:@"holder"]];
-    subtitle = [subtitle stringByAppendingString:@" "];
     subtitle = [subtitle stringByAppendingString:[dic objectForKey:@"bank"]];
+    subtitle = [subtitle stringByAppendingString:@" "];
+    subtitle = [subtitle stringByAppendingString:[dic objectForKey:@"holder"]];
     
     cell.textLabel.text = title;
-    
     cell.detailTextLabel.text = subtitle;
-
+    
+    image = [image stringByAppendingString:[dic objectForKey:@"card_type"]];
+    image = [image stringByAppendingString:@".png"];
+    cell.imageView.image = [UIImage imageNamed:image];
     //cell.imageView.image = [UIImage imageNamed:@"flower.png"];
     
     // set the accessory view:
-    cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
+//    cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
+
+    cell.imageView.frame = CGRectMake(5, 5, 32, 32);
     
     return cell;
 }
 // FIN UITABLEVIEW -------------------------------------------------------------------------------------
-
+/*
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if([segue.identifier isEqualToString:@"selectDate"]){
+        SecondViewController *controller = (SecondViewController *)segue.destinationViewController;
+        controller.data = _data;
+}
+*/
 @end

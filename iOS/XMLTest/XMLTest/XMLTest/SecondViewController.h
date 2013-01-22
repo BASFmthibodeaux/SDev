@@ -10,4 +10,6 @@
 
 @interface SecondViewController : UIViewController
 
+@property (nonatomic) NSMutableDictionary *data;
+
 @end

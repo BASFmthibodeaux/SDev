@@ -413,6 +413,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "XMLTest/XMLTest-Prefix.pch";
+				"HEADER_SEARCH_PATHS[arch=*]" = "/usr/include/libxml2/**";
 				INFOPLIST_FILE = "XMLTest/XMLTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

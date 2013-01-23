@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SecondViewController : UIViewController
+@interface SecondViewController : UITableViewController {
+    IBOutlet UILabel *bank;
+    IBOutlet UILabel *card;
+    IBOutlet UIImageView *creditCardImage;
+    IBOutlet UILabel *user;
+}
 
-@property (nonatomic) NSMutableDictionary *data;
+@property (nonatomic,strong) NSMutableDictionary *selectedCard;
 
 @end

@@ -12,12 +12,10 @@
 
 @interface FirstViewController ()
 
+
 @end
 
 @implementation FirstViewController
-
-
-
 
 - (void)viewDidLoad
 {
@@ -46,6 +44,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     
     int selectedRow = indexPath.row;
     NSLog(@"touch on row %d", selectedRow);
@@ -74,6 +73,8 @@
     
     // Set the data for this cell:
     NSMutableDictionary *dic = [tableContent objectAtIndex:indexPath.row];
+
+    
     NSString *title = [[NSString alloc] init];
     NSString *subtitle = [[NSString alloc] init];
     NSString *image = [[NSString alloc] init];
@@ -102,11 +103,28 @@
     return cell;
 }
 // FIN UITABLEVIEW -------------------------------------------------------------------------------------
-/*
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if([segue.identifier isEqualToString:@"selectDate"]){
+
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+
+    if([segue.identifier isEqualToString:@"selectDateSegue"]){
         SecondViewController *controller = (SecondViewController *)segue.destinationViewController;
-        controller.data = _data;
+        /*
+        NSIndexPath *selectedRowIndexPath = [self.tableView indexPathForSelectedRow];
+        NSUInteger selectedRow = selectedRowIndexPath.row;
+        NSMutableDictionary *selectedData = [tableContent objectAtIndex:selectedRowIndexPath.row];
+        NSLog(@"%d",selectedRow);
+        NSLog(@"%@",controller);
+         //        controller.data = [[NSMutableDictionary alloc] init ];
+        controller.selectedCard = selectedData;
+        */
+        NSIndexPath *selectedRowIndexPath = [self.tableView indexPathForSelectedRow];
+        NSMutableDictionary *selectedData = [tableContent objectAtIndex:selectedRowIndexPath.row];
+        
+        [segue.destinationViewController performSelector:@selector(setSelectedCard:) withObject:selectedData];
+        
+    }
+
 }
-*/
+
 @end

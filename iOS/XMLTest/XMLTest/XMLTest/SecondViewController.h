@@ -13,6 +13,7 @@
     IBOutlet UILabel *card;
     IBOutlet UIImageView *creditCardImage;
     IBOutlet UILabel *user;
+    IBOutlet UIDatePicker *dateSelection;
 }
 
 @property (nonatomic,strong) NSMutableDictionary *selectedCard;

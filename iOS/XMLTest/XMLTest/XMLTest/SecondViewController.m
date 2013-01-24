@@ -24,7 +24,7 @@
     NSLog(@"received %@",selectedCard);
     
     NSString *title = [[NSString alloc] init];
-    NSString *subtitle = [[NSString alloc] init];
+//    NSString *subtitle = [[NSString alloc] init];
     NSString *imageString = [[NSString alloc] init];
     
     //    title = [title stringByAppendingString: [dic objectForKey:@"card_type"]];
@@ -47,4 +47,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSLog(@"segue.identifier %@",segue.identifier);
+    
+    if([segue.identifier isEqualToString:@"selectWhatSegue"]){
+        NSMutableDictionary *temp = [[NSMutableDictionary alloc] init];
+
+        [temp setObject:[dateSelection date] forKey:@"date"];
+        [temp addEntriesFromDictionary:selectedCard];
+        
+        [segue.destinationViewController performSelector:@selector(setSelectedCard:) withObject:temp];
+        
+    }
+    
+}
 @end

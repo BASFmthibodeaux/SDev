@@ -42,6 +42,10 @@
 		4179826016AB2EDD00349ABA /* CXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4179824416AB24DE00349ABA /* CXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4179826116AB2EDF00349ABA /* CTidy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4179824616AB24DE00349ABA /* CTidy.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4179826416AC936500349ABA /* SimpleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4179826316AC936400349ABA /* SimpleTableCell.m */; };
+		4196EC6216AFFAEA005F86E4 /* WhatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196EC6116AFFAEA005F86E4 /* WhatViewController.m */; };
+		4196EC6516B00824005F86E4 /* ValuesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196EC6416B00824005F86E4 /* ValuesViewController.m */; };
+		4196EC6816B0488E005F86E4 /* MTXMLLists.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196EC6716B0488E005F86E4 /* MTXMLLists.m */; };
+		4196EC6B16B04A00005F86E4 /* GetCreditCardList.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196EC6A16B04A00005F86E4 /* GetCreditCardList.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +104,14 @@
 		4179825516AB266000349ABA /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		4179826216AC936400349ABA /* SimpleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTableCell.h; sourceTree = "<group>"; };
 		4179826316AC936400349ABA /* SimpleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTableCell.m; sourceTree = "<group>"; };
+		4196EC6016AFFAEA005F86E4 /* WhatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhatViewController.h; sourceTree = "<group>"; };
+		4196EC6116AFFAEA005F86E4 /* WhatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhatViewController.m; sourceTree = "<group>"; };
+		4196EC6316B00824005F86E4 /* ValuesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValuesViewController.h; sourceTree = "<group>"; };
+		4196EC6416B00824005F86E4 /* ValuesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValuesViewController.m; sourceTree = "<group>"; };
+		4196EC6616B0488E005F86E4 /* MTXMLLists.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTXMLLists.h; sourceTree = "<group>"; };
+		4196EC6716B0488E005F86E4 /* MTXMLLists.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTXMLLists.m; sourceTree = "<group>"; };
+		4196EC6916B04A00005F86E4 /* GetCreditCardList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCreditCardList.h; sourceTree = "<group>"; };
+		4196EC6A16B04A00005F86E4 /* GetCreditCardList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetCreditCardList.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,24 +160,12 @@
 		410393BA16A83EF400D8D0CC /* XMLTest */ = {
 			isa = PBXGroup;
 			children = (
+				4196EC5F16AFF530005F86E4 /* iPhone View Controllers */,
 				4179821B16AB245400349ABA /* XMLParser */,
 				4179820416AAF59E00349ABA /* controllers */,
 				410393C316A83EF400D8D0CC /* AppDelegate.h */,
 				410393C416A83EF400D8D0CC /* AppDelegate.m */,
-				410393CC16A83EF400D8D0CC /* MainStoryboard_iPhone.storyboard */,
 				410393CF16A83EF400D8D0CC /* MainStoryboard_iPad.storyboard */,
-				412AA6CA16AF014D00173714 /* MASTER_old.png */,
-				412AA6CE16AF0C4D00173714 /* MASTER.png */,
-				412AA6CC16AF015500173714 /* VISA.png */,
-				412AA6C716AED01600173714 /* AMEX.png */,
-				410393D216A83EF400D8D0CC /* FirstViewController.h */,
-				410393D316A83EF400D8D0CC /* FirstViewController.m */,
-				410393D516A83EF400D8D0CC /* first.png */,
-				410393D716A83EF400D8D0CC /* first@2x.png */,
-				410393D916A83EF400D8D0CC /* SecondViewController.h */,
-				410393DA16A83EF400D8D0CC /* SecondViewController.m */,
-				410393DC16A83EF400D8D0CC /* second.png */,
-				410393DE16A83EF400D8D0CC /* second@2x.png */,
 				410393BB16A83EF400D8D0CC /* Supporting Files */,
 				4179826216AC936400349ABA /* SimpleTableCell.h */,
 				4179826316AC936400349ABA /* SimpleTableCell.m */,
@@ -176,6 +176,14 @@
 		410393BB16A83EF400D8D0CC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				412AA6CA16AF014D00173714 /* MASTER_old.png */,
+				412AA6CE16AF0C4D00173714 /* MASTER.png */,
+				412AA6CC16AF015500173714 /* VISA.png */,
+				412AA6C716AED01600173714 /* AMEX.png */,
+				410393D516A83EF400D8D0CC /* first.png */,
+				410393D716A83EF400D8D0CC /* first@2x.png */,
+				410393DC16A83EF400D8D0CC /* second.png */,
+				410393DE16A83EF400D8D0CC /* second@2x.png */,
 				410393BC16A83EF400D8D0CC /* XMLTest-Info.plist */,
 				410393BD16A83EF400D8D0CC /* InfoPlist.strings */,
 				410393C016A83EF400D8D0CC /* main.m */,
@@ -192,6 +200,10 @@
 			children = (
 				4179820A16AB047F00349ABA /* GetXML.h */,
 				4179820B16AB047F00349ABA /* GetXML.m */,
+				4196EC6616B0488E005F86E4 /* MTXMLLists.h */,
+				4196EC6716B0488E005F86E4 /* MTXMLLists.m */,
+				4196EC6916B04A00005F86E4 /* GetCreditCardList.h */,
+				4196EC6A16B04A00005F86E4 /* GetCreditCardList.m */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -224,6 +236,22 @@
 				4179824716AB24DE00349ABA /* TouchXML.h */,
 			);
 			name = XMLParser;
+			sourceTree = "<group>";
+		};
+		4196EC5F16AFF530005F86E4 /* iPhone View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				410393CC16A83EF400D8D0CC /* MainStoryboard_iPhone.storyboard */,
+				410393D216A83EF400D8D0CC /* FirstViewController.h */,
+				410393D316A83EF400D8D0CC /* FirstViewController.m */,
+				410393D916A83EF400D8D0CC /* SecondViewController.h */,
+				410393DA16A83EF400D8D0CC /* SecondViewController.m */,
+				4196EC6016AFFAEA005F86E4 /* WhatViewController.h */,
+				4196EC6116AFFAEA005F86E4 /* WhatViewController.m */,
+				4196EC6316B00824005F86E4 /* ValuesViewController.h */,
+				4196EC6416B00824005F86E4 /* ValuesViewController.m */,
+			);
+			name = "iPhone View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,6 +346,10 @@
 				4179825D16AB2ED700349ABA /* CXMLElement.m in Sources */,
 				4179820C16AB047F00349ABA /* GetXML.m in Sources */,
 				4179826416AC936500349ABA /* SimpleTableCell.m in Sources */,
+				4196EC6216AFFAEA005F86E4 /* WhatViewController.m in Sources */,
+				4196EC6516B00824005F86E4 /* ValuesViewController.m in Sources */,
+				4196EC6816B0488E005F86E4 /* MTXMLLists.m in Sources */,
+				4196EC6B16B04A00005F86E4 /* GetCreditCardList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

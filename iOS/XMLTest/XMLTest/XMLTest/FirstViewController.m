@@ -8,7 +8,7 @@
 
 #import "FirstViewController.h"
 #import "SecondViewController.h"
-#import "GetXML.h"
+#import "GetCreditCardList.h"
 
 @interface FirstViewController ()
 
@@ -22,14 +22,20 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 //    loadUnknownXML();
+    /*
     GetXML *test = [GetXML alloc];
     
     
     
     NSLog(@"init");
     test.loadXML;
+     */
+    
+    GetCreditCardList *list = [[GetCreditCardList alloc] init];
+    
+    list.loadXML;
 
-    tableContent = [[NSMutableArray alloc] initWithArray:test.content copyItems:YES];
+    tableContent = [[NSMutableArray alloc] initWithArray:list.resultSet copyItems:YES];
 }
 
 
@@ -108,7 +114,7 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 
     if([segue.identifier isEqualToString:@"selectDateSegue"]){
-        SecondViewController *controller = (SecondViewController *)segue.destinationViewController;
+//        SecondViewController *controller = (SecondViewController *)segue.destinationViewController;
         /*
         NSIndexPath *selectedRowIndexPath = [self.tableView indexPathForSelectedRow];
         NSUInteger selectedRow = selectedRowIndexPath.row;

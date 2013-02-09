@@ -58,9 +58,7 @@ require_once $functions_path . '/connect.php';
 			$where = $where . " and pur_cc_id= ".$rvar_credit_card;
 		}
 		if ($rvar_due_period !="") {
-			$query .= ", future_payments ";
-			$where .= " and fp_pur_id = pur_id ";
-			$where .= " and fp_due_period = '".$rvar_due_period."'";
+			$where .= " and pur_id in (select fp_pur_id from future_payments where fp_due_period = '".$rvar_due_period."' )";
 		}
 		if ($rvar_period !="") {
 			$where .= " and  substr(pur_date,1,7) = '".$rvar_period."'";
@@ -83,13 +81,13 @@ require_once $functions_path . '/connect.php';
 		$result = mysql_query($query) or die("list_cards.php: Query failed (" . $query .") ". mysql_error());
 		$item_index = 0;
 
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {  
 			print('<purchase>'.$NL);
 
 			print('<pur_id>'.$row["pur_id"].'</pur_id>'.$NL);
 			print('<date>'.$row["pur_date"].'</date>'.$NL);
 			print('<purchased_by>'.$row["pur_purchased_by"].'</purchased_by>'.$NL);
-			print('<credit_card_id>'.$row["cc_id"].'</credit_card_id>'.$NL);
+			print('<credit_card_id>'.$row["cc_id"].'</credit_card_id>'.$NL);  
 			print('<credit_card>'.$row["cc_number"].'</credit_card>'.$NL);
 			print('<card_type>'.$row["acc_card_type"].'</card_type>'.$NL);
 			print('<description>'.$row["pur_description"].'</description>'.$NL);
@@ -97,15 +95,17 @@ require_once $functions_path . '/connect.php';
 			print('<payments>'.$row["pur_payments"].'</payments>'.$NL);
 			if ($row["pur_payments"] != "" &&  $row["pur_payments"] != 0) {
 				print('<payment_value>'.round($row["pur_value"]/$row["pur_payments"],2).'</payment_value>'.$NL);
+			} else {
+				print('<payment_value>'.$row["pur_value"].'</payment_value>'.$NL);
 			}
 			print('<timestamp>'.$row["pur_timestamp"].'</timestamp>'.$NL);
 
 			print('</purchase>'.$NL);
 			$item_index ++;
 	    }
-// 		print('<query>'.$query.'</query>'.$NL);
-// 		print('<query>'.$rvar_order_by.'</query>'.$NL);
-// 		print('<where_clause>'.$where.'</where_clause>'.$NL);
+ 		print('<query>'.$query.'</query>'.$NL);
+ 		print('<query>'.$rvar_order_by.'</query>'.$NL);
+ 		print('<where_clause>'.$where.'</where_clause>'.$NL);
    	} else {
    		$texto_error = "";
    		if ($rvar_cHash == "") {
